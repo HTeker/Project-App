@@ -13,6 +13,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.survivingwithandroid.weather.lib.WeatherClient;
+import com.survivingwithandroid.weather.lib.WeatherConfig;
+import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
+import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
+import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
+import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
+import com.survivingwithandroid.weather.lib.request.WeatherRequest;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +49,20 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        try {
+            WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
+            WeatherConfig config = new WeatherConfig();
+
+            WeatherClient client = builder.attach(this)
+                    .provider(new OpenweathermapProviderType())
+                    .httpClient(WeatherDefaultClient.class)
+                    .config(config)
+                    .build();
+        }
+        catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     @Override

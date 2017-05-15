@@ -29,4 +29,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     apply plugin: 'realm-android'
+    compile 'com.survivingwithandroid:weatherlib:1.6.0'
+    compile 'com.survivingwithandroid:weatherlib_okhttpclient:1.6.0'
+    compile 'com.squareup.okhttp:okhttp:2.0.+'
 }
