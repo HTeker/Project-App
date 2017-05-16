@@ -9,6 +9,7 @@ public class User extends RealmObject {
     private boolean enabledAgendaSync;
     private boolean enabledAlarmSync;
 
+    private boolean setOwnPosition;
     private double customLocationLat;
     private double customLocationLng;
 
@@ -44,6 +45,14 @@ public class User extends RealmObject {
 
     public void setEnabledAlarmSync(boolean enabledAlarmSync) {
         this.enabledAlarmSync = enabledAlarmSync;
+    }
+
+    public boolean isSetOwnPosition() {
+        return setOwnPosition;
+    }
+
+    public void setSetOwnPosition(boolean setOwnPosition) {
+        this.setOwnPosition = setOwnPosition;
     }
 
     public double getCustomLocationLat() {
