@@ -1,5 +1,6 @@
 package com.weatheradviceapp;
 
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -39,7 +40,9 @@ public class MainActivity extends AppCompatActivity
 
         boolean locationEnabled = false;
         if(!canAccessLocation()){
-            requestPermissions(LOCATION_PERMS, 1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(LOCATION_PERMS, 1);
+            }
         } else{
             locationEnabled = true;
         }
