@@ -12,18 +12,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
-import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
-import com.survivingwithandroid.weather.lib.model.CurrentWeather;
-import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
-import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    WeatherVisualizer wvToday1;
+    WeatherVisualizer wvToday2;
+    WeatherVisualizer wvTomorow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,16 @@ public class MainActivity extends AppCompatActivity
         catch (Throwable t) {
             t.printStackTrace();
         }
+
+
+        // Dit kan gedaan worden als de weer info is verkregen.
+        WeatherInfo wi1 = new WeatherInfo("Rotterdam");
+        WeatherInfo wi2 = new WeatherInfo("Den Haag");
+
+        wvToday1 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday1), wi1);
+        wvToday2 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday2), wi2);
+        wvTomorow = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherTomorow), wi1);
+
     }
 
     @Override
