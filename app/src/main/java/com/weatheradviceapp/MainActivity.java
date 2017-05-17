@@ -1,8 +1,11 @@
 package com.weatheradviceapp;
 
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,14 +20,24 @@ import android.view.ViewGroup;
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
+import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
+import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.model.Weather;
+import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
+import com.survivingwithandroid.weather.lib.provider.yahooweather.YahooProviderType;
+import com.survivingwithandroid.weather.lib.request.WeatherRequest;
+import com.weatheradviceapp.fragments.SettingsFragment;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     WeatherVisualizer wvToday1;
     WeatherVisualizer wvToday2;
-    WeatherVisualizer wvTomorow;
+    WeatherVisualizer wvTomorrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,26 +67,55 @@ public class MainActivity extends AppCompatActivity
         try {
             WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
             WeatherConfig config = new WeatherConfig();
+            //config.ApiKey = "f664c19fcacc336597b0ead017bf69fc";
 
             WeatherClient client = builder.attach(this)
-                    .provider(new OpenweathermapProviderType())
+                    //.provider(new OpenweathermapProviderType())
+                    .provider(new YahooProviderType())
                     .httpClient(WeatherDefaultClient.class)
                     .config(config)
                     .build();
+
+            /* Zo zou het moeten gaan maar werkt niet... * /
+            client.getCurrentCondition(new WeatherRequest("2988507"), new WeatherClient.WeatherEventListener() {
+                @Override
+                public void onWeatherRetrieved(CurrentWeather currentWeather) {
+
+                    // The weather can be shown, this is demo code
+                    Calendar cal = Calendar.getInstance();
+
+                    wvToday1 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday1), currentWeather.weather, cal.getTime());
+                    wvToday2 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday2), currentWeather.weather, cal.getTime());
+
+                    cal.add(Calendar.DATE, 1);
+                    wvTomorrow = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherTomorrow), currentWeather.weather, cal.getTime());
+                }
+
+                @Override
+                public void onWeatherError(WeatherLibException e) {
+                    Log.d("WeatherLib", "Weather Error - parsing data");
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onConnectionError(Throwable throwable) {
+                    Log.d("WeatherLib", "Connection error");
+                    throwable.printStackTrace();
+                }
+            });
+            /**/
+            // The weather can be shown, this is demo code
+            Calendar cal = Calendar.getInstance();
+
+            wvToday1 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday1),  new Weather(), cal.getTime());
+            wvToday2 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday2), new Weather(), cal.getTime());
+
+            cal.add(Calendar.DATE, 1);
+            wvTomorrow = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherTomorrow), new Weather(), cal.getTime());
         }
         catch (Throwable t) {
             t.printStackTrace();
         }
-
-
-        // Dit kan gedaan worden als de weer info is verkregen.
-        WeatherInfo wi1 = new WeatherInfo("Rotterdam");
-        WeatherInfo wi2 = new WeatherInfo("Den Haag");
-
-        wvToday1 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday1), wi1);
-        wvToday2 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday2), wi2);
-        wvTomorow = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherTomorow), wi1);
-
     }
 
     @Override
@@ -102,6 +144,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            displayView(item.getItemId());
             return true;
         }
 
@@ -131,5 +174,34 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void displayView(int viewId) {
+
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
+
+        switch (viewId) {
+            case R.id.action_settings:
+                fragment = new SettingsFragment();
+                title  = "Settings";
+                break;
+
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+
+        // set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
     }
 }

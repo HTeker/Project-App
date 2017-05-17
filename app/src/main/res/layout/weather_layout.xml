@@ -13,18 +13,19 @@
         android:layout_alignParentTop="true"
         android:layout_weight="0.54"
         android:text="location"
-        android:textSize="14sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/datetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
         android:layout_marginLeft="32dp"
         android:layout_weight="0.54"
         android:text="date/time"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_alignBaseline="@+id/location"
+        android:layout_alignBottom="@+id/location"
+        android:layout_alignParentEnd="true" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -41,7 +42,7 @@
             android:layout_alignParentTop="true"
             android:gravity="left"
             android:text="21"
-            android:textSize="72sp" />
+            android:textSize="56sp" />
 
         <TextView
             android:id="@+id/tempUnit"
@@ -50,7 +51,7 @@
             android:layout_alignBaseline="@+id/temp"
             android:layout_alignBottom="@+id/temp"
             android:layout_toEndOf="@+id/temp"
-            android:text="@string/temp_unit_celcius"
+            android:text="@string/temp_unit_celsius"
             android:textSize="24sp" />
 
         <ImageView
