@@ -1,5 +1,7 @@
 package com.weatheradviceapp;
 
+import android.*;
+import android.Manifest;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
@@ -28,7 +30,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String[] LOCATION_PERMS={
-            android.Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
     };
 
     @Override
@@ -38,13 +41,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        boolean locationEnabled = false;
         if(!canAccessLocation()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(LOCATION_PERMS, 1);
             }
-        } else{
-            locationEnabled = true;
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean canAccessLocation() {
-        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+        return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
     private boolean hasPermission(String perm) {
