@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean canAccessLocation() {
-        return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
+        return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) && hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION));
     }
 
     private boolean hasPermission(String perm) {
