@@ -24,8 +24,7 @@
 
     <string name="settings_interests">Interests</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_header">Project App HRO Dinf1</string>
+    <string name="menu_payoff">Team working apps</string>
 
 </resources>
