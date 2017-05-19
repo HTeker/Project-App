@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,29 +14,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
-import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
-import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.Weather;
-import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
-import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.provider.yahooweather.YahooProviderType;
-import com.survivingwithandroid.weather.lib.request.WeatherRequest;
+import com.weatheradviceapp.fragments.HomeFragment;
 import com.weatheradviceapp.fragments.SettingsFragment;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    WeatherVisualizer wvToday1;
-    WeatherVisualizer wvToday2;
-    WeatherVisualizer wvTomorrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +52,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Init home fragment
+        displayView(R.id.fragment_home);
+
 
         try {
             WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
@@ -104,14 +97,6 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             /**/
-            // The weather can be shown, this is demo code
-            Calendar cal = Calendar.getInstance();
-
-            wvToday1 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday1),  new Weather(), cal.getTime());
-            wvToday2 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday2), new Weather(), cal.getTime());
-
-            cal.add(Calendar.DATE, 1);
-            wvTomorrow = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherTomorrow), new Weather(), cal.getTime());
         }
         catch (Throwable t) {
             t.printStackTrace();
@@ -123,6 +108,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -182,6 +169,10 @@ public class MainActivity extends AppCompatActivity
         String title = getString(R.string.app_name);
 
         switch (viewId) {
+            case R.id.fragment_home:
+                fragment = new HomeFragment();
+                break;
+
             case R.id.action_settings:
                 fragment = new SettingsFragment();
                 title  = "Settings";

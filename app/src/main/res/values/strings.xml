@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">WeatherAdviceApp</string>
+    <string name="app_name">Weather Advice App</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="title_home">Weather advice</string>
 
     <string name="action_settings">Settings</string>
     <string name="main_today">Today</string>
@@ -22,5 +24,8 @@
     <string name="enabled_alarm_sync">Alarm</string>
 
     <string name="settings_interests">Interests</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

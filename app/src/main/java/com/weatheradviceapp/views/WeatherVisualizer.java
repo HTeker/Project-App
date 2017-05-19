@@ -1,5 +1,6 @@
-package com.weatheradviceapp;
+package com.weatheradviceapp.views;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
+import com.weatheradviceapp.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,12 +38,10 @@ public class WeatherVisualizer {
     ImageView weatherImg;
 
 
-    public WeatherVisualizer(LayoutInflater inflater, ViewGroup root, Weather weather, Date date) {
+    public WeatherVisualizer(LayoutInflater inflater, ViewGroup container, Weather weather, Date date) {
 
-        this.weather = weather;
-        this.date = date;
-
-        wv = inflater.inflate(R.layout.weather_layout, root);
+        // Initialize view
+        wv = inflater.inflate(R.layout.weather_layout, container);
 
         location = (TextView) wv.findViewById(R.id.location);
         datetime = (TextView) wv.findViewById(R.id.datetime);
@@ -53,18 +53,27 @@ public class WeatherVisualizer {
         cloud = (TextView) wv.findViewById(R.id.cloud);
         weatherImg = (ImageView) wv.findViewById(R.id.weatherImg);
 
+        showWeatherData(weather, date);
+    }
+
+    public void showWeatherData(Weather weather, Date date) {
+
+        this.weather = weather;
+        this.date = date;
+
+        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
+        datetime.setText(df.format(date));
+
         if (null != weather.location.getCity()) {
 
-            // Zet nu de waarden in de textviews
-            location.setText(weather.location.getClass().toString());
-            DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
-            datetime.setText(df.format(date));
-            temp.setText(Math.round(weather.temperature.getTemp()));
-            sun.setText(Math.round(weather.currentCondition.getUV()));
-            windSpeed.setText(Math.round(weather.wind.getSpeed()) + Resources.getSystem().getString(R.string.windspeed_unit_kph));
+            // Set values in textviews
+            location.setText(weather.location.getCity());
+            temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
+            sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
+            windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + Resources.getSystem().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
 
-            // In de weather class worden 2 rain classes geinstantieerd. geen docs kunnen vinden over inhoud.
-            rain.setText(Math.round(weather.rain[0].getChance()) + " %");
+            // In the weather class 2 rain instances are created but no docs available why.
+            rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %" + Math.round(weather.rain[0].getChance())));
         }
     }
 }
