@@ -190,11 +190,12 @@ public class MainActivity extends AppCompatActivity
     public void displayView(int viewId) {
 
         Fragment fragment = null;
-                title = getString(R.string.title_home);
+        String title = getString(R.string.app_name);// This get "Lib" for some reason
 
         switch (viewId) {
             case R.id.fragment_home:
                 fragment = new HomeFragment();
+                title = getString(R.string.title_home);
                 break;
 
             case R.id.action_settings:
