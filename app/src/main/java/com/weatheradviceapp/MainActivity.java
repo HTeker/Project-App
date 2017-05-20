@@ -1,6 +1,5 @@
 package com.weatheradviceapp;
 
-import android.*;
 import android.Manifest;
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -26,9 +25,6 @@ import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
 import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
-import com.survivingwithandroid.weather.lib.provider.IWeatherProvider;
-import com.survivingwithandroid.weather.lib.provider.WeatherProviderFactory;
-import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
