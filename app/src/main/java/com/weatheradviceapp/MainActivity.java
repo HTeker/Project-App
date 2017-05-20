@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,7 +24,13 @@ import android.view.MenuItem;
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
+import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
+import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.provider.IWeatherProvider;
+import com.survivingwithandroid.weather.lib.provider.WeatherProviderFactory;
+import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
+import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -69,11 +76,35 @@ public class MainActivity extends AppCompatActivity
             WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
             WeatherConfig config = new WeatherConfig();
 
+            config.ApiKey = getString(R.string.openweathermap_api_key);
+
             WeatherClient client = builder.attach(this)
                     .provider(new OpenweathermapProviderType())
                     .httpClient(WeatherDefaultClient.class)
                     .config(config)
                     .build();
+
+
+            // TODO: De coördinaten in de WeatherRequest zijn momenteel van de school, deze moeten we vanuit de GPS van de gebruiker halen
+            client.getCurrentCondition(new WeatherRequest(51.917377F, 4.48392F), new WeatherClient.WeatherEventListener() {
+                @Override
+                public void onWeatherRetrieved(CurrentWeather currentWeather) {
+                    float currentTemp = currentWeather.weather.temperature.getTemp();
+                    Log.d("WL", "City ["+currentWeather.weather.location.getCity()+"] Current temp ["+currentTemp+"]");
+                }
+
+                @Override
+                public void onWeatherError(WeatherLibException e) {
+                    Log.d("WL", "Weather Error - parsing data");
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onConnectionError(Throwable throwable) {
+                    Log.d("WL", "Connection error");
+                    throwable.printStackTrace();
+                }
+            });
         }
         catch (Throwable t) {
             t.printStackTrace();
