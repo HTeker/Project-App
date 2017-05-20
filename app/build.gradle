@@ -11,6 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
+        resValue "string", "openweathermap_api_key", (project.findProperty("OPENWEATHERMAP_API_KEY") ?: "")
     }
     buildTypes {
         release {
@@ -34,4 +35,6 @@ dependencies {
     compile 'com.survivingwithandroid:weatherlib_okhttpclient:1.6.0'
     compile 'com.squareup.okhttp:okhttp:2.0.+'
     compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.evernote:android-job:1.1.10'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
 }

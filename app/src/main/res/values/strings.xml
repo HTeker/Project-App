@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">WeatherAdviceApp</string>
-    <string name="openweathermap_api_key">f664c19fcacc336597b0ead017bf69fc</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
