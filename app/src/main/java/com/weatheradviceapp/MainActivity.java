@@ -28,6 +28,9 @@ import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
+import com.weatheradviceapp.fragments.HomeFragment;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -68,18 +71,23 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Init home fragment
+        displayView(R.id.fragment_home);
+
+
         try {
             WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
             WeatherConfig config = new WeatherConfig();
+            //config.ApiKey = "f664c19fcacc336597b0ead017bf69fc";
 
             config.ApiKey = getString(R.string.openweathermap_api_key);
 
             WeatherClient client = builder.attach(this)
-                    .provider(new OpenweathermapProviderType())
+                    //.provider(new OpenweathermapProviderType())
+                    .provider(new YahooProviderType())
                     .httpClient(WeatherDefaultClient.class)
                     .config(config)
                     .build();
-
 
             // TODO: De coördinaten in de WeatherRequest zijn momenteel van de school, deze moeten we vanuit de GPS van de gebruiker halen
             client.getCurrentCondition(new WeatherRequest(51.917377F, 4.48392F), new WeatherClient.WeatherEventListener() {
@@ -112,6 +120,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -146,8 +156,8 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_home) {
+            displayView(R.id.fragment_home);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -176,9 +186,14 @@ public class MainActivity extends AppCompatActivity
     public void displayView(int viewId) {
 
         Fragment fragment = null;
-        String title = getString(R.string.app_name);
+        String title = getString(R.string.app_name);// This get "Lib" for some reason
 
         switch (viewId) {
+            case R.id.fragment_home:
+                fragment = new HomeFragment();
+                title = getString(R.string.title_home);
+                break;
+
             case R.id.action_settings:
                 fragment = new SettingsFragment();
                 title  = "Settings";
