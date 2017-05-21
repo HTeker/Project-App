@@ -1,6 +1,5 @@
 package com.weatheradviceapp;
 
-import android.*;
 import android.Manifest;
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -10,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,10 +23,12 @@ import android.view.MenuItem;
 import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
-import com.survivingwithandroid.weather.lib.model.Weather;
-import com.survivingwithandroid.weather.lib.provider.yahooweather.YahooProviderType;
-import com.weatheradviceapp.fragments.HomeFragment;
+import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
+import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
+import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
+import com.weatheradviceapp.fragments.HomeFragment;
 
 import java.util.Calendar;
 
@@ -78,6 +80,8 @@ public class MainActivity extends AppCompatActivity
             WeatherConfig config = new WeatherConfig();
             //config.ApiKey = "f664c19fcacc336597b0ead017bf69fc";
 
+            config.ApiKey = getString(R.string.openweathermap_api_key);
+
             WeatherClient client = builder.attach(this)
                     //.provider(new OpenweathermapProviderType())
                     .provider(new YahooProviderType())
@@ -85,34 +89,26 @@ public class MainActivity extends AppCompatActivity
                     .config(config)
                     .build();
 
-            /* Zo zou het moeten gaan maar werkt niet... * /
-            client.getCurrentCondition(new WeatherRequest("2988507"), new WeatherClient.WeatherEventListener() {
+            // TODO: De coördinaten in de WeatherRequest zijn momenteel van de school, deze moeten we vanuit de GPS van de gebruiker halen
+            client.getCurrentCondition(new WeatherRequest(51.917377F, 4.48392F), new WeatherClient.WeatherEventListener() {
                 @Override
                 public void onWeatherRetrieved(CurrentWeather currentWeather) {
-
-                    // The weather can be shown, this is demo code
-                    Calendar cal = Calendar.getInstance();
-
-                    wvToday1 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday1), currentWeather.weather, cal.getTime());
-                    wvToday2 = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherToday2), currentWeather.weather, cal.getTime());
-
-                    cal.add(Calendar.DATE, 1);
-                    wvTomorrow = new WeatherVisualizer(getLayoutInflater(), (ViewGroup)findViewById(R.id.weatherTomorrow), currentWeather.weather, cal.getTime());
+                    float currentTemp = currentWeather.weather.temperature.getTemp();
+                    Log.d("WL", "City ["+currentWeather.weather.location.getCity()+"] Current temp ["+currentTemp+"]");
                 }
 
                 @Override
                 public void onWeatherError(WeatherLibException e) {
-                    Log.d("WeatherLib", "Weather Error - parsing data");
+                    Log.d("WL", "Weather Error - parsing data");
                     e.printStackTrace();
                 }
 
                 @Override
                 public void onConnectionError(Throwable throwable) {
-                    Log.d("WeatherLib", "Connection error");
+                    Log.d("WL", "Connection error");
                     throwable.printStackTrace();
                 }
             });
-            /**/
         }
         catch (Throwable t) {
             t.printStackTrace();
