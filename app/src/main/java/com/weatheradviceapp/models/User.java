@@ -1,7 +1,9 @@
 package com.weatheradviceapp.models;
 
+import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 public class User extends RealmObject {
     private boolean enabledGPSLocation;
@@ -77,5 +79,15 @@ public class User extends RealmObject {
 
     public void setInterests(RealmList<Interest> interests) {
         this.interests = interests;
+    }
+
+    public static User getUser() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<User> list = realm.where(User.class).findAll();
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+
+        return null;
     }
 }

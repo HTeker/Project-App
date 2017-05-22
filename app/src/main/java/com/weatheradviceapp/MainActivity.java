@@ -1,6 +1,10 @@
 package com.weatheradviceapp;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
@@ -9,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,20 +25,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.survivingwithandroid.weather.lib.WeatherClient;
-import com.survivingwithandroid.weather.lib.WeatherConfig;
-import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
-import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
-import com.survivingwithandroid.weather.lib.model.CurrentWeather;
-import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
-import com.survivingwithandroid.weather.lib.request.WeatherRequest;
+import com.evernote.android.job.JobManager;
+import com.evernote.android.job.JobRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
-import com.weatheradviceapp.fragments.HomeFragment;
+import com.weatheradviceapp.jobs.SyncWeatherJob;
+import com.weatheradviceapp.models.User;
+import com.weatheradviceapp.models.WeatherCondition;
 
-import java.util.Calendar;
+import com.weatheradviceapp.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private JobManager mJobManager;
 
     private static final String[] LOCATION_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -71,47 +75,64 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("new-weather-available"));
+
+        mJobManager = JobManager.instance();
+
+        // Reset.
+        mJobManager.cancelAll();
+
+        fetchWeather();
+        scheduleWeatherFetching();
+
         // Init home fragment
-        displayView(R.id.fragment_home);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, new HomeFragment(), "home");
+        ft.commit();
+    }
 
-
-        try {
-            WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
-            WeatherConfig config = new WeatherConfig();
-            //config.ApiKey = "f664c19fcacc336597b0ead017bf69fc";
-
-            config.ApiKey = getString(R.string.openweathermap_api_key);
-
-            WeatherClient client = builder.attach(this)
-                    //.provider(new OpenweathermapProviderType())
-                    .provider(new YahooProviderType())
-                    .httpClient(WeatherDefaultClient.class)
-                    .config(config)
-                    .build();
-
-            // TODO: De coördinaten in de WeatherRequest zijn momenteel van de school, deze moeten we vanuit de GPS van de gebruiker halen
-            client.getCurrentCondition(new WeatherRequest(51.917377F, 4.48392F), new WeatherClient.WeatherEventListener() {
-                @Override
-                public void onWeatherRetrieved(CurrentWeather currentWeather) {
-                    float currentTemp = currentWeather.weather.temperature.getTemp();
-                    Log.d("WL", "City ["+currentWeather.weather.location.getCity()+"] Current temp ["+currentTemp+"]");
-                }
-
-                @Override
-                public void onWeatherError(WeatherLibException e) {
-                    Log.d("WL", "Weather Error - parsing data");
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onConnectionError(Throwable throwable) {
-                    Log.d("WL", "Connection error");
-                    throwable.printStackTrace();
-                }
-            });
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
+            if (homeFragment != null) {
+                homeFragment.refreshWeatherData();
+            }
         }
-        catch (Throwable t) {
-            t.printStackTrace();
+    };
+
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
+    }
+
+    private void fetchWeather() {
+        User currentUser = User.getUser();
+
+        if (currentUser != null) {
+            new JobRequest.Builder(SyncWeatherJob.TAG)
+                    .setExecutionWindow(3_000L, 4_000L)
+                    .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
+                    .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                    .setRequirementsEnforced(true)
+                    .setPersisted(true)
+                    .build()
+                    .schedule();
+        }
+    }
+
+    private void scheduleWeatherFetching() {
+        User currentUser = User.getUser();
+
+        if (currentUser != null) {
+            new JobRequest.Builder(SyncWeatherJob.TAG)
+                    .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
+                    .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                    .setPersisted(true)
+                    .build()
+                    .schedule();
         }
     }
 
@@ -186,7 +207,7 @@ public class MainActivity extends AppCompatActivity
     public void displayView(int viewId) {
 
         Fragment fragment = null;
-        String title = getString(R.string.app_name);// This get "Lib" for some reason
+        String title = getString(R.string.weather_app_name);
 
         switch (viewId) {
             case R.id.fragment_home:
@@ -196,7 +217,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_settings:
                 fragment = new SettingsFragment();
-                title  = "Settings";
+                title  = getString(R.string.title_settings);
                 break;
 
         }
