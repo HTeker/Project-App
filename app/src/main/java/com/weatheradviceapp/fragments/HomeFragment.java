@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.models.WeatherCondition;
 import com.weatheradviceapp.views.WeatherVisualizer;
 
 import java.util.Calendar;
@@ -23,6 +24,8 @@ public class HomeFragment extends Fragment {
     ViewGroup weatherToday1;
     ViewGroup weatherToday2;
     ViewGroup weatherTomorrow;
+
+    private WeatherCondition latestWeatherCondition;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,14 +43,11 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         weatherToday1 = (ViewGroup) view.findViewById(R.id.weatherToday1);
-        weatherToday2 = (ViewGroup) view.findViewById(R.id.weatherToday2);
-        weatherTomorrow = (ViewGroup) view.findViewById(R.id.weatherTomorrow);
 
         Calendar cal = Calendar.getInstance();
         wvToday1 = new WeatherVisualizer(getActivity().getLayoutInflater(), weatherToday1, new Weather(), cal.getTime());
-        wvToday2 = new WeatherVisualizer(getActivity().getLayoutInflater(), weatherToday2, new Weather(), cal.getTime());
-        cal.add(Calendar.DATE, 1);
-        wvTomorrow = new WeatherVisualizer(getActivity().getLayoutInflater(), weatherTomorrow, new Weather(), cal.getTime());
+
+        refreshWeatherData();
 
         return view;
     }
@@ -58,16 +58,10 @@ public class HomeFragment extends Fragment {
      */
     public void refreshWeatherData() {
 
-        // TODO: Get weather data in realm
+        latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
 
-        // The weather can be shown, this is demo code
-        Calendar cal = Calendar.getInstance();
-
-        wvToday1.showWeatherData(new Weather(), cal.getTime());
-        // Only when avaiable
-        wvToday2.showWeatherData(new Weather(), cal.getTime());
-
-        cal.add(Calendar.DATE, 1);
-        wvTomorrow.showWeatherData(new Weather(), cal.getTime());
+        if (latestWeatherCondition != null) {
+            wvToday1.showWeatherData(latestWeatherCondition.getWeather().weather, latestWeatherCondition.getFetchDate());
+        }
     }
 }

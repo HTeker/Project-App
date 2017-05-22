@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity
 
     private JobManager mJobManager;
 
-    private WeatherCondition latestWeatherCondition;
-
     private static final String[] LOCATION_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -87,12 +85,6 @@ public class MainActivity extends AppCompatActivity
         fetchWeather();
         scheduleWeatherFetching();
 
-        latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
-        if (latestWeatherCondition != null) {
-            float currentTemp = latestWeatherCondition.getWeather().weather.temperature.getTemp();
-            Log.d("WL", "City ["+latestWeatherCondition.getWeather().weather.location.getCity()+"] Current temp ["+currentTemp+"]");
-        }
-
         // Init home fragment
         displayView(R.id.fragment_home);
     }
@@ -100,12 +92,8 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
-            if (latestWeatherCondition != null) {
-                float currentTemp = latestWeatherCondition.getWeather().weather.temperature.getTemp();
-                Log.d("WL_broadcast", "City [" + latestWeatherCondition.getWeather().weather.location.getCity() + "] Current temp [" + currentTemp + "]");
-            }
-
+            HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_home);
+            homeFragment.refreshWeatherData();
         }
     };
 
@@ -225,7 +213,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_settings:
                 fragment = new SettingsFragment();
-                title  = "Settings";
+                title  = getString(R.string.title_settings);
                 break;
 
         }

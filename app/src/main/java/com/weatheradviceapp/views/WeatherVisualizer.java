@@ -68,12 +68,14 @@ public class WeatherVisualizer {
 
             // Set values in textviews
             location.setText(weather.location.getCity());
-            temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
-            sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
-            windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + Resources.getSystem().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
+
+            // Dit werkt allemaal niet bij mij:
+            //temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
+            //sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
+            //windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + Resources.getSystem().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
 
             // In the weather class 2 rain instances are created but no docs available why.
-            rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %" + Math.round(weather.rain[0].getChance())));
+            //rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %" + Math.round(weather.rain[0].getChance())));
         }
     }
 }
