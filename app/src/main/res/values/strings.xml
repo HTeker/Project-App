@@ -6,7 +6,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
     <string name="main_today">Today</string>
     <string name="main_tomorrow">Tomorrow</string>
 
@@ -27,4 +26,7 @@
 
     <string name="menu_header">Project App HRO Dinf1</string>
     <string name="menu_payoff">Team working apps</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_my_advice">My advice</string>
+    <string name="menu_settings">Settings</string>
 </resources>
