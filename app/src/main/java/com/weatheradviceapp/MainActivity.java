@@ -92,8 +92,9 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_home);
-            homeFragment.refreshWeatherData();
+            // @todo: fix this.
+            //HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_home);
+            //homeFragment.refreshWeatherData();
         }
     };
 
