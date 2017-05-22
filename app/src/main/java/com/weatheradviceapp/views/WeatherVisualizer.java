@@ -84,7 +84,7 @@ public class WeatherVisualizer {
                 rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
             }
 
-            cloud.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.currentCondition.getHumidity()));
+            cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
         }
     }
 }
