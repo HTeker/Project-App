@@ -1,6 +1,7 @@
 package com.weatheradviceapp.fragments;
 
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -151,24 +152,38 @@ public class SettingsFragment extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                googleMap.setMyLocationEnabled(googleMapsGPS);
+                try {
+                    googleMap.setMyLocationEnabled(googleMapsGPS);
+                } catch(Exception e) {
 
-                MarkerOptions markerOptions = new MarkerOptions().draggable(true);
+                }
+
+                final MarkerOptions markerOptions = new MarkerOptions().draggable(true);
+                LatLng currentPosition = new LatLng(0, 0);
 
                 if (user.isSetOwnPosition()) {
-                    LatLng currentPosition = new LatLng(user.getCustomLocationLat(), user.getCustomLocationLng());
-                    markerOptions.position(currentPosition);
-
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(currentPosition).zoom(12).build();
-
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    currentPosition = new LatLng(user.getCustomLocationLat(), user.getCustomLocationLng());
                 } else {
-                    if (googleMapsGPS && googleMap.getMyLocation() != null) {
-                        markerOptions.position(new LatLng(googleMap.getMyLocation().getLatitude(), googleMap.getMyLocation().getLongitude()));
-                    } else {
-                        markerOptions.position(new LatLng(0, 0));
+                    if (googleMapsGPS && googleMap.isMyLocationEnabled() && googleMap.getMyLocation() != null) {
+                        currentPosition = new LatLng(googleMap.getMyLocation().getLatitude(), googleMap.getMyLocation().getLongitude());
                     }
                 }
+
+                markerOptions.position(currentPosition);
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(currentPosition).zoom(12).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                    @Override
+                    public void onMyLocationChange(Location my_location) {
+                        if (!user.isSetOwnPosition()) {
+                            LatLng currentPosition = new LatLng(my_location.getLatitude(), my_location.getLongitude());
+                            marker.setPosition(currentPosition);
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(currentPosition).zoom(12).build();
+                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        }
+                    }
+                });
 
                 googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                     @Override
