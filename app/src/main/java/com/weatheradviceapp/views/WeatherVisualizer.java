@@ -37,6 +37,8 @@ public class WeatherVisualizer {
 
     ImageView weatherImg;
 
+    ViewGroup container;
+
 
     public WeatherVisualizer(LayoutInflater inflater, ViewGroup container, Weather weather, Date date) {
 
@@ -52,6 +54,8 @@ public class WeatherVisualizer {
         rain = (TextView) wv.findViewById(R.id.rain);
         cloud = (TextView) wv.findViewById(R.id.cloud);
         weatherImg = (ImageView) wv.findViewById(R.id.weatherImg);
+
+        this.container = container;
 
         showWeatherData(weather, date);
     }
@@ -74,7 +78,7 @@ public class WeatherVisualizer {
             //sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
 
             // @todo: fix errors, format not found, resource not found. Missing context?
-            //windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + Resources.getSystem().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
+            //windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + container.getContext().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
 
             // In the weather class 2 rain instances are created but no docs available why.
             //rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %" + Math.round(weather.rain[0].getChance())));
