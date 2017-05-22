@@ -76,7 +76,7 @@ public class WeatherVisualizer {
             temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
             sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
 
-            windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + container.getContext().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
+            windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed()) + " " + container.getContext().getString(R.string.windspeed_unit_kph));
 
             // Weather index 0 = in 1 h.
             // Weather index 1 = in 3 h.
