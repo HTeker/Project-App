@@ -1,7 +1,5 @@
 package com.weatheradviceapp.views;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,32 +10,25 @@ import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
-
-/**
- * Created by Casper on 17-5-2017.
- */
 
 public class WeatherVisualizer {
 
-    Weather weather;
-    Date date;
-    View wv;
-    TextView location;
-    TextView datetime;
-    TextView temp;
-    TextView tempUnit;
-    TextView sun;
-    TextView windSpeed;
-    TextView rain;
-    TextView cloud;
+    private Weather weather;
+    private Date date;
+    private View wv;
+    private TextView location;
+    private TextView datetime;
+    private TextView temp;
+    private TextView tempUnit;
+    private TextView sun;
+    private TextView windSpeed;
+    private TextView rain;
+    private TextView cloud;
 
-    ImageView weatherImg;
+    private ImageView weatherImg;
 
-    ViewGroup container;
+    private ViewGroup container;
 
 
     public WeatherVisualizer(LayoutInflater inflater, ViewGroup container, Weather weather, Date date) {
@@ -73,15 +64,18 @@ public class WeatherVisualizer {
             // Set values in textviews
             location.setText(weather.location.getCity());
 
-            // @todo: fix errors, format not found.
-            //temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
-            //sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
+            temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
+            sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
 
-            // @todo: fix errors, format not found, resource not found. Missing context?
-            //windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + container.getContext().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
+            windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed()) + " " + container.getContext().getString(R.string.windspeed_unit_kph));
 
-            // In the weather class 2 rain instances are created but no docs available why.
-            //rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %" + Math.round(weather.rain[0].getChance())));
+            // Weather index 0 = in 1 h.
+            // Weather index 1 = in 3 h.
+            if (weather.rain.length > 0) {
+                rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
+            }
+
+            cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
         }
     }
 }
