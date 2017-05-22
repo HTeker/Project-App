@@ -28,6 +28,5 @@
     <string name="menu_payoff">Team working apps</string>
     <string name="menu_home">Home</string>
     <string name="menu_my_advice">My advice</string>
-    <string name="menu_account">Account</string>
     <string name="menu_settings">Settings</string>
 </resources>
