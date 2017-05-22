@@ -32,6 +32,8 @@ import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.models.WeatherCondition;
 
+import com.weatheradviceapp.fragments.HomeFragment;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -90,6 +92,9 @@ public class MainActivity extends AppCompatActivity
             float currentTemp = latestWeatherCondition.getWeather().weather.temperature.getTemp();
             Log.d("WL", "City ["+latestWeatherCondition.getWeather().weather.location.getCity()+"] Current temp ["+currentTemp+"]");
         }
+
+        // Init home fragment
+        displayView(R.id.fragment_home);
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -98,8 +103,9 @@ public class MainActivity extends AppCompatActivity
             latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
             if (latestWeatherCondition != null) {
                 float currentTemp = latestWeatherCondition.getWeather().weather.temperature.getTemp();
-                Log.d("WL_broadcast", "City ["+latestWeatherCondition.getWeather().weather.location.getCity()+"] Current temp ["+currentTemp+"]");
+                Log.d("WL_broadcast", "City [" + latestWeatherCondition.getWeather().weather.location.getCity() + "] Current temp [" + currentTemp + "]");
             }
+
         }
     };
 
@@ -143,6 +149,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -177,8 +185,8 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_home) {
+            displayView(R.id.fragment_home);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -207,9 +215,14 @@ public class MainActivity extends AppCompatActivity
     public void displayView(int viewId) {
 
         Fragment fragment = null;
-        String title = getString(R.string.app_name);
+        String title = getString(R.string.app_name);// This get "Lib" for some reason
 
         switch (viewId) {
+            case R.id.fragment_home:
+                fragment = new HomeFragment();
+                title = getString(R.string.title_home);
+                break;
+
             case R.id.action_settings:
                 fragment = new SettingsFragment();
                 title  = "Settings";
