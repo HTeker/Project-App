@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity
     public void displayView(int viewId) {
 
         Fragment fragment = null;
-        String title = getString(R.string.app_name);// This get "Lib" for some reason
+        String title = getString(R.string.weather_app_name);
 
         switch (viewId) {
             case R.id.fragment_home:

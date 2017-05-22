@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weather Advice App</string>
+    <string name="weather_app_name">Weather Advice App</string>
     <string name="title_home">Weather Advice</string>
     <string name="title_settings">Settings</string>
 
@@ -27,5 +27,4 @@
 
     <string name="menu_header">Project App HRO Dinf1</string>
     <string name="menu_payoff">Team working apps</string>
-
 </resources>
