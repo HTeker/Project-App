@@ -1,7 +1,5 @@
 package com.weatheradviceapp.views;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,32 +10,25 @@ import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
-
-/**
- * Created by Casper on 17-5-2017.
- */
 
 public class WeatherVisualizer {
 
-    Weather weather;
-    Date date;
-    View wv;
-    TextView location;
-    TextView datetime;
-    TextView temp;
-    TextView tempUnit;
-    TextView sun;
-    TextView windSpeed;
-    TextView rain;
-    TextView cloud;
+    private Weather weather;
+    private Date date;
+    private View wv;
+    private TextView location;
+    private TextView datetime;
+    private TextView temp;
+    private TextView tempUnit;
+    private TextView sun;
+    private TextView windSpeed;
+    private TextView rain;
+    private TextView cloud;
 
-    ImageView weatherImg;
+    private ImageView weatherImg;
 
-    ViewGroup container;
+    private ViewGroup container;
 
 
     public WeatherVisualizer(LayoutInflater inflater, ViewGroup container, Weather weather, Date date) {
