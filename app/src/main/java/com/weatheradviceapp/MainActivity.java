@@ -86,15 +86,18 @@ public class MainActivity extends AppCompatActivity
         scheduleWeatherFetching();
 
         // Init home fragment
-        displayView(R.id.fragment_home);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, new HomeFragment(), "home");
+        ft.commit();
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // @todo: fix this.
-            //HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_home);
-            //homeFragment.refreshWeatherData();
+            HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
+            if (homeFragment != null) {
+                homeFragment.refreshWeatherData();
+            }
         }
     };
 
