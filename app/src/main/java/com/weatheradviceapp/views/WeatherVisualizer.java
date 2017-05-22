@@ -73,15 +73,18 @@ public class WeatherVisualizer {
             // Set values in textviews
             location.setText(weather.location.getCity());
 
-            // @todo: fix errors, format not found.
-            //temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
-            //sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
+            temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
+            sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
 
-            // @todo: fix errors, format not found, resource not found. Missing context?
-            //windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + container.getContext().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
+            windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f " + container.getContext().getString(R.string.windspeed_unit_kph), weather.wind.getSpeed()));
 
-            // In the weather class 2 rain instances are created but no docs available why.
-            //rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %" + Math.round(weather.rain[0].getChance())));
+            // Weather index 0 = in 1 h.
+            // Weather index 1 = in 3 h.
+            if (weather.rain.length > 0) {
+                rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
+            }
+
+            cloud.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.currentCondition.getHumidity()));
         }
     }
 }
