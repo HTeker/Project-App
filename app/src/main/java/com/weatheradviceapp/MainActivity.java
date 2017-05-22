@@ -217,13 +217,13 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_settings:
                 fragment = new SettingsFragment();
-                title  = getString(R.string.title_settings);
+                title = getString(R.string.title_settings);
                 break;
         }
 
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.addToBackStack("home");
+            ft.addToBackStack(title);
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
         }
