@@ -32,36 +32,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/location"
-        android:layout_centerHorizontal="true">
+        android:layout_marginTop="6dp">
+
+        <ImageView
+            android:id="@+id/weatherImg"
+            android:layout_width="72dp"
+            android:layout_height="70dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/circle" />
 
         <TextView
             android:id="@+id/temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
             android:gravity="left"
             android:text="21"
-            android:textSize="56sp" />
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/tempUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/temp"
             android:layout_alignBottom="@+id/temp"
             android:layout_toEndOf="@+id/temp"
             android:text="@string/temp_unit_celsius"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/weatherImg"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toEndOf="@+id/tempUnit"
-            app:srcCompat="@drawable/circle" />
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
@@ -69,7 +68,10 @@
         android:id="@+id/iconSun"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_below="@+id/relativeLayout"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_toEndOf="@+id/relativeLayout"
         app:srcCompat="@drawable/sun" />
 
     <TextView
@@ -85,9 +87,9 @@
         android:id="@+id/iconWind"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignBottom="@+id/iconSun"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_toEndOf="@+id/sun"
+        android:layout_alignStart="@+id/iconSun"
+        android:layout_below="@+id/iconSun"
+        android:layout_marginTop="12dp"
         app:srcCompat="@drawable/wind" />
 
     <TextView
@@ -106,13 +108,13 @@
         android:layout_alignBottom="@+id/sun"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_toEndOf="@+id/windSpeed"
-        app:srcCompat="@drawable/humidity" />
+        app:srcCompat="@drawable/rain" />
 
     <TextView
         android:id="@+id/rain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/iconSun"
+        android:layout_alignBottom="@+id/iconRain"
         android:layout_toEndOf="@+id/iconRain"
         android:paddingLeft="4dp"
         android:text="40 %" />
@@ -121,16 +123,15 @@
         android:id="@+id/iconCloud"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignBottom="@+id/iconSun"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_toEndOf="@+id/rain"
+        android:layout_alignBottom="@+id/windSpeed"
+        android:layout_alignStart="@+id/iconRain"
         app:srcCompat="@drawable/cloud" />
 
     <TextView
         android:id="@+id/cloud"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/iconSun"
+        android:layout_alignBottom="@+id/iconCloud"
         android:layout_toEndOf="@+id/iconCloud"
         android:paddingLeft="4dp"
         android:text="40 %" />
