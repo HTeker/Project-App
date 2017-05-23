@@ -3,5 +3,5 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorWeatherIcon">#9ED3FF</color>
+    <color name="colorWeatherIconBg">#003F9C</color>
 </resources>
