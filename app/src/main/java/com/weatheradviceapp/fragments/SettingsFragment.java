@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
@@ -45,6 +46,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.Manifest;
 import android.widget.TextView;
 
+
+import com.robertlevonyan.views.chip.Chip;
+import com.robertlevonyan.views.chip.OnSelectClickListener;
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.helpers.WifiScanReceiver;
 import com.weatheradviceapp.jobs.SyncCalendarJob;
@@ -117,6 +121,76 @@ public class SettingsFragment extends Fragment {
                 } else {
                     mMapView.setVisibility(LinearLayout.VISIBLE);
                 }
+            }
+        });
+
+        Chip barbecueChip = (Chip) view.findViewById(R.id.barbecue_chip);
+        if (user.isEnabledBarbecueChip()) {
+            barbecueChip.setChipText("Selected");
+        }
+
+        barbecueChip.setOnSelectClickListener(new OnSelectClickListener() {
+            @Override
+            public void onSelectClick(View v, boolean selected) {
+                realm.beginTransaction();
+                user.setEnabledBarbecueChip(selected);
+                realm.commitTransaction();
+            }
+        });
+
+        Chip waterSport = (Chip) view.findViewById(R.id.watersport_chip);
+        if (user.isEnabledWaterSportChip()) {
+            waterSport.setChipText("Selected");
+        }
+
+        waterSport.setOnSelectClickListener(new OnSelectClickListener() {
+            @Override
+            public void onSelectClick(View v, boolean selected) {
+                realm.beginTransaction();
+                user.setEnabledWaterSportChip(selected);
+                realm.commitTransaction();
+            }
+        });
+
+        Chip soccerChip = (Chip) view.findViewById(R.id.soccer_chip);
+        if (user.isEnabledSoccerChip()) {
+            soccerChip.setChipText("Selected");
+        }
+
+        soccerChip.setOnSelectClickListener(new OnSelectClickListener() {
+            @Override
+            public void onSelectClick(View v, boolean selected) {
+                realm.beginTransaction();
+                user.setEnabledSoccerChip(selected);
+                realm.commitTransaction();
+            }
+        });
+
+        Chip beachChip = (Chip) view.findViewById(R.id.beach_chip);
+        if (user.isEnabledBeachChip()) {
+            beachChip.setChipText("Selected");
+        }
+
+        beachChip.setOnSelectClickListener(new OnSelectClickListener() {
+            @Override
+            public void onSelectClick(View v, boolean selected) {
+                realm.beginTransaction();
+                user.setEnabledBeachChip(selected);
+                realm.commitTransaction();
+            }
+        });
+
+        Chip bikeChip = (Chip) view.findViewById(R.id.bike_chip);
+        if (user.isEnabledBikeChip()) {
+            bikeChip.setChipText("Selected");
+        }
+
+        bikeChip.setOnSelectClickListener(new OnSelectClickListener() {
+            @Override
+            public void onSelectClick(View v, boolean selected) {
+                realm.beginTransaction();
+                user.setEnabledBikeChip(selected);
+                realm.commitTransaction();
             }
         });
 

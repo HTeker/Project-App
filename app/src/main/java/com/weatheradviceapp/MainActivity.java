@@ -1,6 +1,8 @@
 package com.weatheradviceapp;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +14,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -82,6 +86,10 @@ public class MainActivity extends AppCompatActivity
         mJobManager = JobManager.instance();
         // Reset.
         mJobManager.cancelAll();
+
+        if (user.isEnabledDemoMode()) {
+            showPushNotification();
+        }
 
         // Just now fetch weather data, so we're sure the swipeContainer is assigned
         fetchWeather();
@@ -202,7 +210,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        switch(id) {
+        switch (id) {
             case R.id.nav_home:
                 displayView(id);
                 // Not working because of new fragment initialization in displayView()
@@ -230,7 +238,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, perm));
+        return (PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, perm));
     }
 
     public void displayView(int viewId) {
@@ -264,5 +272,30 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void showPushNotification() {
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.umbrella_icon)
+                        .setContentTitle("Bobs Weather Advice")
+                        .setContentText("Don't forget your Umbrella")
+                        .setAutoCancel(true);
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        int mId = 1;
+        mNotificationManager.notify(mId, mBuilder.build());
     }
 }

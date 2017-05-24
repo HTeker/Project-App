@@ -15,12 +15,57 @@ public class User extends RealmObject {
     private boolean enabledDemoMode;
     private RealmList<Network> wifiNetworks = new RealmList<Network>();
 
+    private boolean enabledBarbecueChip;
+    private boolean enabledSoccerChip;
+    private boolean enabledWaterSportChip;
+    private boolean enabledBeachChip;
+    private boolean enabledBikeChip;
     private boolean setOwnPosition;
     private double customLocationLat;
     private double customLocationLng;
 
     private RealmList<Interest> interests;
     private RealmList<UserCalendar> agendas;
+
+    public boolean isEnabledBarbecueChip() {
+        return enabledBarbecueChip;
+    }
+
+    public void setEnabledBarbecueChip(boolean enabledBarbecueChip) {
+        this.enabledBarbecueChip = enabledBarbecueChip;
+    }
+
+    public boolean isEnabledWaterSportChip() {
+        return enabledWaterSportChip;
+    }
+
+    public void setEnabledWaterSportChip(boolean enabledWaterSportChip) {
+        this.enabledWaterSportChip = enabledWaterSportChip;
+    }
+
+    public boolean isEnabledBikeChip() {
+        return enabledBikeChip;
+    }
+
+    public void setEnabledBikeChip(boolean enabledBikeChip) {
+        this.enabledBikeChip = enabledBikeChip;
+    }
+
+    public boolean isEnabledBeachChip() {
+        return enabledBeachChip;
+    }
+
+    public void setEnabledBeachChip(boolean enabledBeachChip) {
+        this.enabledBeachChip = enabledBeachChip;
+    }
+
+    public boolean isEnabledSoccerChip() {
+        return enabledSoccerChip;
+    }
+
+    public void setEnabledSoccerChip(boolean enabledSoccerChip) {
+        this.enabledSoccerChip = enabledSoccerChip;
+    }
 
     public boolean isEnabledGPSLocation() {
         return enabledGPSLocation;
