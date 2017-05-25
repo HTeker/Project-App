@@ -9,20 +9,16 @@ import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-import android.view.View;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.evernote.android.job.JobManager;
@@ -30,7 +26,7 @@ import com.evernote.android.job.JobRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
-import com.weatheradviceapp.models.WeatherCondition;
+    private SwipeRefreshLayout swipeContainer;
 
 import com.weatheradviceapp.fragments.HomeFragment;
 
@@ -69,10 +65,27 @@ public class MainActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("new-weather-available"));
 
         mJobManager = JobManager.instance();
-
         // Reset.
         mJobManager.cancelAll();
 
+        // Pull-to-refresh
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(
+                R.color.colorPrimary,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Start job to fetch new weather data
+                fetchWeather();
+            }
+        });
+
+        // Just now fetch weather data, so we're sure the swipeContainer is assigned
         fetchWeather();
         scheduleWeatherFetching();
 
@@ -88,6 +101,11 @@ public class MainActivity extends AppCompatActivity
             HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
             if (homeFragment != null) {
                 homeFragment.refreshWeatherData();
+            }
+
+            // And reset the pull-to-refresh
+            if (swipeContainer != null) {
+                swipeContainer.setRefreshing(false);
             }
         }
     };

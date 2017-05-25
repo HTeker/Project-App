@@ -1,7 +1,5 @@
 package com.weatheradviceapp.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,15 +15,9 @@ import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
 
-    WeatherVisualizer wvToday1;
-    WeatherVisualizer wvToday2;
-    WeatherVisualizer wvTomorrow;
+    private WeatherVisualizer wvToday1;
 
-    ViewGroup weatherToday1;
-    ViewGroup weatherToday2;
-    ViewGroup weatherTomorrow;
-
-    private WeatherCondition latestWeatherCondition;
+    private ViewGroup weatherToday1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -58,7 +50,7 @@ public class HomeFragment extends Fragment {
      */
     public void refreshWeatherData() {
 
-        latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
+        WeatherCondition latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
 
         if (latestWeatherCondition != null) {
             wvToday1.showWeatherData(latestWeatherCondition.getWeather().weather, latestWeatherCondition.getFetchDate());
