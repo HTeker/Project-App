@@ -26,13 +26,13 @@ import com.evernote.android.job.JobRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
-    private SwipeRefreshLayout swipeContainer;
 
 import com.weatheradviceapp.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private SwipeRefreshLayout swipeContainer;
     private JobManager mJobManager;
 
     private static final String[] LOCATION_PERMS={
