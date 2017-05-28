@@ -23,6 +23,7 @@ import android.view.MenuItem;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
+import com.weatheradviceapp.fragments.AgendaFragment;
 import com.weatheradviceapp.fragments.SettingsFragment;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
@@ -35,9 +36,10 @@ public class MainActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeContainer;
     private JobManager mJobManager;
 
-    private static final String[] LOCATION_PERMS={
+    private static final String[] REQUIRED_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.READ_CALENDAR
     };
 
     @Override
@@ -47,9 +49,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(!canAccessLocation()){
+        if(!hasRequiredPermissions()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(LOCATION_PERMS, 1);
+                requestPermissions(REQUIRED_PERMS, 1);
             }
         }
 
@@ -170,8 +172,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private boolean canAccessLocation() {
-        return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) && hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION));
+    private boolean hasRequiredPermissions() {
+        for (String permision : REQUIRED_PERMS){
+            if (!hasPermission(permision)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private boolean hasPermission(String perm) {
@@ -187,6 +195,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_home:
                 fragment = new HomeFragment();
                 title = getString(R.string.title_home);
+                break;
+
+            case R.id.nav_agenda:
+                fragment = new AgendaFragment();
+                title = getString(R.string.title_agenda);
                 break;
 
             case R.id.nav_settings:
