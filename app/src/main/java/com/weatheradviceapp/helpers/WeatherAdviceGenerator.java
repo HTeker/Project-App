@@ -1,0 +1,41 @@
+package com.weatheradviceapp.helpers;
+
+
+import com.survivingwithandroid.weather.lib.model.Weather;
+import com.weatheradviceapp.models.Advice;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class WeatherAdviceGenerator {
+
+    private List<Advice> adviceList;
+
+    /**
+     * The WeatherAdviceGenerator runs all the weather conditions against the Advice implementations
+     * to get the highest score for a weather condition. The list of advices is then sorted based on
+     * score.
+     *
+     * @param weatherConditions
+     */
+    public WeatherAdviceGenerator(List<Weather> weatherConditions) {
+        adviceList = AdviceFactory.getAdviceInstances();
+
+        for (Advice advice : adviceList) {
+            advice.calcBestScore(weatherConditions);
+        }
+
+        Collections.sort(adviceList, new Comparator<Advice>() {
+            @Override
+            public int compare(Advice a, Advice b) {
+                // -1 - less than, 1 - greater than, 0 - equal, all inverse for descending
+                return a.getScore() > b.getScore() ? -1 : a.getScore() < b.getScore() ? 1 : 0;
+            }
+        });
+    }
+
+    public List<Advice> getAdviceList() {
+        return adviceList;
+    }
+}
