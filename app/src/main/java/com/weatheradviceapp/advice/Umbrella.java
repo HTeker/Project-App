@@ -6,18 +6,28 @@ import com.survivingwithandroid.weather.lib.model.Weather;
 
 public class Umbrella extends Advice {
 
+    /**
+     * The umbrella score is based on the rain forecast but with too much wind the score goes down.
+     *
+     * @param weather The weather condition to calculate the advice score on.
+     * @return
+     */
     @Override
-    protected double calcWeatherScore(Weather weather) {
-        return 2.1;
+    protected float calcWeatherScore(Weather weather) {
+        if (weather.wind.getSpeed() > 60 || weather.rain.length == 0) {
+            // No score on strong wind
+            return 0.0f;
+        }
+        return weather.rain[0].getChance() - (weather.wind.getSpeed() * 3.6f);
     }
 
     @Override
     public int getAdviceIconResource() {
-        return R.drawable.umbrella_icon;
+        return R.drawable.advice_umbrella;
     }
 
     @Override
     public int getAdviceStringResource() {
-        return R.string.weather_text_000;
+        return R.string.advice_umbrella;
     }
 }

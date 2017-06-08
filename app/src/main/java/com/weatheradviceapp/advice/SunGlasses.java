@@ -6,19 +6,24 @@ import com.survivingwithandroid.weather.lib.model.Weather;
 
 public class SunGlasses extends Advice {
 
+    /**
+     * The sunglasses advice is based on the UV index, higher index is higher rating.
+     *
+     * @param weather The weather condition to calculate the advice score on.
+     * @return
+     */
     @Override
-    protected double calcWeatherScore(Weather weather) {
-        return 2.0;
+    protected float calcWeatherScore(Weather weather) {
+
+        return -weather.clouds.getPerc();
     }
 
     @Override
     public int getAdviceIconResource() {
-        return R.drawable.umbrella_icon;
+        return R.drawable.advice_sunglasses;
     }
 
     @Override
-    public int getAdviceStringResource() {
-        return R.string.weather_text_000;
-    }
+    public int getAdviceStringResource() { return R.string.advice_sunglasses; }
 
 }

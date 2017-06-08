@@ -11,6 +11,7 @@ import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
 import com.weatheradviceapp.models.WeatherCondition;
+import com.weatheradviceapp.views.AdviceVisualizer;
 import com.weatheradviceapp.views.WeatherVisualizer;
 
 import java.util.ArrayList;
@@ -19,10 +20,9 @@ import java.util.Calendar;
 public class HomeFragment extends Fragment {
 
     private WeatherVisualizer wvToday1;
+    private AdviceVisualizer[] adviceVisualizers = new AdviceVisualizer[4];
 
     private ViewGroup weatherToday1;
-
-    private TextView[] tv = new TextView[3];
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,14 +40,14 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         weatherToday1 = (ViewGroup) view.findViewById(R.id.weatherToday1);
-
-        tv[0] = (TextView) view.findViewById(R.id.textView2);
-        tv[1] = (TextView) view.findViewById(R.id.textView3);
-        tv[2] = (TextView) view.findViewById(R.id.textView4);
-
-
         Calendar cal = Calendar.getInstance();
-        wvToday1 = new WeatherVisualizer(getActivity().getLayoutInflater(), weatherToday1, new Weather(), cal.getTime());
+        wvToday1 = new WeatherVisualizer(inflater, weatherToday1, new Weather(), cal.getTime());
+
+        adviceVisualizers[0] = new AdviceVisualizer(inflater, (ViewGroup) view.findViewById(R.id.advice1));
+        adviceVisualizers[1] = new AdviceVisualizer(inflater, (ViewGroup) view.findViewById(R.id.advice2));
+        adviceVisualizers[2] = new AdviceVisualizer(inflater, (ViewGroup) view.findViewById(R.id.advice3));
+        adviceVisualizers[3] = new AdviceVisualizer(inflater, (ViewGroup) view.findViewById(R.id.advice4));
+
 
         refreshWeatherData();
 
@@ -66,14 +66,21 @@ public class HomeFragment extends Fragment {
             wvToday1.showWeatherData(latestWeatherCondition.getWeather().weather, latestWeatherCondition.getFetchDate());
 
 
-            // Generate advice for all weather conditions
-            //ArrayList<Weather> allWeathers = new ArrayList<>();
-            //allWeathers.add(latestWeatherCondition.getWeather().weather);
-            //WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers);
+            // Get all weather conditions for the day planning
+            ArrayList<Weather> allWeathers = new ArrayList<>();
+            allWeathers.add(latestWeatherCondition.getWeather().weather);
+            // TODO: Get forecast for calendar items by location and time
 
-            //for(int i = 0; i < tv.length; i++) {
-            //    tv[i].setText(getString(advGen.getAdviceList().get(i).getAdviceStringResource()));
-            //}
+            // Generate advice for all weather conditions
+            WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers);
+
+            for(int i = 0; i < adviceVisualizers.length; i++) {
+                if (advGen.getAdviceList().size() > i) { // && advGen.getAdviceList().get(i).getScore() > 40.0f) {
+                    adviceVisualizers[i].showAdvice(advGen.getAdviceList().get(i));
+                } else {
+                    adviceVisualizers[i].clearAdvice();
+                }
+            }
         }
     }
 }

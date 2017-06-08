@@ -19,21 +19,23 @@ public class WeatherAdviceGenerator {
      *
      * @param weatherConditions
      */
-    public WeatherAdviceGenerator(List<Weather> weatherConditions) {
-        adviceList = AdviceFactory.getAdviceInstances();
+    public WeatherAdviceGenerator(Iterable<Weather> weatherConditions) {
+        adviceList = AdviceFactory.getAllAdviceInstances();
 
         for (Advice advice : adviceList) {
-            advice.calcBestScore(weatherConditions);
+            advice.saveBestScore(weatherConditions);
         }
 
         Collections.sort(adviceList, new Comparator<Advice>() {
             @Override
             public int compare(Advice a, Advice b) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inverse for descending
+                // Sort in reverse order, highest first, lowest at end of list
                 return a.getScore() > b.getScore() ? -1 : a.getScore() < b.getScore() ? 1 : 0;
             }
         });
     }
+
+
 
     public List<Advice> getAdviceList() {
         return adviceList;
