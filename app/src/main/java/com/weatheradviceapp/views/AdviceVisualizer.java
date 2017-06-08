@@ -30,11 +30,13 @@ public class AdviceVisualizer {
     }
 
     public void clearAdvice() {
+        adviceIcon.setBackgroundResource(android.R.color.transparent);
         adviceIcon.setImageResource(android.R.color.transparent);
         adviceText.setText("");
     }
 
     public void showAdvice(Advice advice) {
+        adviceIcon.setBackgroundResource(R.drawable.rounded_rect);
         adviceIcon.setImageResource(advice.getAdviceIconResource());
         adviceText.setText(advice.toString());
     }

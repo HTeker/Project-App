@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
@@ -35,6 +38,10 @@ public class MainActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeContainer;
     private JobManager mJobManager;
 
+    private ConstraintSet normalLayout = new ConstraintSet();
+    private ConstraintSet adviceDetailLayout = new ConstraintSet();
+    boolean adviceDetails = false;
+
     private static final String[] LOCATION_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -44,6 +51,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        normalLayout.clone(getApplicationContext(), R.layout.fragment_home);
+        adviceDetailLayout.clone(getApplicationContext(), R.layout.fragment_advice);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -210,5 +222,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
+    }
+
+    public void toggleAdviceDetail(View v) {
+        adviceDetails = !adviceDetails;
+        ConstraintLayout homeFragment = (ConstraintLayout) findViewById(R.id.fragment_home);
+        if (adviceDetails) {
+            adviceDetailLayout.applyTo(homeFragment);
+        } else {
+            normalLayout.applyTo(homeFragment);
+        }
     }
 }
