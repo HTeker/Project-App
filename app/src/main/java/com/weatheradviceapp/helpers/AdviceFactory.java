@@ -10,15 +10,25 @@ import java.util.List;
  */
 public class AdviceFactory {
 
-    public static final String[] adviceClasses = {"SunGlasses", "Umbrella"};
+    public static final String[] adviceClasses = {"BeanieHat", "CottonClothing", "Gloves", "Raincoat", "SunGlasses", "Umbrella", "WoolClothing"};
 
     public static Advice getAdviceInstance(String adviceClass) {
 
         switch(adviceClass) {
+            case "BeanieHat":
+                return new BeanieHat();
+            case "CottonClothing":
+                return new CottonClothing();
+            case "Gloves":
+                return new Gloves();
+            case "Raincoat":
+                return new Raincoat();
             case "SunGlasses":
                 return new SunGlasses();
             case "Umbrella":
                 return new Umbrella();
+            case "WoolClothing":
+                return new WoolClothing();
             default:
                 return null;
         }

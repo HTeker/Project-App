@@ -3,5 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorWeatherIconBg">#003F9C</color>
+    <color name="colorWeatherIconBg">#003f9c</color>
+
+    <color name="colorTextLight">#e0e0e0</color>
+    <color name="colorTextDark">#333333</color>
 </resources>

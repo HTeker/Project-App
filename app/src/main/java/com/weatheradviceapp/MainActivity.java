@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.transition.TransitionManager;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -211,6 +212,7 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.addToBackStack(title);
             ft.replace(R.id.content_frame, fragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.commit();
         }
 
@@ -221,16 +223,28 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
     }
 
     public void toggleAdviceDetail(View v) {
-        adviceDetails = !adviceDetails;
+        showAdviceDetails(!adviceDetails);
+
+        HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
+        if (homeFragment != null) {
+            homeFragment.refreshWeatherData();
+        }
+
+    }
+
+    public void showAdviceDetails(boolean show) {
+        adviceDetails = show;
         ConstraintLayout homeFragment = (ConstraintLayout) findViewById(R.id.fragment_home);
-        if (adviceDetails) {
-            adviceDetailLayout.applyTo(homeFragment);
-        } else {
-            normalLayout.applyTo(homeFragment);
+        if (homeFragment != null) {
+            TransitionManager.beginDelayedTransition(homeFragment);
+            if (adviceDetails) {
+                adviceDetailLayout.applyTo(homeFragment);
+            } else {
+                normalLayout.applyTo(homeFragment);
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
 package com.weatheradviceapp.advice;
 
+import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.Advice;
-import com.survivingwithandroid.weather.lib.model.Weather;
 
-public class SunGlasses extends Advice {
+public class Raincoat extends Advice {
 
     /**
      * The sunglasses advice is based on the UV index, higher index is higher rating.
@@ -14,15 +14,19 @@ public class SunGlasses extends Advice {
      */
     @Override
     protected float calcWeatherScore(Weather weather) {
-        return 100F - weather.clouds.getPerc();
+        if (weather.wind.getSpeed() > 60 || weather.rain.length == 0) {
+            // No score on strong wind
+            return 0.0f;
+        }
+        return weather.rain[0].getChance() + (weather.wind.getSpeed() * 3.6f);
     }
 
     @Override
     public int getAdviceIconResource() {
-        return R.drawable.advice_sunglasses;
+        return R.drawable.advice_raincoat;
     }
 
     @Override
-    public int getAdviceStringResource() { return R.string.advice_sunglasses; }
+    public int getAdviceStringResource() { return R.string.advice_raincoat; }
 
 }
