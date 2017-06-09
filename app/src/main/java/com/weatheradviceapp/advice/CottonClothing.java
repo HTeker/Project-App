@@ -7,7 +7,7 @@ import com.weatheradviceapp.models.Advice;
 public class CottonClothing extends Advice {
 
     /**
-     * The umbrella score is based on the rain forecast but with too much wind the score goes down.
+     * The CottonClothing score is based on the temperature above 20 C.
      *
      * @param weather The weather condition to calculate the advice score on.
      * @return

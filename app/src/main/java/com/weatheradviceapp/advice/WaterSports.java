@@ -4,29 +4,26 @@ import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.Advice;
 
-public class Gloves extends Advice {
+public class WaterSports extends Advice {
 
     /**
-     * The Gloves advice is based on the temperature and starts below 5 C. Colder is a higher rating.
+     * The WaterSports activity is based on the temperature and a nice wind speed.
      *
      * @param weather The weather condition to calculate the advice score on.
      * @return
      */
     @Override
     protected float calcWeatherScore(Weather weather) {
-        if (weather.temperature.getTemp() > 5) {
-            return 0F;
-        } else {
-            return 50 + (2 * (-weather.temperature.getTemp() + 5));
-        }
+        // TODO: Only when personal interest is selected
+        return ((weather.temperature.getTemp() - 20) * 10) + (weather.wind.getSpeed() * 3.6f);
     }
 
     @Override
     public int getAdviceIconResource() {
-        return R.drawable.advice_gloves;
+        return R.drawable.watersport_chip_icon;
     }
 
     @Override
-    public int getAdviceStringResource() { return R.string.advice_gloves; }
+    public int getAdviceStringResource() { return R.string.advice_water_sports; }
 
 }

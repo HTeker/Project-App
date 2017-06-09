@@ -61,7 +61,7 @@ public class WeatherVisualizer {
             weatherImg.setImageResource(WeatherImageMapper.getWeatherIconResource(weather.currentCondition.getIcon(), weather.currentCondition.getWeatherId()));
             temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
             sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
-            windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed() * 3.6f) + " " + container.getContext().getString(R.string.windspeed_unit_kph));
+            windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed() * 3.6f) + " " + container.getContext().getString(R.string.wind_speed_unit_kph));
             cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
 
             // Weather index 0 = in 1 h.

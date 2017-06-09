@@ -10,7 +10,9 @@ import java.util.List;
  */
 public class AdviceFactory {
 
-    public static final String[] adviceClasses = {"BeanieHat", "CottonClothing", "Gloves", "Raincoat", "SunGlasses", "Umbrella", "WoolClothing"};
+    public static final String[] adviceClasses = {
+            "BeanieHat", "CottonClothing", "Gloves", "Raincoat", "SunGlasses", "Umbrella", "WoolClothing",
+            "Barbecue", "Beach", "Bike", "Soccer", "WaterSports"};
 
     public static Advice getAdviceInstance(String adviceClass) {
 
@@ -29,6 +31,16 @@ public class AdviceFactory {
                 return new Umbrella();
             case "WoolClothing":
                 return new WoolClothing();
+            case "Barbecue":
+                return new Barbecue();
+            case "Beach":
+                return new Beach();
+            case "Bike":
+                return new Bike();
+            case "Soccer":
+                return new Soccer();
+            case "WaterSports":
+                return new WaterSports();
             default:
                 return null;
         }

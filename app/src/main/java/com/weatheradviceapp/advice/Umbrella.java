@@ -8,6 +8,7 @@ public class Umbrella extends Advice {
 
     /**
      * The umbrella score is based on the rain forecast but with too much wind the score goes down.
+     * Strong wind (above 60 Km/h) and the umbrella is not advised.
      *
      * @param weather The weather condition to calculate the advice score on.
      * @return

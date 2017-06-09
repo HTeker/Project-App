@@ -7,7 +7,8 @@ import com.weatheradviceapp.models.Advice;
 public class BeanieHat extends Advice {
 
     /**
-     * The sunglasses advice is based on the UV index, higher index is higher rating.
+     * The BeanieHat advice is based on the temprerature, Lower than 5 C starts a rating. Colder is
+     * higher rating.
      *
      * @param weather The weather condition to calculate the advice score on.
      * @return
@@ -27,6 +28,6 @@ public class BeanieHat extends Advice {
     }
 
     @Override
-    public int getAdviceStringResource() { return R.string.advice_beaniehat; }
+    public int getAdviceStringResource() { return R.string.advice_beanie_hat; }
 
 }
