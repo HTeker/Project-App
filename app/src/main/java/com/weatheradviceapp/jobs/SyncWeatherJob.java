@@ -30,6 +30,8 @@ import io.realm.Realm;
 public class SyncWeatherJob extends Job {
 
     public static final String TAG = "sync_weather_job_tag";
+    public static final String WEATHER_AVAILABLE = "new-weather-available";
+    public static final String WEATHER_FAIL = "weather-job-failed";
 
     @Override
     @NonNull
@@ -69,10 +71,10 @@ public class SyncWeatherJob extends Job {
                 lat = bestLocation.getLatitude();
             }
 
-            final double reqest_lon = lon;
+            final double request_lon = lon;
             final double request_lat = lat;
 
-            client.getCurrentCondition(new WeatherRequest(reqest_lon, request_lat), new WeatherClient.WeatherEventListener() {
+            client.getCurrentCondition(new WeatherRequest(request_lon, request_lat), new WeatherClient.WeatherEventListener() {
                 @Override
                 public void onWeatherRetrieved(CurrentWeather currentWeather) {
                     Realm realm = Realm.getDefaultInstance();
@@ -80,14 +82,14 @@ public class SyncWeatherJob extends Job {
                     WeatherCondition weatherCondition = realm.createObject(WeatherCondition.class);
                     weatherCondition.setFetchDate(new Date());
                     weatherCondition.setWeather(currentWeather);
-                    weatherCondition.setLocationLng(reqest_lon);
+                    weatherCondition.setLocationLng(request_lon);
                     weatherCondition.setLocationLat(request_lat);
                     realm.commitTransaction();
 
                     float currentTemp = currentWeather.weather.temperature.getTemp();
                     Log.d("WL", "City ["+currentWeather.weather.location.getCity()+"] Current temp ["+currentTemp+"]");
 
-                    Intent intent = new Intent("new-weather-available");
+                    Intent intent = new Intent(WEATHER_AVAILABLE);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                 }
 
@@ -95,12 +97,20 @@ public class SyncWeatherJob extends Job {
                 public void onWeatherError(WeatherLibException e) {
                     Log.d("WL", "Weather Error - parsing data");
                     e.printStackTrace();
+
+                    // Send broadcast to end swipe container animation on fail
+                    Intent intent = new Intent(WEATHER_FAIL);
+                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                 }
 
                 @Override
                 public void onConnectionError(Throwable throwable) {
                     Log.d("WL", "Connection error");
                     throwable.printStackTrace();
+
+                    // Send broadcast to end swipe container animation on fail
+                    Intent intent = new Intent(WEATHER_FAIL);
+                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                 }
             });
         }

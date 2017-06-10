@@ -28,6 +28,7 @@ import android.view.View;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
+import com.weatheradviceapp.jobs.DemoWeatherJob;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
 
@@ -41,7 +42,9 @@ public class MainActivity extends AppCompatActivity
 
     private ConstraintSet normalLayout = new ConstraintSet();
     private ConstraintSet adviceDetailLayout = new ConstraintSet();
-    boolean adviceDetails = false;
+    private boolean adviceDetails = false;
+    private boolean demoMode = false;
+
 
     private static final String[] LOCATION_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
-            if (homeFragment != null) {
+            if (homeFragment != null && intent.getAction() == SyncWeatherJob.WEATHER_AVAILABLE) {
                 homeFragment.refreshWeatherData();
             }
 
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity
         User currentUser = User.getUser();
 
         if (currentUser != null) {
-            new JobRequest.Builder(SyncWeatherJob.TAG)
+            new JobRequest.Builder(demoMode ? DemoWeatherJob.TAG : SyncWeatherJob.TAG)
                     .setExecutionWindow(3_000L, 4_000L)
                     .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
                     .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
@@ -173,13 +176,19 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        displayView(id);
+        if (id == R.id.nav_demo_mode) {
+            demoMode = !demoMode;
+            item.setChecked(demoMode);
+        } else {
+            displayView(id);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 
@@ -246,5 +255,9 @@ public class MainActivity extends AppCompatActivity
                 normalLayout.applyTo(homeFragment);
             }
         }
+    }
+
+    private void nextDemoWeather() {
+
     }
 }

@@ -35,9 +35,11 @@ public class WeatherAdviceGenerator {
         });
     }
 
+    public int size() {
+        return adviceList.size();
+    }
 
-
-    public List<Advice> getAdviceList() {
-        return adviceList;
+    public Advice get(int index) {
+        return adviceList.get(index);
     }
 }

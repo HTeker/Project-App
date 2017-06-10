@@ -13,12 +13,14 @@ import com.weatheradviceapp.R;
 import com.weatheradviceapp.WeatherApplication;
 import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
 import com.weatheradviceapp.helpers.WeatherImageMapper;
+import com.weatheradviceapp.models.Advice;
 import com.weatheradviceapp.models.WeatherCondition;
 import com.weatheradviceapp.views.AdviceVisualizer;
 import com.weatheradviceapp.views.WeatherVisualizer;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -82,8 +84,8 @@ public class HomeFragment extends Fragment {
             WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers);
 
             for(int i = 0; i < adviceVisualizers.length; i++) {
-                if (advGen.getAdviceList().size() > i && advGen.getAdviceList().get(i).getScore() > 40.0f) {
-                    adviceVisualizers[i].showAdvice(advGen.getAdviceList().get(i));
+                if (advGen.size() > i && advGen.get(i).getScore() > 40.0f) {
+                    adviceVisualizers[i].showAdvice(advGen.get(i));
                 } else {
                     adviceVisualizers[i].clearAdvice();
                 }
