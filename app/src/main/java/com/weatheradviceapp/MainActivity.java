@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
             HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
             if (homeFragment != null && intent.getAction() == SyncWeatherJob.WEATHER_AVAILABLE) {
                 homeFragment.refreshWeatherData();
@@ -180,15 +181,25 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_demo_mode) {
-            demoMode = !demoMode;
-            item.setChecked(demoMode);
-        } else {
-            displayView(id);
+        switch(id) {
+            case R.id.nav_demo_mode:
+                demoMode = !demoMode;
+                item.setChecked(demoMode);
+                break;
+            case R.id.nav_home:
+            case R.id.nav_my_advice:
+                displayView(id);
+                // Not working because of new fragment initialization in displayView()
+                //showAdviceDetails(id == R.id.nav_my_advice);
+                break;
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
+            default:
+                displayView(id);
+                break;
         }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -207,6 +218,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (viewId) {
             case R.id.nav_home:
+            case R.id.nav_my_advice:
                 fragment = new HomeFragment();
                 title = getString(R.string.title_home);
                 break;
@@ -236,28 +248,20 @@ public class MainActivity extends AppCompatActivity
 
     public void toggleAdviceDetail(View v) {
         showAdviceDetails(!adviceDetails);
-
-        HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
-        if (homeFragment != null) {
-            homeFragment.refreshWeatherData();
-        }
-
     }
 
     public void showAdviceDetails(boolean show) {
-        adviceDetails = show;
-        ConstraintLayout homeFragment = (ConstraintLayout) findViewById(R.id.fragment_home);
-        if (homeFragment != null) {
-            TransitionManager.beginDelayedTransition(homeFragment);
-            if (adviceDetails) {
-                adviceDetailLayout.applyTo(homeFragment);
-            } else {
-                normalLayout.applyTo(homeFragment);
+        if (show != adviceDetails) {
+            ConstraintLayout homeFragment = (ConstraintLayout) findViewById(R.id.fragment_home);
+            if (homeFragment != null) {
+                TransitionManager.beginDelayedTransition(homeFragment);
+                if (show) {
+                    adviceDetailLayout.applyTo(homeFragment);
+                } else {
+                    normalLayout.applyTo(homeFragment);
+                }
+                adviceDetails = show;
             }
         }
-    }
-
-    private void nextDemoWeather() {
-
     }
 }

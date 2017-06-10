@@ -16,7 +16,7 @@ public class Barbecue extends Advice {
     @Override
     protected float calcWeatherScore(Weather weather) {
         // TODO: Only when personal interest is selected
-        return 30 + ((weather.temperature.getTemp() - 18) * 10) + ((15 - weather.rain[0].getChance()) * 5);
+        return (weather.temperature.getTemp() >= 18 ? 40 : 0) + ((15 - weather.rain[0].getChance()) * 2);
     }
 
     @Override

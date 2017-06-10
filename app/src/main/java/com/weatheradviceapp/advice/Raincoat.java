@@ -14,7 +14,7 @@ public class Raincoat extends Advice {
      */
     @Override
     protected float calcWeatherScore(Weather weather) {
-        return weather.rain[0].getChance() + (weather.wind.getSpeed() * 3.6f);
+        return weather.rain[0].getAmmount() * 7 + (weather.rain[0].getAmmount() > 3 ? (weather.wind.getSpeed() * 3.6f) : 0);
     }
 
     @Override

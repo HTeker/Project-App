@@ -1,5 +1,6 @@
 package com.weatheradviceapp.helpers;
 
+import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
 
 /**
@@ -11,10 +12,15 @@ import com.weatheradviceapp.R;
  */
 public class WeatherImageMapper {
 
-    public static int getWeatherIconResource(String icon, int weatherId) {
+    private Weather weather;
 
+    public WeatherImageMapper(Weather weather) {
+        this.weather = weather;
+    }
+
+    public int getWeatherIconResource() {
         // When one of the following conditions is met return with the dedicated icon
-        switch(weatherId) {
+        switch(weather.currentCondition.getWeatherId()) {
             case 202:
             case 212:
                 return R.drawable.w202;
@@ -31,7 +37,7 @@ public class WeatherImageMapper {
         }
 
         // Otherwise get the image for the weather icon
-        switch(icon) {
+        switch(weather.currentCondition.getIcon()) {
             case "01d":
                 return R.drawable.w01d;
             case "01n":
@@ -71,10 +77,10 @@ public class WeatherImageMapper {
         }
     }
 
-    public static int getWeatherBackgroundResource(String icon, int weatherId) {
+    public int getWeatherBackgroundResource() {
 
         // When one of the following conditions is met return with the dedicated icon
-        switch(weatherId) {
+        switch(weather.currentCondition.getWeatherId()) {
             case 202:
             case 212:
                 return R.drawable.bg_thunder;
@@ -89,7 +95,7 @@ public class WeatherImageMapper {
         }
 
         // Otherwise get the image for the weather icon
-        switch(icon) {
+        switch(weather.currentCondition.getIcon()) {
             case "01d":
             case "01n":
             case "02d":
@@ -120,12 +126,13 @@ public class WeatherImageMapper {
         }
     }
 
-    public static int getWeatherForegroundColor(String icon, int weatherId) {
-        switch(getWeatherBackgroundResource(icon, weatherId)) {
+    public int getWeatherForegroundColor() {
+        switch(getWeatherBackgroundResource()) {
             case R.drawable.bg_thunder:
             case R.drawable.bg_rain:
             case R.drawable.bg_clouds:
                 return R.color.colorTextLight;
+
             default:
                 return R.color.colorTextDark;
         }

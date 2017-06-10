@@ -58,14 +58,14 @@ public class WeatherVisualizer {
             // Set values in views
             location.setText(weather.location.getCity());
 
-            weatherImg.setImageResource(WeatherImageMapper.getWeatherIconResource(weather.currentCondition.getIcon(), weather.currentCondition.getWeatherId()));
+            weatherImg.setImageResource(new WeatherImageMapper(weather).getWeatherIconResource());
             temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
             sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
             windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed() * 3.6f) + " " + container.getContext().getString(R.string.wind_speed_unit_kph));
             cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
 
-            // Weather index 0 = in 1 h.
-            // Weather index 1 = in 3 h.
+            // TODO: Get forecast for rain prediction
+            // The rain on the currentWeather is only representing the volume in mm from the last 3 hours.
             if (weather.rain.length > 0) {
                 rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
             } else {

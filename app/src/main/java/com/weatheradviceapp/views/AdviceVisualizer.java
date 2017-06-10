@@ -16,13 +16,7 @@ public class AdviceVisualizer {
     private ImageView adviceIcon;
     private TextView adviceText;
 
-    private ViewGroup container;
-
-
     public AdviceVisualizer(LayoutInflater inflater, ViewGroup container) {
-
-        this.container = container;
-
         // Initialize view
         adviceView = inflater.inflate(R.layout.advice_layout, container);
         adviceIcon = (ImageView) adviceView.findViewById(R.id.adviceIcon);

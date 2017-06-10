@@ -47,7 +47,7 @@ public class AdviceFactory {
     }
 
     public static List<Advice> getAllAdviceInstances() {
-        ArrayList<Advice> result = new ArrayList<>();
+        List<Advice> result = new ArrayList<>();
 
         for (String className : adviceClasses) {
             Advice advice = getAdviceInstance(className);

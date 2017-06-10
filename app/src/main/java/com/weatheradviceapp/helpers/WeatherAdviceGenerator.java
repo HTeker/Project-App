@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class WeatherAdviceGenerator {
+public class WeatherAdviceGenerator  {
 
     private List<Advice> adviceList;
 
