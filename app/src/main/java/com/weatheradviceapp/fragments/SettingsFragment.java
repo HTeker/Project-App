@@ -1,15 +1,24 @@
 package com.weatheradviceapp.fragments;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Switch;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,17 +35,24 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.Manifest;
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.User;
+import com.weatheradviceapp.models.UserCalendar;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class SettingsFragment extends Fragment {
-
     private Realm realm;
     private User user;
     MapView mMapView;
     private GoogleMap googleMap;
     private Marker marker;
+    private View view;
+
+    SettingsFragmentAgendaListAdapter agendaListAdapter = null;
 
     private static final String[] LOCATION_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -57,7 +73,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         mMapView = (MapView) view.findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
@@ -100,6 +116,7 @@ public class SettingsFragment extends Fragment {
         Switch agenda_sync_switch = (Switch) view.findViewById(R.id.enabled_agenda_sync_switch);
         if (user.isEnabledAgendaSync()) {
             agenda_sync_switch.setChecked(true);
+            fillUserAgendas(view, UserCalendar.getUserCalendars());
         }
 
         agenda_sync_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -107,6 +124,13 @@ public class SettingsFragment extends Fragment {
                 realm.beginTransaction();
                 user.setEnabledAgendaSync(isChecked);
                 realm.commitTransaction();
+
+                if (isChecked) {
+                    fillUserAgendas(view, UserCalendar.getUserCalendars());
+                } else {
+                    ListView listView = (ListView) view.findViewById(R.id.agenda_select_list);
+                    listView.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -261,5 +285,153 @@ public class SettingsFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    public void fillUserAgendas(View view, Cursor cur) {
+        RealmList<UserCalendar> user_enabled_agendas = user.getAgendas();
+        HashMap<Long, Boolean> hmap = new HashMap<Long, Boolean>();
+
+        for (int i = 0; i < user_enabled_agendas.size(); i++) {
+            hmap.put(user_enabled_agendas.get(i).getCalID(), true);
+        }
+
+        ArrayList<AvailableCalendar> agendaList = new ArrayList<AvailableCalendar>();
+
+        while (cur.moveToNext()) {
+            long calID = 0;
+            String displayName = null;
+
+            // Get the field values
+            calID = cur.getLong(UserCalendar.CALENDAR_PROJECTION_ID_INDEX);
+            displayName = cur.getString(UserCalendar.CALENDAR_PROJECTION_DISPLAY_NAME_INDEX);
+
+            AvailableCalendar calendar = new AvailableCalendar(calID, displayName, hmap.containsKey(calID));
+            agendaList.add(calendar);
+        }
+
+        agendaListAdapter = new SettingsFragmentAgendaListAdapter(this.getContext(), R.layout.fragment_settings_agenda, agendaList);
+        ListView listView = (ListView) view.findViewById(R.id.agenda_select_list);
+        listView.setAdapter(agendaListAdapter);
+        listView.setVisibility(View.VISIBLE);
+    }
+
+    private class SettingsFragmentAgendaListAdapter extends ArrayAdapter<AvailableCalendar> {
+
+        private ArrayList<AvailableCalendar> calendarList;
+
+        public SettingsFragmentAgendaListAdapter(Context context, int textViewResourceId,
+                               ArrayList<AvailableCalendar> calendarList) {
+            super(context, textViewResourceId, calendarList);
+            this.calendarList = new ArrayList<AvailableCalendar>();
+            this.calendarList.addAll(calendarList);
+        }
+
+        private class ViewHolder {
+            Switch name;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder holder = null;
+            if (convertView == null) {
+                LayoutInflater vi = (LayoutInflater)this.getContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);
+                convertView = vi.inflate(R.layout.fragment_settings_agenda, null);
+
+                holder = new ViewHolder();
+                holder.name = (Switch) convertView.findViewById(R.id.agenda_select_list_option);
+                convertView.setTag(holder);
+
+                holder.name.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        RealmList<UserCalendar> user_enabled_agendas = user.getAgendas();
+                        HashMap<Long, Integer> hmap = new HashMap<Long, Integer>();
+
+                        for (int i = 0; i < user_enabled_agendas.size(); i++) {
+                            hmap.put(user_enabled_agendas.get(i).getCalID(), i);
+                        }
+
+                        AvailableCalendar calendar = (AvailableCalendar) buttonView.getTag();
+
+                        if (calendar == null) {
+                            return;
+                        }
+
+                        if (isChecked && !hmap.containsKey(calendar.getCalID())) {
+                            // If is checked and not in map yet, add it to list.
+                            realm.beginTransaction();
+                            RealmList<UserCalendar> userCaledendarslist = new RealmList();
+                            userCaledendarslist.addAll(user_enabled_agendas);
+                            UserCalendar new_calendar = realm.createObject(UserCalendar.class);
+                            new_calendar.setCalID(calendar.getCalID());
+                            new_calendar.setDisplayName(calendar.getDisplayName());
+                            userCaledendarslist.add(new_calendar);
+                            user.setAgendas(userCaledendarslist);
+                            realm.commitTransaction();
+                        }
+                        else if(!isChecked && hmap.containsKey(calendar.getCalID())) {
+                            // If is not checked and is in map, remove from list.
+                            realm.beginTransaction();
+                            RealmList<UserCalendar> userCaledendarslist = new RealmList();
+                            userCaledendarslist.addAll(user_enabled_agendas);
+                            int calendar_index = hmap.get(calendar.getCalID());
+                            userCaledendarslist.remove(calendar_index);
+                            user.setAgendas(userCaledendarslist);
+                            realm.commitTransaction();
+                        }
+
+                        calendar.setSelected(isChecked);
+                    }
+                });
+            }
+            else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            AvailableCalendar calendar = calendarList.get(position);
+            holder.name.setText(calendar.getDisplayName());
+            holder.name.setChecked(calendar.isSelected());
+            holder.name.setTag(calendar);
+
+            return convertView;
+        }
+    }
+
+    private class AvailableCalendar {
+        long calID;
+        String displayName;
+        boolean selected = false;
+
+        public AvailableCalendar(long calID, String displayName, boolean selected) {
+            super();
+            this.calID = calID;
+            this.displayName = displayName;
+            this.selected = selected;
+        }
+
+        public long getCalID() {
+            return calID;
+        }
+
+        public void setCalID(long calID) {
+            this.calID = calID;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public void setDisplayName(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public boolean isSelected() {
+            return selected;
+        }
+
+        public void setSelected(boolean selected) {
+            this.selected = selected;
+        }
     }
 }

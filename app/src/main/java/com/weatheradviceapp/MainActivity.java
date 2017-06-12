@@ -27,16 +27,12 @@ import android.view.View;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
-import com.weatheradviceapp.fragments.AgendaFragment;
 import com.weatheradviceapp.fragments.SettingsFragment;
 import com.weatheradviceapp.jobs.DemoWeatherJob;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
 
 import com.weatheradviceapp.fragments.HomeFragment;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -183,7 +179,6 @@ public class MainActivity extends AppCompatActivity
 
         switch(id) {
             case R.id.nav_home:
-            case R.id.nav_my_advice:
                 displayView(id);
                 // Not working because of new fragment initialization in displayView()
                 //showAdviceDetails(id == R.id.nav_my_advice);
@@ -217,17 +212,12 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = null;
         String title = getString(R.string.weather_app_name);
-
+        boolean enableSwipeContainer = false;
         switch (viewId) {
             case R.id.nav_home:
-            case R.id.nav_my_advice:
                 fragment = new HomeFragment();
                 title = getString(R.string.title_home);
-                break;
-
-            case R.id.nav_agenda:
-                fragment = new AgendaFragment();
-                title = getString(R.string.title_agenda);
+                enableSwipeContainer = true;
                 break;
 
             case R.id.nav_settings:
@@ -237,6 +227,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (fragment != null) {
+            swipeContainer.setEnabled(enableSwipeContainer);
+
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.addToBackStack(title);
             ft.replace(R.id.content_frame, fragment);
