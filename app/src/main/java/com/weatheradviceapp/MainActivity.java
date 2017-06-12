@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.transition.TransitionManager;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,11 +23,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.weatheradviceapp.fragments.AgendaFragment;
 import com.weatheradviceapp.fragments.SettingsFragment;
+import com.weatheradviceapp.jobs.DemoWeatherJob;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
 
@@ -36,6 +41,12 @@ public class MainActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeContainer;
     private JobManager mJobManager;
 
+    private ConstraintSet normalLayout = new ConstraintSet();
+    private ConstraintSet adviceDetailLayout = new ConstraintSet();
+    private boolean adviceDetails = false;
+    private boolean demoMode = false;
+
+
     private static final String[] REQUIRED_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -46,6 +57,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        normalLayout.clone(getApplicationContext(), R.layout.fragment_home);
+        adviceDetailLayout.clone(getApplicationContext(), R.layout.fragment_advice);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -100,8 +116,9 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
             HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
-            if (homeFragment != null) {
+            if (homeFragment != null && intent.getAction() == SyncWeatherJob.WEATHER_AVAILABLE) {
                 homeFragment.refreshWeatherData();
             }
 
@@ -123,7 +140,7 @@ public class MainActivity extends AppCompatActivity
         User currentUser = User.getUser();
 
         if (currentUser != null) {
-            new JobRequest.Builder(SyncWeatherJob.TAG)
+            new JobRequest.Builder(demoMode ? DemoWeatherJob.TAG : SyncWeatherJob.TAG)
                     .setExecutionWindow(3_000L, 4_000L)
                     .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
                     .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
@@ -162,10 +179,26 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        displayView(id);
+        switch(id) {
+            case R.id.nav_demo_mode:
+                demoMode = !demoMode;
+                item.setChecked(demoMode);
+                break;
+            case R.id.nav_home:
+            case R.id.nav_my_advice:
+                displayView(id);
+                // Not working because of new fragment initialization in displayView()
+                //showAdviceDetails(id == R.id.nav_my_advice);
+                break;
+
+            default:
+                displayView(id);
+                break;
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -193,6 +226,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (viewId) {
             case R.id.nav_home:
+            case R.id.nav_my_advice:
                 fragment = new HomeFragment();
                 title = getString(R.string.title_home);
                 break;
@@ -212,6 +246,7 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.addToBackStack(title);
             ft.replace(R.id.content_frame, fragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.commit();
         }
 
@@ -222,6 +257,24 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
 
+    public void toggleAdviceDetail(View v) {
+        showAdviceDetails(!adviceDetails);
+    }
+
+    public void showAdviceDetails(boolean show) {
+        if (show != adviceDetails) {
+            ConstraintLayout homeFragment = (ConstraintLayout) findViewById(R.id.fragment_home);
+            if (homeFragment != null) {
+                TransitionManager.beginDelayedTransition(homeFragment);
+                if (show) {
+                    adviceDetailLayout.applyTo(homeFragment);
+                } else {
+                    normalLayout.applyTo(homeFragment);
+                }
+                adviceDetails = show;
+            }
+        }
     }
 }
