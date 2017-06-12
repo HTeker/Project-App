@@ -3,6 +3,7 @@ package com.weatheradviceapp.models;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.model.Weather;
 
 import java.util.Date;
 
@@ -18,7 +19,7 @@ public class UserCalendarEvent extends RealmObject {
     private String serializedWeather;
 
     @Ignore
-    private CurrentWeather weather;
+    private Weather weather;
 
     long eventID = 0;
     long instanceID = 0;
@@ -88,16 +89,16 @@ public class UserCalendarEvent extends RealmObject {
         this.title = title;
     }
 
-    public CurrentWeather getWeather() {
+    public Weather getWeather() {
 
         if (this.weather == null) {
-            this.weather = gson().fromJson(this.serializedWeather, CurrentWeather.class);
+            this.weather = gson().fromJson(this.serializedWeather, Weather.class);
         }
 
         return this.weather;
     }
 
-    public void setWeather(CurrentWeather weather) {
+    public void setWeather(Weather weather) {
         this.weather = weather;
         this.serializedWeather = gson().toJson(weather);
     }

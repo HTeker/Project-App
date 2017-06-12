@@ -21,6 +21,7 @@ import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
 import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.WeatherForecast;
+import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import com.weatheradviceapp.R;
@@ -29,6 +30,7 @@ import com.weatheradviceapp.models.UserCalendar;
 import com.weatheradviceapp.models.UserCalendarEvent;
 import com.weatheradviceapp.models.WeatherCondition;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -89,8 +91,8 @@ public class SyncCalendarJob extends Job {
                                 calendar_event.setTitle(title);
                                 calendar_event.setEventBeginDate(new Date(beginVal));
                                 calendar_event.setEventEndDate(new Date(endVal));
-                                calendar_event.setLocationLat(addresses.get(0).getLatitude());
                                 calendar_event.setLocationLng(addresses.get(0).getLongitude());
+                                calendar_event.setLocationLat(addresses.get(0).getLatitude());
                                 calendar_event.setLocationTitle(location);
                                 events.add(calendar_event);
 
@@ -105,25 +107,50 @@ public class SyncCalendarJob extends Job {
                                         .config(config)
                                         .build();
 
-                                client.getForecastWeather(new WeatherRequest(addresses.get(0).getLatitude(), addresses.get(0).getLongitude()), new WeatherClient.ForecastWeatherEventListener() {
-                                    @Override
-                                    public void onWeatherRetrieved(WeatherForecast forecast) {
+                                SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
-                                    }
+                                // If event date is today, we can't use forecast weather.
+                                if (DATE_FORMAT.format(new Date(beginVal)).equalsIgnoreCase(DATE_FORMAT.format(new Date()))) {
+                                    client.getHourForecastWeather(new WeatherRequest(addresses.get(0).getLongitude(), addresses.get(0).getLatitude()), new WeatherClient.HourForecastWeatherEventListener() {
+                                        @Override
+                                        public void onWeatherRetrieved(WeatherHourForecast forecast) {
+                                            calendar_event.setWeather(forecast.getHourForecast(0));
+                                            // @todo: fix saving.
+                                        }
 
-                                    @Override
-                                    public void onWeatherError(WeatherLibException e) {
-                                        Log.d("WL", "Weather Error - parsing data");
-                                        e.printStackTrace();
-                                    }
+                                        @Override
+                                        public void onWeatherError(WeatherLibException e) {
+                                            Log.d("WL", "Weather Error - parsing data");
+                                            e.printStackTrace();
+                                        }
 
-                                    @Override
-                                    public void onConnectionError(Throwable throwable) {
-                                        Log.d("WL", "Connection error");
-                                        throwable.printStackTrace();
-                                    }
-                                });
+                                        @Override
+                                        public void onConnectionError(Throwable throwable) {
+                                            Log.d("WL", "Connection error");
+                                            throwable.printStackTrace();
+                                        }
+                                    });
+                                } else {
+                                    client.getForecastWeather(new WeatherRequest(addresses.get(0).getLongitude(), addresses.get(0).getLatitude()), new WeatherClient.ForecastWeatherEventListener() {
+                                        @Override
+                                        public void onWeatherRetrieved(WeatherForecast forecast) {
+                                            calendar_event.setWeather(forecast.getForecast(0));
+                                            // @todo: fix saving.
+                                        }
 
+                                        @Override
+                                        public void onWeatherError(WeatherLibException e) {
+                                            Log.d("WL", "Weather Error - parsing data");
+                                            e.printStackTrace();
+                                        }
+
+                                        @Override
+                                        public void onConnectionError(Throwable throwable) {
+                                            Log.d("WL", "Connection error");
+                                            throwable.printStackTrace();
+                                        }
+                                    });
+                                }
                             }
                         }
                         catch (Exception e) {
