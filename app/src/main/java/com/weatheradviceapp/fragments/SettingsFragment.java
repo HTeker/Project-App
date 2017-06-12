@@ -49,15 +49,8 @@ public class SettingsFragment extends Fragment {
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
 
-        // Create user if we don't have one yet.
-        final RealmResults<User> users = realm.where(User.class).findAll();
-        if (users.size() == 0) {
-            realm.beginTransaction();
-            user = realm.createObject(User.class);
-            realm.commitTransaction();
-        } else {
-            user = users.get(0);
-        }
+        // Get user or create user if we don't have one yet.
+        user = User.getOrCreateUser();
     }
 
     @Override
