@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity
     private ConstraintSet normalLayout = new ConstraintSet();
     private ConstraintSet adviceDetailLayout = new ConstraintSet();
     private boolean adviceDetails = false;
-    private Realm realm;
     private User user;
 
 
@@ -62,18 +61,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Get a Realm instance for this thread
-        realm = Realm.getDefaultInstance();
-
-        // Create user if we don't have one yet.
-        final RealmResults<User> users = realm.where(User.class).findAll();
-        if (users.size() == 0) {
-            realm.beginTransaction();
-            user = realm.createObject(User.class);
-            realm.commitTransaction();
-        } else {
-            user = users.get(0);
-        }
+        // Get user or create user if we don't have one yet.
+        user = User.getOrCreateUser();
 
         normalLayout.clone(getApplicationContext(), R.layout.fragment_home);
         adviceDetailLayout.clone(getApplicationContext(), R.layout.fragment_advice);
@@ -154,31 +143,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void fetchWeather() {
-        User currentUser = User.getUser();
-
-        if (currentUser != null) {
-            new JobRequest.Builder(user.isEnabledDemoMode() ? DemoWeatherJob.TAG : SyncWeatherJob.TAG)
-                    .setExecutionWindow(3_000L, 4_000L)
-                    .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
-                    .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
-                    .setRequirementsEnforced(true)
-                    .setPersisted(true)
-                    .build()
-                    .schedule();
-        }
+        new JobRequest.Builder(user.isEnabledDemoMode() ? DemoWeatherJob.TAG : SyncWeatherJob.TAG)
+                .setExecutionWindow(3_000L, 4_000L)
+                .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setRequirementsEnforced(true)
+                .setPersisted(true)
+                .build()
+                .schedule();
     }
 
     private void scheduleWeatherFetching() {
-        User currentUser = User.getUser();
-
-        if (currentUser != null) {
-            new JobRequest.Builder(SyncWeatherJob.TAG)
-                    .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
-                    .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
-                    .setPersisted(true)
-                    .build()
-                    .schedule();
-        }
+        new JobRequest.Builder(SyncWeatherJob.TAG)
+                .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setPersisted(true)
+                .build()
+                .schedule();
     }
 
     @Override
