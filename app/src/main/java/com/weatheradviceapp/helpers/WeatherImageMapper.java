@@ -1,5 +1,6 @@
 package com.weatheradviceapp.helpers;
 
+import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
 
 /**
@@ -11,10 +12,15 @@ import com.weatheradviceapp.R;
  */
 public class WeatherImageMapper {
 
-    public static int getWeatherIconResource(String icon, int weatherId) {
+    private Weather weather;
 
+    public WeatherImageMapper(Weather weather) {
+        this.weather = weather;
+    }
+
+    public int getWeatherIconResource() {
         // When one of the following conditions is met return with the dedicated icon
-        switch(weatherId) {
+        switch(weather.currentCondition.getWeatherId()) {
             case 202:
             case 212:
                 return R.drawable.w202;
@@ -31,7 +37,7 @@ public class WeatherImageMapper {
         }
 
         // Otherwise get the image for the weather icon
-        switch(icon) {
+        switch(weather.currentCondition.getIcon()) {
             case "01d":
                 return R.drawable.w01d;
             case "01n":
@@ -68,6 +74,67 @@ public class WeatherImageMapper {
 
             default:
                 return R.drawable.w01d;
+        }
+    }
+
+    public int getWeatherBackgroundResource() {
+
+        // When one of the following conditions is met return with the dedicated icon
+        switch(weather.currentCondition.getWeatherId()) {
+            case 202:
+            case 212:
+                return R.drawable.bg_thunder;
+            case 500:
+            case 502:
+            case 503:
+            case 504:
+                return R.drawable.bg_rain;
+            case 511:
+            case 602:
+                return R.drawable.bg_snow;
+        }
+
+        // Otherwise get the image for the weather icon
+        switch(weather.currentCondition.getIcon()) {
+            case "01d":
+            case "01n":
+            case "02d":
+            case "02n":
+            case "03d":
+            case "03n":
+                return R.drawable.bg_sunny;
+            case "04d":
+            case "04n":
+                return R.drawable.bg_clouds;
+            case "09d":
+            case "09n":
+            case "10d":
+            case "10n":
+                return R.drawable.bg_rain;
+            case "11d":
+            case "11n":
+                return R.drawable.bg_thunder;
+            case "13d":
+            case "13n":
+                return R.drawable.bg_snow;
+            case "50d":
+            case "50n":
+                return R.drawable.bg_fog;
+
+            default:
+                return R.drawable.bg_sunny;
+        }
+    }
+
+    public int getWeatherForegroundColor() {
+        switch(getWeatherBackgroundResource()) {
+            case R.drawable.bg_thunder:
+            case R.drawable.bg_rain:
+            case R.drawable.bg_clouds:
+                return R.color.colorTextLight;
+
+            default:
+                return R.color.colorTextDark;
         }
     }
 }

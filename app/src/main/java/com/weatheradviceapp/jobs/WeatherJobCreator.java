@@ -10,6 +10,8 @@ public class WeatherJobCreator implements JobCreator {
         switch (tag) {
             case SyncWeatherJob.TAG:
                 return new SyncWeatherJob();
+            case DemoWeatherJob.TAG:
+                return new DemoWeatherJob();
             default:
                 return null;
         }
