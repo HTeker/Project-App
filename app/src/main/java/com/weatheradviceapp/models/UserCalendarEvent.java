@@ -1,5 +1,7 @@
 package com.weatheradviceapp.models;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;

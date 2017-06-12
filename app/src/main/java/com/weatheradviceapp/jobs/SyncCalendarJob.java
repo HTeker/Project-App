@@ -153,11 +153,33 @@ public class SyncCalendarJob extends Job {
                                             long date_difference = new Date(beginVal).getTime() - new Date().getTime();
                                             int day = (int)(date_difference / DateUtils.DAY_IN_MILLIS);
 
+                                            Log.d("Dinges", "" + forecast.getForecast());
+
                                             Realm realm = Realm.getDefaultInstance();
                                             realm.beginTransaction();
                                             RealmResults<UserCalendarEvent> calendar_events = realm.where(UserCalendarEvent.class).equalTo("instanceID", instanceID).findAll();
 
                                             for (int i=0; i< calendar_events.size(); i++) {
+
+                                                if (new Date(beginVal).getHours() >= 0 && new Date(beginVal).getHours() < 6) {
+                                                    forecast.getForecast(day).weather.temperature.setTemp(forecast.getForecast(day).forecastTemp.night);
+                                                }
+
+                                                if (new Date(beginVal).getHours() >= 6 && new Date(beginVal).getHours() < 12) {
+                                                    forecast.getForecast(day).weather.temperature.setTemp(forecast.getForecast(day).forecastTemp.morning);
+                                                }
+
+                                                if (new Date(beginVal).getHours() >= 12 && new Date(beginVal).getHours() < 18) {
+                                                    forecast.getForecast(day).weather.temperature.setTemp(forecast.getForecast(day).forecastTemp.day);
+                                                }
+
+                                                if (new Date(beginVal).getHours() >= 18 && new Date(beginVal).getHours() < 24) {
+                                                    forecast.getForecast(day).weather.temperature.setTemp(forecast.getForecast(day).forecastTemp.eve);
+                                                }
+
+                                                forecast.getForecast(day).weather.temperature.setMinTemp(forecast.getForecast(day).forecastTemp.min);
+                                                forecast.getForecast(day).weather.temperature.setMaxTemp(forecast.getForecast(day).forecastTemp.max);
+
                                                 calendar_events.get(i).setWeather(forecast.getForecast(day).weather);
                                             }
 

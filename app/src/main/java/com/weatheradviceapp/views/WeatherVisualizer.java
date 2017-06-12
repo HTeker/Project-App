@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
@@ -11,6 +12,7 @@ import com.weatheradviceapp.R;
 import com.weatheradviceapp.helpers.WeatherImageMapper;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class WeatherVisualizer {
@@ -45,6 +47,8 @@ public class WeatherVisualizer {
 
         this.container = container;
 
+
+
         showWeatherData(weather, date);
     }
 
@@ -52,6 +56,11 @@ public class WeatherVisualizer {
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
         datetime.setText(df.format(date));
+
+        TextView calendar_date = (TextView) wv.findViewById(R.id.calendar_date);
+
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("H:m");
+        calendar_date.setText(DATE_FORMAT.format(date));
 
         if (null != weather.location.getCity()) {
 
@@ -84,5 +93,15 @@ public class WeatherVisualizer {
 
     public void setText(String text) {
         location.setText(text);
+    }
+
+    public void setLocation(String text) {
+        RelativeLayout weatherLayout = (RelativeLayout) wv.findViewById(R.id.weatherInfo);
+        RelativeLayout locationLayout = (RelativeLayout) wv.findViewById(R.id.locationInfo);
+        weatherLayout.setVisibility(View.GONE);
+        locationLayout.setVisibility(View.VISIBLE);
+
+        TextView calendar_location = (TextView) wv.findViewById(R.id.calendar_location);
+        calendar_location.setText(text);
     }
 }

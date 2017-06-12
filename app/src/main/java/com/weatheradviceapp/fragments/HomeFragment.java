@@ -121,8 +121,6 @@ public class HomeFragment extends Fragment {
         RealmList<UserCalendar> user_enabled_agendas = user.getAgendas();
 
         int displayed_agenda = 0;
-        wvCalendar1.hide();
-        wvCalendar2.hide();
 
         // Loop through all enabled agenda's.
         for (int i=0; i< user_enabled_agendas.size(); i++) {
@@ -145,17 +143,28 @@ public class HomeFragment extends Fragment {
                     if (displayed_agenda == 0) {
                         wvCalendar1.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate());
                         wvCalendar1.setText(events.get(i2).getTitle());
+                        wvCalendar1.setLocation(events.get(i2).getLocationTitle());
                         wvCalendar1.show();
                     }
                     if (displayed_agenda == 1) {
                         wvCalendar2.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate());
                         wvCalendar2.setText(events.get(i2).getTitle());
+                        wvCalendar2.setLocation(events.get(i2).getLocationTitle());
                         wvCalendar2.show();
                     }
 
                     displayed_agenda++;
                 }
             }
+        }
+
+        if (displayed_agenda == 0) {
+            wvCalendar1.hide();
+            wvCalendar2.hide();
+        }
+
+        if (displayed_agenda == 1) {
+            wvCalendar2.hide();
         }
     }
 

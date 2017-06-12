@@ -66,76 +66,104 @@
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/iconSun"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+    <RelativeLayout
+        android:id="@+id/weatherInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@+id/relativeLayout"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_toEndOf="@+id/relativeLayout">
+
+        <ImageView
+            android:id="@+id/iconSun"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            app:srcCompat="@drawable/sun" />
+
+        <TextView
+            android:id="@+id/sun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iconSun"
+            android:layout_toEndOf="@+id/iconSun"
+            android:paddingLeft="4dp"
+            android:text="1-11+" />
+
+        <ImageView
+            android:id="@+id/iconWind"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@+id/iconSun"
+            android:layout_below="@+id/iconSun"
+            android:layout_marginTop="12dp"
+            app:srcCompat="@drawable/wind" />
+
+        <TextView
+            android:id="@+id/windSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iconWind"
+            android:layout_toEndOf="@+id/iconWind"
+            android:paddingLeft="4dp"
+            android:text="16 km/h" />
+
+        <ImageView
+            android:id="@+id/iconRain"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignBottom="@+id/sun"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_toEndOf="@+id/windSpeed"
+            app:srcCompat="@drawable/rain" />
+
+        <TextView
+            android:id="@+id/rain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iconRain"
+            android:layout_toEndOf="@+id/iconRain"
+            android:paddingLeft="4dp"
+            android:text="40 %" />
+
+        <ImageView
+            android:id="@+id/iconCloud"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignBottom="@+id/windSpeed"
+            android:layout_alignStart="@+id/iconRain"
+            app:srcCompat="@drawable/cloud" />
+
+        <TextView
+            android:id="@+id/cloud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iconCloud"
+            android:layout_toEndOf="@+id/iconCloud"
+            android:paddingLeft="4dp"
+            android:text="40 %" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/locationInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/relativeLayout"
         android:layout_toEndOf="@+id/relativeLayout"
-        app:srcCompat="@drawable/sun" />
+        android:visibility="gone">
 
-    <TextView
-        android:id="@+id/sun"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/iconSun"
-        android:layout_toEndOf="@+id/iconSun"
-        android:paddingLeft="4dp"
-        android:text="1-11+" />
+        <TextView
+            android:id="@+id/calendar_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp" />
 
-    <ImageView
-        android:id="@+id/iconWind"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignStart="@+id/iconSun"
-        android:layout_below="@+id/iconSun"
-        android:layout_marginTop="12dp"
-        app:srcCompat="@drawable/wind" />
-
-    <TextView
-        android:id="@+id/windSpeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/iconWind"
-        android:layout_toEndOf="@+id/iconWind"
-        android:paddingLeft="4dp"
-        android:text="16 km/h" />
-
-    <ImageView
-        android:id="@+id/iconRain"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignBottom="@+id/sun"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_toEndOf="@+id/windSpeed"
-        app:srcCompat="@drawable/rain" />
-
-    <TextView
-        android:id="@+id/rain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/iconRain"
-        android:layout_toEndOf="@+id/iconRain"
-        android:paddingLeft="4dp"
-        android:text="40 %" />
-
-    <ImageView
-        android:id="@+id/iconCloud"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignBottom="@+id/windSpeed"
-        android:layout_alignStart="@+id/iconRain"
-        app:srcCompat="@drawable/cloud" />
-
-    <TextView
-        android:id="@+id/cloud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/iconCloud"
-        android:layout_toEndOf="@+id/iconCloud"
-        android:paddingLeft="4dp"
-        android:text="40 %" />
-
+        <TextView
+            android:id="@+id/calendar_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/calendar_location"
+            android:layout_toEndOf="@+id/calendar_location"
+            android:paddingLeft="4dp" />
+    </RelativeLayout>
 </RelativeLayout>
