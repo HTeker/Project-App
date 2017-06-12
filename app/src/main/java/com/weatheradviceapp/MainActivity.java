@@ -22,6 +22,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -83,7 +84,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("new-weather-available"));
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SyncWeatherJob.WEATHER_AVAILABLE);
+        intentFilter.addAction(SyncCalendarJob.WEATHER_AVAILABLE);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, intentFilter);
 
         mJobManager = JobManager.instance();
         // Reset.
@@ -121,14 +126,13 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
             if (homeFragment != null) {
-                if (intent.getAction() == SyncWeatherJob.WEATHER_AVAILABLE) {
+                if (intent.getAction().equalsIgnoreCase(SyncWeatherJob.WEATHER_AVAILABLE)) {
                     homeFragment.refreshWeatherData();
                 }
-                if (intent.getAction() == SyncCalendarJob.WEATHER_AVAILABLE) {
-                    homeFragment.refreshWeatherData();
+                if (intent.getAction().equalsIgnoreCase(SyncCalendarJob.WEATHER_AVAILABLE)) {
+                    homeFragment.refreshCalendarData();
                 }
             }
 

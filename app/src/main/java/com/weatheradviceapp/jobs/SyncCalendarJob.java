@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.evernote.android.job.Job;
@@ -37,6 +38,7 @@ import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class SyncCalendarJob extends Job {
 
@@ -67,13 +69,11 @@ public class SyncCalendarJob extends Job {
             // Loop through all found instances.
             while (cur.moveToNext()) {
 
-                UserCalendarEvent calendar_event = realm.createObject(UserCalendarEvent.class);
-
                 // Get the field values
-                long instanceID = cur.getLong(UserCalendar.INSTANCE_PROJECTION_ID_INDEX);
+                final long instanceID = cur.getLong(UserCalendar.INSTANCE_PROJECTION_ID_INDEX);
                 long eventID = cur.getLong(UserCalendar.INSTANCE_PROJECTION_EVENT_ID_INDEX);
                 String title = cur.getString(UserCalendar.INSTANCE_PROJECTION_TITLE_INDEX);
-                long beginVal = cur.getLong(UserCalendar.INSTANCE_PROJECTION_BEGIN_INDEX);
+                final long beginVal = cur.getLong(UserCalendar.INSTANCE_PROJECTION_BEGIN_INDEX);
                 long endVal = cur.getLong(UserCalendar.INSTANCE_PROJECTION_END_INDEX);
 
                 // Lookup the event of this instance.
@@ -86,6 +86,7 @@ public class SyncCalendarJob extends Job {
                         try {
                             List<Address> addresses = geocoder.getFromLocationName(location, 1);
                             if (addresses.size() > 0) {
+                                UserCalendarEvent calendar_event = realm.createObject(UserCalendarEvent.class);
                                 calendar_event.setInstanceID(instanceID);
                                 calendar_event.setEventID(eventID);
                                 calendar_event.setTitle(title);
@@ -114,8 +115,22 @@ public class SyncCalendarJob extends Job {
                                     client.getHourForecastWeather(new WeatherRequest(addresses.get(0).getLongitude(), addresses.get(0).getLatitude()), new WeatherClient.HourForecastWeatherEventListener() {
                                         @Override
                                         public void onWeatherRetrieved(WeatherHourForecast forecast) {
-                                            calendar_event.setWeather(forecast.getHourForecast(0));
-                                            // @todo: fix saving.
+
+                                            long date_difference = new Date(beginVal).getTime() - new Date().getTime();
+                                            int hour = (int)(date_difference / DateUtils.HOUR_IN_MILLIS);
+
+                                            Realm realm = Realm.getDefaultInstance();
+                                            realm.beginTransaction();
+                                            RealmResults<UserCalendarEvent> calendar_events = realm.where(UserCalendarEvent.class).equalTo("instanceID", instanceID).findAll();
+
+                                            for (int i=0; i< calendar_events.size(); i++) {
+                                                calendar_events.get(i).setWeather(forecast.getHourForecast(hour).weather);
+                                            }
+
+                                            realm.commitTransaction();
+
+                                            Intent intent = new Intent(WEATHER_AVAILABLE);
+                                            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                                         }
 
                                         @Override
@@ -134,8 +149,22 @@ public class SyncCalendarJob extends Job {
                                     client.getForecastWeather(new WeatherRequest(addresses.get(0).getLongitude(), addresses.get(0).getLatitude()), new WeatherClient.ForecastWeatherEventListener() {
                                         @Override
                                         public void onWeatherRetrieved(WeatherForecast forecast) {
-                                            calendar_event.setWeather(forecast.getForecast(0));
-                                            // @todo: fix saving.
+
+                                            long date_difference = new Date(beginVal).getTime() - new Date().getTime();
+                                            int day = (int)(date_difference / DateUtils.DAY_IN_MILLIS);
+
+                                            Realm realm = Realm.getDefaultInstance();
+                                            realm.beginTransaction();
+                                            RealmResults<UserCalendarEvent> calendar_events = realm.where(UserCalendarEvent.class).equalTo("instanceID", instanceID).findAll();
+
+                                            for (int i=0; i< calendar_events.size(); i++) {
+                                                calendar_events.get(i).setWeather(forecast.getForecast(day).weather);
+                                            }
+
+                                            realm.commitTransaction();
+
+                                            Intent intent = new Intent(WEATHER_AVAILABLE);
+                                            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                                         }
 
                                         @Override

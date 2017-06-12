@@ -73,4 +73,16 @@ public class WeatherVisualizer {
             }
         }
     }
+
+    public void show() {
+        wv.setVisibility(View.VISIBLE);
+    }
+
+    public void hide() {
+        wv.setVisibility(View.GONE);
+    }
+
+    public void setText(String text) {
+        location.setText(text);
+    }
 }
