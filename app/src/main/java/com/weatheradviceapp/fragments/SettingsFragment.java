@@ -130,6 +130,19 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Switch demo_mode = (Switch) view.findViewById(R.id.enabled_demo_mode);
+        if (user.isEnabledDemoMode()) {
+            demo_mode.setChecked(true);
+        }
+
+        demo_mode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                realm.beginTransaction();
+                user.setEnabledDemoMode(isChecked);
+                realm.commitTransaction();
+            }
+        });
+
         boolean locationEnabled = false;
         if (!canAccessLocation()) {
             requestPermissions(LOCATION_PERMS, 1);
