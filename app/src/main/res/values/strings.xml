@@ -21,6 +21,7 @@
     <string name="settings_sync">Sync</string>
     <string name="enabled_agenda_sync">Agenda</string>
     <string name="enabled_alarm_sync">Alarm</string>
+    <string name="enabled_demo_mode">Demo Mode</string>
 
     <string name="settings_interests">Interests</string>
 
