@@ -81,9 +81,10 @@
             <ListView
                 android:id="@+id/agenda_select_list"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="195dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
                 android:visibility="gone" />
 
             <View

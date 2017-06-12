@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 
+import com.evernote.android.job.JobRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.models.UserCalendar;
 
@@ -343,8 +345,8 @@ public class SettingsFragment extends Fragment {
                 holder.name = (Switch) convertView.findViewById(R.id.agenda_select_list_option);
                 convertView.setTag(holder);
 
-                holder.name.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                holder.name.setOnClickListener( new View.OnClickListener() {
+                    public void onClick(View v) {
                         RealmList<UserCalendar> user_enabled_agendas = user.getAgendas();
                         HashMap<Long, Integer> hmap = new HashMap<Long, Integer>();
 
@@ -352,13 +354,10 @@ public class SettingsFragment extends Fragment {
                             hmap.put(user_enabled_agendas.get(i).getCalID(), i);
                         }
 
-                        AvailableCalendar calendar = (AvailableCalendar) buttonView.getTag();
+                        Switch cb = (Switch) v;
+                        AvailableCalendar calendar = (AvailableCalendar) cb.getTag();
 
-                        if (calendar == null) {
-                            return;
-                        }
-
-                        if (isChecked && !hmap.containsKey(calendar.getCalID())) {
+                        if (cb.isChecked() && !hmap.containsKey(calendar.getCalID())) {
                             // If is checked and not in map yet, add it to list.
                             realm.beginTransaction();
                             RealmList<UserCalendar> userCaledendarslist = new RealmList();
@@ -370,7 +369,7 @@ public class SettingsFragment extends Fragment {
                             user.setAgendas(userCaledendarslist);
                             realm.commitTransaction();
                         }
-                        else if(!isChecked && hmap.containsKey(calendar.getCalID())) {
+                        else if(!cb.isChecked() && hmap.containsKey(calendar.getCalID())) {
                             // If is not checked and is in map, remove from list.
                             realm.beginTransaction();
                             RealmList<UserCalendar> userCaledendarslist = new RealmList();
@@ -381,7 +380,8 @@ public class SettingsFragment extends Fragment {
                             realm.commitTransaction();
                         }
 
-                        calendar.setSelected(isChecked);
+                        calendar.setSelected(cb.isChecked());
+                        fetchCalendarWeather();
                     }
                 });
             }
@@ -433,5 +433,16 @@ public class SettingsFragment extends Fragment {
         public void setSelected(boolean selected) {
             this.selected = selected;
         }
+    }
+
+    private void fetchCalendarWeather() {
+        new JobRequest.Builder(SyncCalendarJob.TAG)
+                .setExecutionWindow(3_000L, 4_000L)
+                .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setRequirementsEnforced(true)
+                .setPersisted(true)
+                .build()
+                .schedule();
     }
 }

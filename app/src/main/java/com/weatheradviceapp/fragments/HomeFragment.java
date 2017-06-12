@@ -50,6 +50,7 @@ public class HomeFragment extends Fragment {
         adviceVisualizers.add(new AdviceVisualizer(inflater, (ViewGroup) thisView.findViewById(R.id.advice4)));
 
         refreshWeatherData(thisView);
+        refreshCalendarData(thisView);
 
         return thisView;
     }
@@ -60,6 +61,14 @@ public class HomeFragment extends Fragment {
      */
     public void refreshWeatherData() {
         refreshWeatherData(getView().findViewById(R.id.fragment_home));
+    }
+
+    /**
+     * Shows the latest available weather data on screen. Call when new data is retrieved from
+     * webservice.
+     */
+    public void refreshCalendarData() {
+        refreshCalendarData(getView().findViewById(R.id.fragment_home));
     }
 
     public void refreshWeatherData(View view) {
@@ -89,6 +98,10 @@ public class HomeFragment extends Fragment {
                 }
             }
         }
+    }
+
+    public void refreshCalendarData(View view) {
+
     }
 
     /**

@@ -29,6 +29,7 @@ import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
 import com.weatheradviceapp.jobs.DemoWeatherJob;
+import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
 
@@ -108,6 +109,8 @@ public class MainActivity extends AppCompatActivity
         // Just now fetch weather data, so we're sure the swipeContainer is assigned
         fetchWeather();
         scheduleWeatherFetching();
+        fetchCalendarWeather();
+        scheduleCalendarWeatherFetching();
 
         // Init home fragment
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -120,8 +123,13 @@ public class MainActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
 
             HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
-            if (homeFragment != null && intent.getAction() == SyncWeatherJob.WEATHER_AVAILABLE) {
-                homeFragment.refreshWeatherData();
+            if (homeFragment != null) {
+                if (intent.getAction() == SyncWeatherJob.WEATHER_AVAILABLE) {
+                    homeFragment.refreshWeatherData();
+                }
+                if (intent.getAction() == SyncCalendarJob.WEATHER_AVAILABLE) {
+                    homeFragment.refreshWeatherData();
+                }
             }
 
             // And reset the pull-to-refresh
@@ -151,6 +159,26 @@ public class MainActivity extends AppCompatActivity
 
     private void scheduleWeatherFetching() {
         new JobRequest.Builder(SyncWeatherJob.TAG)
+                .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setPersisted(true)
+                .build()
+                .schedule();
+    }
+
+    private void fetchCalendarWeather() {
+        new JobRequest.Builder(SyncCalendarJob.TAG)
+                .setExecutionWindow(3_000L, 4_000L)
+                .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setRequirementsEnforced(true)
+                .setPersisted(true)
+                .build()
+                .schedule();
+    }
+
+    private void scheduleCalendarWeatherFetching() {
+        new JobRequest.Builder(SyncCalendarJob.TAG)
                 .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                 .setPersisted(true)
