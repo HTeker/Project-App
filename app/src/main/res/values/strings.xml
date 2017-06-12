@@ -23,6 +23,7 @@
     <string name="settings_sync">Sync</string>
     <string name="enabled_agenda_sync">Agenda</string>
     <string name="enabled_alarm_sync">Alarm</string>
+    <string name="enabled_demo_mode">Demo Mode</string>
 
     <string name="settings_interests">Interests</string>
 
@@ -32,7 +33,6 @@
     <string name="menu_my_advice">My advice</string>
     <string name="menu_agenda">Agenda</string>
     <string name="menu_settings">Settings</string>
-    <string name="menu_demo">Demo mode</string>
 
     <string name="advice_sunglasses">Put on sunglasses because the sun is bright in %1$s.</string>
     <string name="advice_umbrella">Take an umbrella because it will rain in %1$s.</string>

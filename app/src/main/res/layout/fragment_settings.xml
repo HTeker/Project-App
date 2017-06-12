@@ -59,6 +59,12 @@
             android:layout_height="wrap_content"
             android:text="@string/enabled_alarm_sync" />
 
+        <Switch
+            android:id="@+id/enabled_demo_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enabled_demo_mode" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
