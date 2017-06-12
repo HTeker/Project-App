@@ -34,6 +34,9 @@ import com.weatheradviceapp.models.User;
 
 import com.weatheradviceapp.fragments.HomeFragment;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,7 +46,8 @@ public class MainActivity extends AppCompatActivity
     private ConstraintSet normalLayout = new ConstraintSet();
     private ConstraintSet adviceDetailLayout = new ConstraintSet();
     private boolean adviceDetails = false;
-    private boolean demoMode = false;
+    private Realm realm;
+    private User user;
 
 
     private static final String[] LOCATION_PERMS={
@@ -55,6 +59,19 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+
+        // Create user if we don't have one yet.
+        final RealmResults<User> users = realm.where(User.class).findAll();
+        if (users.size() == 0) {
+            realm.beginTransaction();
+            user = realm.createObject(User.class);
+            realm.commitTransaction();
+        } else {
+            user = users.get(0);
+        }
 
         normalLayout.clone(getApplicationContext(), R.layout.fragment_home);
         adviceDetailLayout.clone(getApplicationContext(), R.layout.fragment_advice);
@@ -138,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         User currentUser = User.getUser();
 
         if (currentUser != null) {
-            new JobRequest.Builder(demoMode ? DemoWeatherJob.TAG : SyncWeatherJob.TAG)
+            new JobRequest.Builder(user.isEnabledDemoMode() ? DemoWeatherJob.TAG : SyncWeatherJob.TAG)
                     .setExecutionWindow(3_000L, 4_000L)
                     .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
                     .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
@@ -182,10 +199,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch(id) {
-            case R.id.nav_demo_mode:
-                demoMode = !demoMode;
-                item.setChecked(demoMode);
-                break;
             case R.id.nav_home:
             case R.id.nav_my_advice:
                 displayView(id);
