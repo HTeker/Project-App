@@ -99,4 +99,17 @@ public class User extends RealmObject {
 
         return null;
     }
+
+    public static User getOrCreateUser() {
+        User user = getUser();
+
+        if (user == null) {
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            user = realm.createObject(User.class);
+            realm.commitTransaction();
+        }
+
+        return user;
+    }
 }
