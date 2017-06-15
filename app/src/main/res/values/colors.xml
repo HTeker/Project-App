@@ -6,5 +6,7 @@
     <color name="colorWeatherIconBg">#003f9c</color>
 
     <color name="colorTextLight">#e0e0e0</color>
+    <color name="colorTextShadowLight">#333333</color>
     <color name="colorTextDark">#333333</color>
+    <color name="colorTextShadowDark">#88aaaaaa</color>
 </resources>

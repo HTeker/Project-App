@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
             WeatherImageMapper wim = new WeatherImageMapper(w);
 
             view.setBackgroundResource(wim.getWeatherBackgroundResource());
-            setTextColor((ViewGroup) view, ContextCompat.getColor(WeatherApplication.getContext(), wim.getWeatherForegroundColor()));
+            setTextColor((ViewGroup) view, wim.getWeatherForegroundColor(), wim.getWeatherShadowColor());
             wvToday.showWeatherData(w, latestWeatherCondition.getFetchDate());
 
             // Get all weather conditions for the day planning
@@ -97,13 +97,14 @@ public class HomeFragment extends Fragment {
      * @param parent
      * @param color
      */
-    private void setTextColor(ViewGroup parent, int color) {
+    private void setTextColor(ViewGroup parent, int color, int shadowColor) {
         for (int count=0; count < parent.getChildCount(); count++) {
             View view = parent.getChildAt(count);
             if (view instanceof TextView) {
                 ((TextView)view).setTextColor(color);
+                ((TextView)view).setShadowLayer(5, 2, 1, shadowColor);
             } else if (view instanceof ViewGroup) {
-                setTextColor((ViewGroup)view, color);
+                setTextColor((ViewGroup)view, color, shadowColor);
             }
         }
     }

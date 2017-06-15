@@ -13,10 +13,12 @@
         android:layout_height="wrap_content"
         android:text="@string/main_today"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintVertical_bias="0.032" />
 
     <RelativeLayout
         android:id="@+id/weatherToday"
@@ -34,31 +36,27 @@
 
     <TextView
         android:id="@+id/txtPlanning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="284dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginRight="-9dp"
         android:text="@string/main_planning"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/advice1"
-        app:layout_constraintVertical_bias="0.517" />
+        app:layout_constraintTop_toTopOf="@+id/txtToday"
+        android:layout_marginTop="8dp" />
 
     <RelativeLayout
         android:id="@+id/weatherPlanning1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="-1dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtPlanning">
 
     </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/weatherPlanning2"
@@ -67,71 +65,77 @@
         android:layout_marginTop="32dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weatherPlanning1">
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/advice1"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="44dp"
+        android:id="@+id/advice2"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="26dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="toggleAdviceDetail"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/advice1"
+        app:layout_constraintVertical_bias="0.519">
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/advice1"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="18dp"
         android:onClick="toggleAdviceDetail"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/advice3"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weatherToday">
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/advice4"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
-        android:onClick="toggleAdviceDetail"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/advice3">
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/advice2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
-        android:onClick="toggleAdviceDetail"
-        app:layout_constraintHorizontal_bias="0.371"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/advice1">
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/advice3"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
         android:onClick="toggleAdviceDetail"
-        app:layout_constraintHorizontal_bias="0.637"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/advice1"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toRightOf="@+id/advice1"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/advice2">
+        app:layout_constraintTop_toTopOf="@+id/advice1"
+        app:layout_constraintVertical_bias="0.0">
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/advice4"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:onClick="toggleAdviceDetail"
+        app:layout_constraintBottom_toBottomOf="@+id/advice2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toRightOf="@+id/advice2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/advice2"
+        app:layout_constraintVertical_bias="0.0">
 
     </RelativeLayout>
 

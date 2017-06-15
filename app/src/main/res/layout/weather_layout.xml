@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="3dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="3dp">
 
     <TextView
         android:id="@+id/location"
@@ -12,6 +16,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_weight="0.54"
+        android:shadowColor="@color/colorTextShadowDark"
+        android:shadowRadius="3"
         android:text="location"
         android:textSize="18sp" />
 
@@ -19,13 +25,15 @@
         android:id="@+id/datetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_weight="0.54"
-        android:text="date/time"
-        android:textSize="14sp"
         android:layout_alignBaseline="@+id/location"
         android:layout_alignBottom="@+id/location"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="32dp"
+        android:layout_weight="0.54"
+        android:shadowColor="@color/colorTextShadowDark"
+        android:shadowRadius="3"
+        android:text="date/time"
+        android:textSize="14sp" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -47,13 +55,15 @@
             android:id="@+id/temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:gravity="center"
-            android:text="21"
-            android:textSize="40sp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="12dp"
             android:layout_toEndOf="@+id/weatherImg"
-            android:layout_marginStart="12dp" />
+            android:gravity="center"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
+            android:text="21"
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/tempUnit"
@@ -61,6 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/temp"
             android:layout_toEndOf="@+id/temp"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
             android:text="@string/temp_unit_celsius"
             android:textSize="18sp" />
 
@@ -81,8 +93,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/iconSun"
+        android:layout_marginLeft="4dp"
         android:layout_toEndOf="@+id/iconSun"
+        android:padding="3dp"
         android:paddingLeft="4dp"
+        android:shadowColor="@color/colorTextShadowDark"
+        android:shadowRadius="3"
         android:text="1-11+" />
 
     <ImageView
@@ -99,8 +115,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/iconWind"
+        android:layout_marginLeft="4dp"
         android:layout_toEndOf="@+id/iconWind"
+        android:padding="3dp"
         android:paddingLeft="4dp"
+        android:shadowColor="@color/colorTextShadowDark"
+        android:shadowRadius="3"
         android:text="16 km/h" />
 
     <ImageView
@@ -117,8 +137,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/iconRain"
+        android:layout_marginLeft="4dp"
         android:layout_toEndOf="@+id/iconRain"
+        android:padding="3dp"
         android:paddingLeft="4dp"
+        android:shadowColor="@color/colorTextShadowDark"
+        android:shadowRadius="3"
         android:text="40 %" />
 
     <ImageView
@@ -134,8 +158,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/iconCloud"
+        android:layout_marginLeft="4dp"
         android:layout_toEndOf="@+id/iconCloud"
-        android:paddingLeft="4dp"
+        android:padding="3dp"
+        android:shadowColor="@color/colorTextShadowDark"
+        android:shadowRadius="3"
         android:text="40 %" />
 
 </RelativeLayout>
