@@ -1,11 +1,13 @@
 package com.weatheradviceapp.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
@@ -71,7 +73,7 @@ public class HomeFragment extends Fragment {
             WeatherImageMapper wim = new WeatherImageMapper(w);
 
             view.setBackgroundResource(wim.getWeatherBackgroundResource());
-            setTextColor((ViewGroup) view, ContextCompat.getColor(WeatherApplication.getContext(), wim.getWeatherForegroundColor()));
+            setTextColor((ViewGroup) view, wim.getWeatherForegroundColor(), wim.getWeatherShadowColor());
             wvToday.showWeatherData(w, latestWeatherCondition.getFetchDate());
 
             // Get all weather conditions for the day planning
@@ -97,14 +99,30 @@ public class HomeFragment extends Fragment {
      * @param parent
      * @param color
      */
-    private void setTextColor(ViewGroup parent, int color) {
+    private void setTextColor(ViewGroup parent, int color, int shadowColor) {
         for (int count=0; count < parent.getChildCount(); count++) {
             View view = parent.getChildAt(count);
             if (view instanceof TextView) {
-                ((TextView)view).setTextColor(color);
+                TextView tv = (TextView) view;
+                tv.setTextColor(color);
+                tv.setShadowLayer(5, 2, 1, shadowColor);
+            } else if (view instanceof ImageView) {
+                if (view.getId() == R.id.iconCloud ||
+                    view.getId() == R.id.iconRain ||
+                    view.getId() == R.id.iconSun ||
+                    view.getId() == R.id.iconWind) {
+                    ImageView imv = (ImageView) view;
+                    imv.setImageDrawable(setTint(imv.getDrawable(), color));
+                }
             } else if (view instanceof ViewGroup) {
-                setTextColor((ViewGroup)view, color);
+                setTextColor((ViewGroup)view, color, shadowColor);
             }
         }
+    }
+
+    public static Drawable setTint(Drawable d, int color) {
+        Drawable wrappedDrawable = DrawableCompat.wrap(d);
+        DrawableCompat.setTint(wrappedDrawable, color);
+        return wrappedDrawable;
     }
 }
