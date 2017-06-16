@@ -60,6 +60,12 @@
                 android:layout_height="wrap_content">
             </ListView>
 
+            <Button
+                android:id="@+id/button_add_wifi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add WiFi Network" />
+
         </LinearLayout>
 
         <TextView

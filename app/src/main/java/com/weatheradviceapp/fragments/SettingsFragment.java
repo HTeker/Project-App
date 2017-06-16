@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -118,6 +119,14 @@ public class SettingsFragment extends Fragment {
         if (user.isEnabledAgendaSync()) {
             agenda_sync_switch.setChecked(true);
         }
+
+        Button btn_add_wifi = (Button) view.findViewById(R.id.button_add_wifi);
+        btn_add_wifi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         agenda_sync_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
