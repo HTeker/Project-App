@@ -8,8 +8,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Switch;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,6 +26,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
+import android.widget.TextView;
 
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.User;
@@ -104,6 +108,11 @@ public class SettingsFragment extends Fragment {
                 }
             }
         });
+
+        String[] networks = {"Network 1", "Network 2", "Network 3"};
+        ListAdapter wifiAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, networks);
+        ListView list_whitelisted_wifi = (ListView) view.findViewById(R.id.list_whitelisted_wifi_networks);
+        list_whitelisted_wifi.setAdapter(wifiAdapter);
 
         Switch agenda_sync_switch = (Switch) view.findViewById(R.id.enabled_agenda_sync_switch);
         if (user.isEnabledAgendaSync()) {
