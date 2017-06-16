@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
+import com.google.android.gms.cast.TextTrackStyle;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -24,6 +25,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
+import android.widget.TextView;
+
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.User;
 
@@ -35,6 +38,7 @@ public class SettingsFragment extends Fragment {
     private Realm realm;
     private User user;
     MapView mMapView;
+    TextView mHeaderWhitelistedWifi;
     private GoogleMap googleMap;
     private Marker marker;
 
@@ -85,8 +89,10 @@ public class SettingsFragment extends Fragment {
         });
 
         Switch wifi_switch = (Switch) view.findViewById(R.id.enabled_wifi_location_switch);
+        mHeaderWhitelistedWifi = (TextView) view.findViewById(R.id.header_whitelisted_wifi);
         if (user.isEnabledWiFiLocation()) {
             wifi_switch.setChecked(true);
+            mHeaderWhitelistedWifi.setVisibility(View.VISIBLE);
         }
 
         wifi_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -94,6 +100,12 @@ public class SettingsFragment extends Fragment {
                 realm.beginTransaction();
                 user.setEnabledWiFiLocation(isChecked);
                 realm.commitTransaction();
+
+                if (isChecked) {
+                    mHeaderWhitelistedWifi.setVisibility(View.VISIBLE);
+                } else {
+                    mHeaderWhitelistedWifi.setVisibility(View.GONE);
+                }
             }
         });
 
