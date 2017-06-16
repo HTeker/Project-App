@@ -30,7 +30,9 @@ import android.Manifest;
 import android.widget.TextView;
 
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.models.Network;
 import com.weatheradviceapp.models.User;
+import com.weatheradviceapp.adapters.WhitelistedWifiAdapter;
 
 import io.realm.Realm;
 
@@ -110,8 +112,13 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        String[] networks = {"Network 1", "Network 2", "Network 3"};
-        ListAdapter wifiAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, networks);
+        realm.beginTransaction();
+        user.addWifiNetwork(new Network("Netwerk 1"));
+        user.addWifiNetwork(new Network("Netwerk 2"));
+        user.addWifiNetwork(new Network("Netwerk 3"));
+        realm.commitTransaction();
+
+        ListAdapter wifiAdapter = new WhitelistedWifiAdapter(getActivity(), user.getWifiNetworks());
         ListView list_whitelisted_wifi = (ListView) view.findViewById(R.id.list_whitelisted_wifi_networks);
         list_whitelisted_wifi.setAdapter(wifiAdapter);
 

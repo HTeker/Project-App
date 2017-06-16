@@ -1,5 +1,7 @@
 package com.weatheradviceapp.models;
 
+import java.util.ArrayList;
+
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -11,6 +13,7 @@ public class User extends RealmObject {
     private boolean enabledAgendaSync;
     private boolean enabledAlarmSync;
     private boolean enabledDemoMode;
+    private RealmList<Network> wifiNetworks = new RealmList<Network>();
 
     private boolean setOwnPosition;
     private double customLocationLat;
@@ -56,6 +59,14 @@ public class User extends RealmObject {
 
     public void setEnabledDemoMode(boolean enabledDemoMode){
         this.enabledDemoMode = enabledDemoMode;
+    }
+
+    public RealmList<Network> getWifiNetworks(){
+        return wifiNetworks;
+    }
+
+    public void addWifiNetwork(Network network) {
+        wifiNetworks.add(network);
     }
 
     public boolean isSetOwnPosition() {
