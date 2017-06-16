@@ -12,33 +12,29 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
-import com.google.android.gms.cast.TextTrackStyle;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
-import android.widget.TextView;
 
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.User;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class SettingsFragment extends Fragment {
 
     private Realm realm;
     private User user;
     MapView mMapView;
-    TextView mHeaderWhitelistedWifi;
+    LinearLayout container_whitelisted_wifi;
     private GoogleMap googleMap;
     private Marker marker;
 
@@ -89,10 +85,10 @@ public class SettingsFragment extends Fragment {
         });
 
         Switch wifi_switch = (Switch) view.findViewById(R.id.enabled_wifi_location_switch);
-        mHeaderWhitelistedWifi = (TextView) view.findViewById(R.id.header_whitelisted_wifi);
+        container_whitelisted_wifi = (LinearLayout) view.findViewById(R.id.container_whitelisted_wifi);
         if (user.isEnabledWiFiLocation()) {
             wifi_switch.setChecked(true);
-            mHeaderWhitelistedWifi.setVisibility(View.VISIBLE);
+            container_whitelisted_wifi.setVisibility(View.VISIBLE);
         }
 
         wifi_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -102,9 +98,9 @@ public class SettingsFragment extends Fragment {
                 realm.commitTransaction();
 
                 if (isChecked) {
-                    mHeaderWhitelistedWifi.setVisibility(View.VISIBLE);
+                    container_whitelisted_wifi.setVisibility(View.VISIBLE);
                 } else {
-                    mHeaderWhitelistedWifi.setVisibility(View.GONE);
+                    container_whitelisted_wifi.setVisibility(View.GONE);
                 }
             }
         });

@@ -39,15 +39,28 @@
             android:layout_height="wrap_content"
             android:text="@string/enabled_wifi_location" />
 
-        <TextView
-            android:id="@+id/header_whitelisted_wifi"
+        <LinearLayout
+            android:id="@+id/container_whitelisted_wifi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_whitelisted_wifi_networks"
-            android:layout_marginTop="6dp"
-            android:visibility="gone"
-            />
+            android:orientation="vertical"
+            android:visibility="gone">
 
+            <TextView
+                android:id="@+id/header_whitelisted_wifi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_whitelisted_wifi_networks"
+                android:layout_marginTop="6dp"
+                />
+
+            <ListView
+                android:id="@+id/list_whitelisted_wifi_networks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </ListView>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
