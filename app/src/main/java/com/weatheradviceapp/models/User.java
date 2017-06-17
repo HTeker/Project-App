@@ -69,6 +69,10 @@ public class User extends RealmObject {
         wifiNetworks.add(network);
     }
 
+    public void removeWifiNetwork(Network network) {
+        wifiNetworks.remove(network);
+    }
+
     public boolean isSetOwnPosition() {
         return setOwnPosition;
     }
