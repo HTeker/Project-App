@@ -23,9 +23,11 @@ public class WhitelistedWifiAdapter extends ArrayAdapter<Network> {
 
     private Realm realm;
     private User user;
+    private WhitelistedWifiAdapter self;
 
     public WhitelistedWifiAdapter(@NonNull Context context, RealmList<Network> networks) {
         super(context, R.layout.whitelisted_wifi, networks);
+        this.self = this;
 
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
@@ -60,6 +62,8 @@ public class WhitelistedWifiAdapter extends ArrayAdapter<Network> {
                                 realm.beginTransaction();
                                 user.removeWifiNetwork(singleNetwork);
                                 realm.commitTransaction();
+
+                                self.notifyDataSetChanged();
                             }
                         });
                 alertDialog.show();
