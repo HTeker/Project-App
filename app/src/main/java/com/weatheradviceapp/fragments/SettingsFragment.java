@@ -130,7 +130,7 @@ public class SettingsFragment extends Fragment {
         realm.commitTransaction();
 
         ListAdapter wifiAdapter = new WhitelistedWifiAdapter(getActivity(), user.getWifiNetworks());
-        ListView list_whitelisted_wifi = (ListView) view.findViewById(R.id.list_whitelisted_wifi_networks);
+        ListView list_whitelisted_wifi = (ListView) container_whitelisted_wifi.findViewById(R.id.list_whitelisted_wifi_networks);
         list_whitelisted_wifi.setAdapter(wifiAdapter);
 
         Switch agenda_sync_switch = (Switch) view.findViewById(R.id.enabled_agenda_sync_switch);
