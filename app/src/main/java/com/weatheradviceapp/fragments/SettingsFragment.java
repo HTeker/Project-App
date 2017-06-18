@@ -1,10 +1,19 @@
 package com.weatheradviceapp.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +42,8 @@ import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.Network;
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.adapters.WhitelistedWifiAdapter;
+
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -131,7 +142,21 @@ public class SettingsFragment extends Fragment {
         btn_add_wifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                WifiManager wifi = (WifiManager)getActivity().getSystemService(Context.WIFI_SERVICE);
+                if (wifi.isWifiEnabled()){
+                    //wifi is enabled
+                }else{
+                    final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("WiFi staat uit");
+                    alertDialog.setMessage("Zet uw WiFi aan en probeer het opnieuw");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
             }
         });
 
