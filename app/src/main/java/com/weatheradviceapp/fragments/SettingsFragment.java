@@ -142,7 +142,7 @@ public class SettingsFragment extends Fragment {
         btn_add_wifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WifiManager wifi = (WifiManager)getActivity().getSystemService(Context.WIFI_SERVICE);
+                WifiManager wifi = (WifiManager)getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 if (wifi.isWifiEnabled()){
                     //wifi is enabled
                 }else{
