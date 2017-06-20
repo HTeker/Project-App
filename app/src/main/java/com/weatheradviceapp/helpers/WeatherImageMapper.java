@@ -1,7 +1,10 @@
 package com.weatheradviceapp.helpers;
 
+import android.support.v4.content.ContextCompat;
+
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.WeatherApplication;
 
 /**
  * Icons for the weather conditions on OpenWeatherMap:
@@ -126,15 +129,29 @@ public class WeatherImageMapper {
         }
     }
 
+
+
     public int getWeatherForegroundColor() {
         switch(getWeatherBackgroundResource()) {
             case R.drawable.bg_thunder:
             case R.drawable.bg_rain:
             case R.drawable.bg_clouds:
-                return R.color.colorTextLight;
+                return ContextCompat.getColor(WeatherApplication.getContext(), R.color.colorTextLight);
 
             default:
-                return R.color.colorTextDark;
+                return ContextCompat.getColor(WeatherApplication.getContext(), R.color.colorTextDark);
+        }
+    }
+
+    public int getWeatherShadowColor() {
+        switch(getWeatherBackgroundResource()) {
+            case R.drawable.bg_thunder:
+            case R.drawable.bg_rain:
+            case R.drawable.bg_clouds:
+                return  ContextCompat.getColor(WeatherApplication.getContext(), R.color.colorTextShadowLight);
+
+            default:
+                return  ContextCompat.getColor(WeatherApplication.getContext(), R.color.colorTextShadowDark);
         }
     }
 }
