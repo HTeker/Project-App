@@ -39,12 +39,7 @@ import com.weatheradviceapp.fragments.HomeFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private SwipeRefreshLayout swipeContainer;
     private JobManager mJobManager;
-
-    private ConstraintSet normalLayout = new ConstraintSet();
-    private ConstraintSet adviceDetailLayout = new ConstraintSet();
-    private boolean adviceDetails = false;
     private User user;
 
 
@@ -61,10 +56,6 @@ public class MainActivity extends AppCompatActivity
 
         // Get user or create user if we don't have one yet.
         user = User.getOrCreateUser();
-
-        normalLayout.clone(getApplicationContext(), R.layout.fragment_home);
-        adviceDetailLayout.clone(getApplicationContext(), R.layout.fragment_advice);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,23 +85,6 @@ public class MainActivity extends AppCompatActivity
         // Reset.
         mJobManager.cancelAll();
 
-        // Pull-to-refresh
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Start job to fetch new weather data
-                fetchWeather();
-            }
-        });
-
         // Just now fetch weather data, so we're sure the swipeContainer is assigned
         fetchWeather();
         scheduleWeatherFetching();
@@ -134,11 +108,8 @@ public class MainActivity extends AppCompatActivity
                 if (intent.getAction().equalsIgnoreCase(SyncCalendarJob.WEATHER_AVAILABLE)) {
                     homeFragment.refreshCalendarData();
                 }
-            }
 
-            // And reset the pull-to-refresh
-            if (swipeContainer != null) {
-                swipeContainer.setRefreshing(false);
+                homeFragment.disableRefresh();
             }
         }
     };
@@ -150,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    private void fetchWeather() {
+    public void fetchWeather() {
         new JobRequest.Builder(user.isEnabledDemoMode() ? DemoWeatherJob.TAG : SyncWeatherJob.TAG)
                 .setExecutionWindow(3_000L, 4_000L)
                 .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
@@ -170,7 +141,7 @@ public class MainActivity extends AppCompatActivity
                 .schedule();
     }
 
-    private void fetchCalendarWeather() {
+    public void fetchCalendarWeather() {
         new JobRequest.Builder(SyncCalendarJob.TAG)
                 .setExecutionWindow(3_000L, 4_000L)
                 .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
@@ -244,12 +215,10 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = null;
         String title = getString(R.string.weather_app_name);
-        boolean enableSwipeContainer = false;
         switch (viewId) {
             case R.id.nav_home:
                 fragment = new HomeFragment();
                 title = getString(R.string.title_home);
-                enableSwipeContainer = true;
                 break;
 
             case R.id.nav_settings:
@@ -259,8 +228,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (fragment != null) {
-            swipeContainer.setEnabled(enableSwipeContainer);
-
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.addToBackStack(title);
             ft.replace(R.id.content_frame, fragment);
@@ -275,24 +242,5 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-    }
-
-    public void toggleAdviceDetail(View v) {
-        showAdviceDetails(!adviceDetails);
-    }
-
-    public void showAdviceDetails(boolean show) {
-        if (show != adviceDetails) {
-            ConstraintLayout homeFragment = (ConstraintLayout) findViewById(R.id.fragment_home);
-            if (homeFragment != null) {
-                TransitionManager.beginDelayedTransition(homeFragment);
-                if (show) {
-                    adviceDetailLayout.applyTo(homeFragment);
-                } else {
-                    normalLayout.applyTo(homeFragment);
-                }
-                adviceDetails = show;
-            }
-        }
     }
 }
