@@ -22,6 +22,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -29,29 +30,23 @@ import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
 import com.weatheradviceapp.jobs.DemoWeatherJob;
+import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.User;
 
 import com.weatheradviceapp.fragments.HomeFragment;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private SwipeRefreshLayout swipeContainer;
     private JobManager mJobManager;
-
-    private ConstraintSet normalLayout = new ConstraintSet();
-    private ConstraintSet adviceDetailLayout = new ConstraintSet();
-    private boolean adviceDetails = false;
     private User user;
 
 
-    private static final String[] LOCATION_PERMS={
+    private static final String[] REQUIRED_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.READ_CALENDAR
     };
 
     @Override
@@ -62,16 +57,12 @@ public class MainActivity extends AppCompatActivity
         // Get user or create user if we don't have one yet.
         user = User.getOrCreateUser();
 
-        normalLayout.clone(getApplicationContext(), R.layout.fragment_home);
-        adviceDetailLayout.clone(getApplicationContext(), R.layout.fragment_advice);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(!canAccessLocation()){
+        if(!hasRequiredPermissions()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(LOCATION_PERMS, 1);
+                requestPermissions(REQUIRED_PERMS, 1);
             }
         }
 
@@ -84,32 +75,21 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("new-weather-available"));
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SyncWeatherJob.WEATHER_AVAILABLE);
+        intentFilter.addAction(SyncCalendarJob.WEATHER_AVAILABLE);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, intentFilter);
 
         mJobManager = JobManager.instance();
         // Reset.
         mJobManager.cancelAll();
 
-        // Pull-to-refresh
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Start job to fetch new weather data
-                fetchWeather();
-            }
-        });
-
         // Just now fetch weather data, so we're sure the swipeContainer is assigned
         fetchWeather();
         scheduleWeatherFetching();
+        fetchCalendarWeather();
+        scheduleCalendarWeatherFetching();
 
         // Init home fragment
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -120,15 +100,16 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
-            if (homeFragment != null && intent.getAction() == SyncWeatherJob.WEATHER_AVAILABLE) {
-                homeFragment.refreshWeatherData();
-            }
+            if (homeFragment != null) {
+                if (intent.getAction().equalsIgnoreCase(SyncWeatherJob.WEATHER_AVAILABLE)) {
+                    homeFragment.refreshWeatherData();
+                }
+                if (intent.getAction().equalsIgnoreCase(SyncCalendarJob.WEATHER_AVAILABLE)) {
+                    homeFragment.refreshCalendarData();
+                }
 
-            // And reset the pull-to-refresh
-            if (swipeContainer != null) {
-                swipeContainer.setRefreshing(false);
+                homeFragment.disableRefresh();
             }
         }
     };
@@ -140,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    private void fetchWeather() {
+    public void fetchWeather() {
         new JobRequest.Builder(user.isEnabledDemoMode() ? DemoWeatherJob.TAG : SyncWeatherJob.TAG)
                 .setExecutionWindow(3_000L, 4_000L)
                 .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
@@ -153,6 +134,26 @@ public class MainActivity extends AppCompatActivity
 
     private void scheduleWeatherFetching() {
         new JobRequest.Builder(SyncWeatherJob.TAG)
+                .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setPersisted(true)
+                .build()
+                .schedule();
+    }
+
+    public void fetchCalendarWeather() {
+        new JobRequest.Builder(SyncCalendarJob.TAG)
+                .setExecutionWindow(3_000L, 4_000L)
+                .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setRequirementsEnforced(true)
+                .setPersisted(true)
+                .build()
+                .schedule();
+    }
+
+    private void scheduleCalendarWeatherFetching() {
+        new JobRequest.Builder(SyncCalendarJob.TAG)
                 .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                 .setPersisted(true)
@@ -181,7 +182,6 @@ public class MainActivity extends AppCompatActivity
 
         switch(id) {
             case R.id.nav_home:
-            case R.id.nav_my_advice:
                 displayView(id);
                 // Not working because of new fragment initialization in displayView()
                 //showAdviceDetails(id == R.id.nav_my_advice);
@@ -197,8 +197,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private boolean canAccessLocation() {
-        return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) && hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION));
+    private boolean hasRequiredPermissions() {
+        for (String permision : REQUIRED_PERMS){
+            if (!hasPermission(permision)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private boolean hasPermission(String perm) {
@@ -209,10 +215,8 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = null;
         String title = getString(R.string.weather_app_name);
-
         switch (viewId) {
             case R.id.nav_home:
-            case R.id.nav_my_advice:
                 fragment = new HomeFragment();
                 title = getString(R.string.title_home);
                 break;
@@ -238,24 +242,5 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-    }
-
-    public void toggleAdviceDetail(View v) {
-        showAdviceDetails(!adviceDetails);
-    }
-
-    public void showAdviceDetails(boolean show) {
-        if (show != adviceDetails) {
-            ConstraintLayout homeFragment = (ConstraintLayout) findViewById(R.id.fragment_home);
-            if (homeFragment != null) {
-                TransitionManager.beginDelayedTransition(homeFragment);
-                if (show) {
-                    adviceDetailLayout.applyTo(homeFragment);
-                } else {
-                    normalLayout.applyTo(homeFragment);
-                }
-                adviceDetails = show;
-            }
-        }
     }
 }

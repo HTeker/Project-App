@@ -2,6 +2,8 @@
     <string name="weather_app_name">Bobs Weather Advice</string>
     <string name="title_home">Bobs Weather Advice</string>
     <string name="title_settings">Settings</string>
+    <string name="title_my_advice">My advice</string>
+    <string name="title_agenda">Agenda</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -29,6 +31,7 @@
     <string name="menu_payoff">Team working apps</string>
     <string name="menu_home">Home</string>
     <string name="menu_my_advice">My advice</string>
+    <string name="menu_agenda">Agenda</string>
     <string name="menu_settings">Settings</string>
 
     <string name="advice_sunglasses">Put on sunglasses because the sun is bright in %1$s.</string>
