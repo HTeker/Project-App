@@ -47,4 +47,11 @@
     <string name="advice_bike">It\'s a good idea to travel by bike today. Not too much wind or rain and a nice temperature to be active.</string>
     <string name="advice_soccer">The weather is nice for outdoor sports. Play soccer with your friends for example.</string>
     <string name="advice_water_sports">The weather is nice to get active on the water. Surfing the waves, kite-surfing or sailing are good options today.</string>
+    <string name="barbecue_chip">Barbecue</string>
+    <string name="beach_chip">Beach</string>
+    <string name="bike_chip">Bicycle</string>
+    <string name="walking_chip">Walking</string>
+    <string name="soccer_chip">Soccer</string>
+    <string name="fishing_chip">Fishing</string>
+    <string name="watersport_chip">Water sports</string>
 </resources>
