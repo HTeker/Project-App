@@ -2,9 +2,9 @@ package com.weatheradviceapp.advice;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ActivityAdvice;
 
-public class Barbecue extends Advice {
+public class Barbecue extends ActivityAdvice {
 
     /**
      * The Barbecue activity is based on the temprerature and rain prediction. Higher temperature
@@ -15,8 +15,12 @@ public class Barbecue extends Advice {
      */
     @Override
     protected float calcWeatherScore(Weather weather) {
-        // TODO: Only when personal interest is selected
-        return (weather.temperature.getTemp() >= 18 ? 40 : 0) + ((15 - weather.rain[0].getChance()) * 2);
+        // Only when personal interest is selected
+        if (this.checkInterest(R.string.barbecue_chip)) {
+            return (weather.temperature.getTemp() >= 18 ? 40 : 0) + ((15 - weather.rain[0].getChance()) * 2);
+        }
+
+        return 0.0f;
     }
 
     @Override

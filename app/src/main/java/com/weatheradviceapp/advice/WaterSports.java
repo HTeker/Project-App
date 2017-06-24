@@ -2,9 +2,9 @@ package com.weatheradviceapp.advice;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ActivityAdvice;
 
-public class WaterSports extends Advice {
+public class WaterSports extends ActivityAdvice {
 
     /**
      * The WaterSports activity is based on the temperature and a nice wind speed.
@@ -14,8 +14,12 @@ public class WaterSports extends Advice {
      */
     @Override
     protected float calcWeatherScore(Weather weather) {
-        // TODO: Only when personal interest is selected
-        return ((weather.temperature.getTemp() - 20) * 10) + (weather.wind.getSpeed() * 3.6f);
+        // Only when personal interest is selected
+        if (this.checkInterest(R.string.bike_chip)) {
+            return ((weather.temperature.getTemp() - 20) * 10) + (weather.wind.getSpeed() * 3.6f);
+        }
+
+        return 0.0f;
     }
 
     @Override

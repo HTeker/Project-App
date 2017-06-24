@@ -2,9 +2,9 @@ package com.weatheradviceapp.advice;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ActivityAdvice;
 
-public class Beach extends Advice {
+public class Beach extends ActivityAdvice {
 
     /**
      * The Beach activity is based on the temperature and clear sky.
@@ -14,8 +14,12 @@ public class Beach extends Advice {
      */
     @Override
     protected float calcWeatherScore(Weather weather) {
-        // TODO: Only when personal interest is selected
-        return 20 + ((weather.temperature.getTemp() - 20) * 10) + ((30 - weather.clouds.getPerc()) * 5);
+        // Only when personal interest is selected
+        if (this.checkInterest(R.string.beach_chip)) {
+            return 20 + ((weather.temperature.getTemp() - 20) * 10) + ((30 - weather.clouds.getPerc()) * 5);
+        }
+
+        return 0.0f;
     }
 
     @Override
