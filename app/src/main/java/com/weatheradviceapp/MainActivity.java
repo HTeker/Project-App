@@ -6,25 +6,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.transition.TransitionManager;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
@@ -41,7 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     private JobManager mJobManager;
     private User user;
-
+    private BroadcastReceiver mMessageReceiver;
 
     private static final String[] REQUIRED_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -79,6 +74,7 @@ public class MainActivity extends AppCompatActivity
         intentFilter.addAction(SyncWeatherJob.WEATHER_AVAILABLE);
         intentFilter.addAction(SyncCalendarJob.WEATHER_AVAILABLE);
 
+        mMessageReceiver = new WeatherReceiver(new Handler());
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, intentFilter);
 
         mJobManager = JobManager.instance();
@@ -97,22 +93,46 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+    private class WeatherReceiver extends BroadcastReceiver {
+
+        private final Handler uiHandler; // Handler used to execute code on the UI thread
+
+        public WeatherReceiver(Handler handler) {
+            this.uiHandler = handler;
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
-            HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("home");
-            if (homeFragment != null) {
-                if (intent.getAction().equalsIgnoreCase(SyncWeatherJob.WEATHER_AVAILABLE)) {
-                    homeFragment.refreshWeatherData();
-                }
-                if (intent.getAction().equalsIgnoreCase(SyncCalendarJob.WEATHER_AVAILABLE)) {
-                    homeFragment.refreshCalendarData();
-                }
 
-                homeFragment.disableRefresh();
+            if (intent.getAction().equalsIgnoreCase(SyncWeatherJob.WEATHER_AVAILABLE)) {
+                // Post the UI updating code to our Handler
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("home");
+                        if (homeFragment != null) {
+                            homeFragment.refreshWeatherData();
+                            homeFragment.disableRefresh();
+                        }
+                    }
+                });
+            }
+
+            if (intent.getAction().equalsIgnoreCase(SyncCalendarJob.WEATHER_AVAILABLE)) {
+                // Post the UI updating code to our Handler
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("home");
+                        if (homeFragment != null) {
+                            homeFragment.refreshCalendarData();
+                            homeFragment.disableRefresh();
+                        }
+                    }
+                });
             }
         }
-    };
+    }
 
     @Override
     protected void onDestroy() {
