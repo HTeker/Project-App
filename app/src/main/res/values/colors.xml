@@ -9,4 +9,11 @@
     <color name="colorTextShadowLight">#333333</color>
     <color name="colorTextDark">#333333</color>
     <color name="colorTextShadowDark">#88aaaaaa</color>
+    <color name="colorGrey">#8BAEBA</color>
+    <color name="colorBeige">#E5D8B9</color>
+    <color name="colorYellow">#F2F27F</color>
+    <color name="colorGreen">#8AC28A</color>
+    <color name="colorTurquoise">#2DA095</color>
+    <color name="colorSilver">#ACACAC</color>
+    <color name="colorRed">#D16159</color>
 </resources>

@@ -20,6 +20,7 @@ public class User extends RealmObject {
     private double customLocationLng;
 
     private RealmList<Interest> interests;
+    private RealmList<UserCalendar> agendas;
 
     public boolean isEnabledGPSLocation() {
         return enabledGPSLocation;
@@ -103,6 +104,14 @@ public class User extends RealmObject {
 
     public void setInterests(RealmList<Interest> interests) {
         this.interests = interests;
+    }
+
+    public RealmList<UserCalendar> getAgendas() {
+        return agendas;
+    }
+
+    public void setAgendas(RealmList<UserCalendar> agendas) {
+        this.agendas = agendas;
     }
 
     public static User getUser() {
