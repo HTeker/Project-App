@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("home");
-                        System.out.println("Woep: " + homeFragment);
                         if (homeFragment != null) {
                             homeFragment.refreshWeatherData();
                             homeFragment.disableRefresh();
@@ -126,7 +125,6 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("home");
-                        System.out.println("Woep: " + homeFragment);
                         if (homeFragment != null) {
                             homeFragment.refreshCalendarData();
                             homeFragment.disableRefresh();

@@ -153,8 +153,6 @@ public class SyncCalendarJob extends Job {
                                             long date_difference = new Date(beginVal).getTime() - new Date().getTime();
                                             int day = (int)(date_difference / DateUtils.DAY_IN_MILLIS);
 
-                                            Log.d("Dinges", "" + forecast.getForecast());
-
                                             Realm realm = Realm.getDefaultInstance();
                                             realm.beginTransaction();
                                             RealmResults<UserCalendarEvent> calendar_events = realm.where(UserCalendarEvent.class).equalTo("instanceID", instanceID).findAll();

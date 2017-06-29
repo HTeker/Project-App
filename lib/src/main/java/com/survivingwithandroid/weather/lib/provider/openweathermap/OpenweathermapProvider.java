@@ -393,6 +393,30 @@ public class OpenweathermapProvider implements IWeatherProvider {
                 hourForecast.weather.wind.setDeg(getFloat("deg", wObj));
                 hourForecast.weather.wind.setGust((float) wObj.optDouble("gust"));
 
+                // Rain (use opt to handle option parameters
+                JSONObject rObj = jObj.optJSONObject("rain");
+                if (rObj != null) {
+
+                    float amm1 = (float) rObj.optDouble("1h");
+                    if (amm1 > 0) {
+                        hourForecast.weather.rain[0].setAmmount(amm1);
+                        hourForecast.weather.rain[0].setTime("1h");
+                    }
+
+                    float amm3 = (float) rObj.optDouble("3h");
+                    if (amm3 > 0) {
+                        hourForecast.weather.rain[1].setAmmount(amm3);
+                        hourForecast.weather.rain[1].setTime("3h");
+                    }
+                }
+
+                // Snow
+                JSONObject sObj = jObj.optJSONObject("snow");
+                if (sObj != null) {
+                    hourForecast.weather.snow.setAmmount((float) sObj.optDouble("3h"));
+                    hourForecast.weather.snow.setTime("3h");
+                }
+
                 //Log.d("SwA", "Add weather forecast");
                 forecast.addForecast(hourForecast);
             }
