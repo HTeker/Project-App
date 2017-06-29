@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +121,15 @@ public class HomeFragment extends Fragment {
         WeatherCondition latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
 
         if (latestWeatherCondition != null) {
-            Weather w = latestWeatherCondition.getWeather().weather;
+            long date_difference = new Date().getTime() - latestWeatherCondition.getFetchDate().getTime();
+            int hour = (int)(date_difference / DateUtils.HOUR_IN_MILLIS);
+
+            // If hour not found, just take last hour.
+            if (latestWeatherCondition.getForecast().hoursForecast.size() < hour) {
+                hour = (latestWeatherCondition.getForecast().hoursForecast.size() - 1);
+            }
+
+            Weather w = latestWeatherCondition.getForecast().getHourForecast(hour).weather;
             WeatherImageMapper wim = new WeatherImageMapper(w);
 
             view.setBackgroundResource(wim.getWeatherBackgroundResource());

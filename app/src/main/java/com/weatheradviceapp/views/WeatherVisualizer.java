@@ -181,12 +181,15 @@ public class WeatherVisualizer {
             windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed() * 3.6f) + " " + container.getContext().getString(R.string.wind_speed_unit_kph));
             cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
 
-            // TODO: Get forecast for rain prediction
-            // The rain on the currentWeather is only representing the volume in mm from the last 3 hours.
-            if (weather.rain.length > 0) {
-                rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
+            if (weather.rain.length > 0 && (weather.rain[0].getTime() != null || weather.rain[1].getTime() != null)) {
+                if (weather.rain[0].getTime() != null) {
+                    rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
+                }
+                else if (weather.rain[1].getTime() != null) {
+                    rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[1].getChance()));
+                }
             } else {
-                rain.setText("-");
+                rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", 0.0f));
             }
         }
     }

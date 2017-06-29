@@ -7,6 +7,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.evernote.android.job.Job;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.model.HourForecast;
+import com.survivingwithandroid.weather.lib.model.WeatherForecast;
+import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProvider;
 import com.weatheradviceapp.models.WeatherCondition;
 
@@ -43,7 +46,11 @@ public class DemoWeatherJob extends Job {
             realm.beginTransaction();
             WeatherCondition weatherCondition = realm.createObject(WeatherCondition.class);
             weatherCondition.setFetchDate(new Date());
-            weatherCondition.setWeather(currentWeather);
+
+            WeatherHourForecast forecast = new WeatherHourForecast();
+            HourForecast hourForecast = new HourForecast();
+            hourForecast.weather = currentWeather.weather;
+            weatherCondition.setForecast(forecast);
             weatherCondition.setLocationLng(0.0);
             weatherCondition.setLocationLat(0.0);
             realm.commitTransaction();
