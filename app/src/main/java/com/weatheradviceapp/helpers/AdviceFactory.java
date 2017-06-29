@@ -3,6 +3,8 @@ package com.weatheradviceapp.helpers;
 import com.weatheradviceapp.models.ActivityAdvice;
 import com.weatheradviceapp.models.Advice;
 import com.weatheradviceapp.advice.*;
+import com.weatheradviceapp.models.ClothingAdvice;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,10 @@ public class AdviceFactory {
     public static final String[] adviceClasses = {
             "BeanieHat", "CottonClothing", "Gloves", "Raincoat", "SunGlasses", "Umbrella", "WoolClothing",
             "Barbecue", "Beach", "Bike", "Soccer", "WaterSports"};
+
+    public enum Filter {
+        ALL, ACTIVITY, CLOTHING
+    }
 
     public static Advice getAdviceInstance(String adviceClass) {
 
@@ -47,13 +53,19 @@ public class AdviceFactory {
         }
     }
 
-    public static List<Advice> getAllAdviceInstances(boolean showActivityAdvices) {
+    public static List<Advice> getAllAdviceInstances(Filter filter) {
         List<Advice> result = new ArrayList<>();
 
         for (String className : adviceClasses) {
             Advice advice = getAdviceInstance(className);
             if (advice != null) {
-                if (!showActivityAdvices || advice instanceof ActivityAdvice) {
+                if (filter == Filter.ALL) {
+                    result.add(advice);
+                }
+                if (filter == Filter.ACTIVITY && advice instanceof ActivityAdvice) {
+                    result.add(advice);
+                }
+                if (filter == Filter.CLOTHING && advice instanceof ClothingAdvice) {
                     result.add(advice);
                 }
             }

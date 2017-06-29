@@ -1,10 +1,10 @@
 package com.weatheradviceapp.advice;
 
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ClothingAdvice;
 import com.survivingwithandroid.weather.lib.model.Weather;
 
-public class Umbrella extends Advice {
+public class Umbrella extends ClothingAdvice {
 
     /**
      * The umbrella score is based on the rain forecast but with too much wind the score goes down.

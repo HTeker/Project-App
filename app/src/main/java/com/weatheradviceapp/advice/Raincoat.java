@@ -2,9 +2,9 @@ package com.weatheradviceapp.advice;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ClothingAdvice;
 
-public class Raincoat extends Advice {
+public class Raincoat extends ClothingAdvice {
 
     /**
      * The sunglasses advice is based on the rain prediction. Wind also ads score.
