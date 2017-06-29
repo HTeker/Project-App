@@ -50,6 +50,8 @@ public class WeatherVisualizer {
 
     public WeatherVisualizer(LayoutInflater inflater, ViewGroup container, Weather weather, Date date) {
 
+        this.container = container;
+
         final LayoutInflater myInflater = inflater;
 
         // Initialize view
@@ -115,8 +117,6 @@ public class WeatherVisualizer {
         cloud = (TextView) wv.findViewById(R.id.cloud);
         weatherImg = (ImageView) wv.findViewById(R.id.weatherImg);
         calendar_location = (TextView) wv.findViewById(R.id.calendar_location);
-
-        this.container = container;
 
         adviceVisualizers = new ArrayList<>();
         adviceVisualizers.add(new AdviceVisualizer(inflater, (ViewGroup) wv.findViewById(R.id.advice1)));
@@ -210,9 +210,9 @@ public class WeatherVisualizer {
 
             for(int i = 0; i < adviceVisualizers.size(); i++) {
                 if (show) {
-                   // adviceVisualizers.get(i).hideText();
+                   adviceVisualizers.get(i).showText();
                 } else {
-                    //adviceVisualizers.get(i).showText();
+                   adviceVisualizers.get(i).hideText();
                 }
             }
 

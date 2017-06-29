@@ -1,238 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ScrollView01"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            xmlns:android="http://schemas.android.com/apk/res/android">
-            <!--<ScrollView-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content">-->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="10dp"
-                    >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_location"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
-                        />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"/>
-
-                    <Switch
-                        android:id="@+id/enabled_gps_location_switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_gps_location"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp" />
-
-                    <com.google.android.gms.maps.MapView
-                        android:id="@+id/map"
-                        android:layout_width="match_parent"
-                        android:name="com.google.android.gms.maps.MapView"
-                        android:layout_height="300dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:visibility="gone"
-                        />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"/>
-
-                    <Switch
-                        android:id="@+id/enabled_wifi_location_switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_wifi_location"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_sync"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"/>
-
-                    <Switch
-                        android:id="@+id/enabled_agenda_sync_switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_agenda_sync"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"/>
-
-                    <ListView
-                        android:id="@+id/agenda_select_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="195dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:scrollbarAlwaysDrawVerticalTrack="true"
-                        android:visibility="gone" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"/>
-
-                    <Switch
-                        android:id="@+id/enabled_alarm_sync_switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_alarm_sync"
-                        android:visibility="gone"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp" />
-
-                    <Switch
-                        android:id="@+id/enabled_demo_mode"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_demo_mode"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_interests"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        />
-
-                </LinearLayout>
-            <!--</ScrollView>-->
-        </LinearLayout>
-
-        <com.robertlevonyan.views.chip.Chip
-            android:id="@+id/barbecue_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="530dp"
-            android:layout_marginLeft="3dp"
-            app:backgroundColor="@color/colorGrey"
-            app:selectable="true"
-            app:chipIcon="@drawable/barbecue_chip_icon"
-            app:closable="true"
-            app:hasIcon="true"
-            app:chipText="@string/barbecue_chip"
-            />
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <com.robertlevonyan.views.chip.Chip
-            android:id="@+id/beach_chip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/barbecue_chip"
-            android:layout_alignBottom="@id/barbecue_chip"
-            app:backgroundColor="@color/colorBeige"
-            app:selectable="true"
-            app:chipIcon="@drawable/beach_chip_icon"
-            app:closable="true"
-            app:hasIcon="true"
-            app:chipText="@string/beach_chip"
-            />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_location"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                />
 
-        <com.robertlevonyan.views.chip.Chip
-            android:id="@+id/bike_chip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/beach_chip"
-            android:layout_alignBottom="@id/beach_chip"
-            app:backgroundColor="@color/colorYellow"
-            app:selectable="true"
-            app:chipIcon="@drawable/bike_chip_icon"
-            app:closable="true"
-            app:hasIcon="true"
-            app:chipText="@string/bike_chip"
-            />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"/>
 
-        <com.robertlevonyan.views.chip.Chip
-            android:id="@+id/walking_chip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_below="@id/barbecue_chip"
-            android:layout_marginTop="5dp"
-            app:backgroundColor="@color/colorTurquoise"
-            app:selectable="true"
-            app:chipIcon="@drawable/walking_chip_icon"
-            app:closable="true"
-            app:hasIcon="true"
-            app:chipText="@string/walking_chip"
-            />
+            <Switch
+                android:id="@+id/enabled_gps_location_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enabled_gps_location"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
 
-        <com.robertlevonyan.views.chip.Chip
-            android:id="@+id/soccer_chip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/walking_chip"
-            android:layout_alignBottom="@id/walking_chip"
-            app:backgroundColor="@color/colorGreen"
-            app:selectable="true"
-            app:chipIcon="@drawable/soccer_chip_icon"
-            app:closable="true"
-            app:hasIcon="true"
-            app:chipText="@string/soccer_chip"
-            />
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:name="com.google.android.gms.maps.MapView"
+                android:layout_height="300dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                />
 
-        <com.robertlevonyan.views.chip.Chip
-            android:id="@+id/fishing_chip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/soccer_chip"
-            android:layout_alignBottom="@id/soccer_chip"
-            app:backgroundColor="@color/colorSilver"
-            app:selectable="true"
-            app:chipIcon="@drawable/fishing_chip_icon"
-            app:closable="true"
-            app:hasIcon="true"
-            app:chipText="@string/fishing_chip"
-            />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"/>
 
-        <com.robertlevonyan.views.chip.Chip
-            android:id="@+id/watersport_chip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_below="@id/walking_chip"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="3dp"
-            app:backgroundColor="@color/colorRed"
-            app:selectable="true"
-            app:chipIcon="@drawable/watersport_chip_icon"
-            app:closable="true"
-            app:hasIcon="true"
-            app:chipText="@string/watersport_chip"
-            />
+            <Switch
+                android:id="@+id/enabled_wifi_location_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enabled_wifi_location"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
 
-    </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_sync"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"/>
+
+            <Switch
+                android:id="@+id/enabled_agenda_sync_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enabled_agenda_sync"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+
+            <ListView
+                android:id="@+id/agenda_select_list"
+                android:layout_width="match_parent"
+                android:layout_height="195dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"/>
+
+            <Switch
+                android:id="@+id/enabled_alarm_sync_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enabled_alarm_sync"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
+
+            <Switch
+                android:id="@+id/enabled_demo_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enabled_demo_mode"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_interests"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                />
+
+            <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.robertlevonyan.views.chip.Chip
+                    android:id="@+id/barbecue_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    app:backgroundColor="@color/colorGrey"
+                    app:selectable="true"
+                    app:chipIcon="@drawable/barbecue_chip_icon"
+                    app:hasIcon="true"
+                    app:chipText="@string/barbecue_chip"
+                    />
+
+                <com.robertlevonyan.views.chip.Chip
+                    android:id="@+id/beach_chip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/barbecue_chip"
+                    android:layout_alignBottom="@id/barbecue_chip"
+                    app:backgroundColor="@color/colorBeige"
+                    app:selectable="true"
+                    app:chipIcon="@drawable/beach_chip_icon"
+                    app:hasIcon="true"
+                    app:chipText="@string/beach_chip"
+                    />
+
+                <com.robertlevonyan.views.chip.Chip
+                    android:id="@+id/bike_chip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/beach_chip"
+                    android:layout_alignBottom="@id/beach_chip"
+                    app:backgroundColor="@color/colorYellow"
+                    app:selectable="true"
+                    app:chipIcon="@drawable/bike_chip_icon"
+                    app:hasIcon="true"
+                    app:chipText="@string/bike_chip"
+                    />
+
+                <com.robertlevonyan.views.chip.Chip
+                    android:id="@+id/walking_chip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_below="@id/barbecue_chip"
+                    android:layout_marginTop="5dp"
+                    app:backgroundColor="@color/colorTurquoise"
+                    app:selectable="true"
+                    app:chipIcon="@drawable/walking_chip_icon"
+                    app:hasIcon="true"
+                    app:chipText="@string/walking_chip"
+                    />
+
+                <com.robertlevonyan.views.chip.Chip
+                    android:id="@+id/soccer_chip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/walking_chip"
+                    android:layout_alignBottom="@id/walking_chip"
+                    app:backgroundColor="@color/colorGreen"
+                    app:selectable="true"
+                    app:chipIcon="@drawable/soccer_chip_icon"
+                    app:hasIcon="true"
+                    app:chipText="@string/soccer_chip"
+                    />
+
+                <com.robertlevonyan.views.chip.Chip
+                    android:id="@+id/fishing_chip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/soccer_chip"
+                    android:layout_alignBottom="@id/soccer_chip"
+                    app:backgroundColor="@color/colorSilver"
+                    app:selectable="true"
+                    app:chipIcon="@drawable/fishing_chip_icon"
+                    app:hasIcon="true"
+                    app:chipText="@string/fishing_chip"
+                    />
+
+                <com.robertlevonyan.views.chip.Chip
+                    android:id="@+id/watersport_chip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/walking_chip"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="5dp"
+                    app:backgroundColor="@color/colorRed"
+                    app:chipIcon="@drawable/watersport_chip_icon"
+                    app:chipText="@string/watersport_chip"
+                    app:hasIcon="true"
+                    app:selectable="true" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </ScrollView>

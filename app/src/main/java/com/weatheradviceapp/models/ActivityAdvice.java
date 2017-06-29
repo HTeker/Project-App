@@ -15,6 +15,7 @@ public abstract class ActivityAdvice extends Advice {
             }
         }
 
-        return false;
+        // When in demo mode always advice activities until chips check works
+        return user.isEnabledDemoMode();
     }
 }
