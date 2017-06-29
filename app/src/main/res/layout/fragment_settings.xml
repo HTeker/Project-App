@@ -16,120 +16,149 @@
             android:layout_height="fill_parent"
             xmlns:android="http://schemas.android.com/apk/res/android">
             <!--<ScrollView-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content">-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_location"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"/>
+
+                <Switch
+                    android:id="@+id/enabled_gps_location_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enabled_gps_location"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp" />
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:name="com.google.android.gms.maps.MapView"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"/>
+
+                <Switch
+                    android:id="@+id/enabled_wifi_location_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enabled_wifi_location"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp" />
+
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:id="@+id/container_whitelisted_wifi"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_margin="10dp"
-                    >
+                    android:visibility="gone">
 
                     <TextView
+                        android:id="@+id/header_whitelisted_wifi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/settings_location"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
+                        android:text="@string/settings_whitelisted_wifi_networks"
+                        android:layout_marginTop="6dp"
                         />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"/>
-
-                    <Switch
-                        android:id="@+id/enabled_gps_location_switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_gps_location"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp" />
-
-                    <com.google.android.gms.maps.MapView
-                        android:id="@+id/map"
-                        android:layout_width="match_parent"
-                        android:name="com.google.android.gms.maps.MapView"
-                        android:layout_height="300dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:visibility="gone"
-                        />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"/>
-
-                    <Switch
-                        android:id="@+id/enabled_wifi_location_switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_wifi_location"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_sync"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"/>
-
-                    <Switch
-                        android:id="@+id/enabled_agenda_sync_switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_agenda_sync"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"/>
 
                     <ListView
-                        android:id="@+id/agenda_select_list"
+                        android:id="@+id/list_whitelisted_wifi_networks"
                         android:layout_width="match_parent"
-                        android:layout_height="195dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:scrollbarAlwaysDrawVerticalTrack="true"
-                        android:visibility="gone" />
+                        android:layout_height="wrap_content">
+                    </ListView>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"/>
-
-                    <Switch
-                        android:id="@+id/enabled_alarm_sync_switch"
+                    <Button
+                        android:id="@+id/button_add_wifi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/enabled_alarm_sync"
-                        android:visibility="gone"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp" />
-
-                    <Switch
-                        android:id="@+id/enabled_demo_mode"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enabled_demo_mode"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_interests"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        />
+                        android:text="Add WiFi Network" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_sync"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"/>
+
+                <Switch
+                    android:id="@+id/enabled_agenda_sync_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enabled_agenda_sync"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+
+                <ListView
+                    android:id="@+id/agenda_select_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="195dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:visibility="gone" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"/>
+
+                <Switch
+                    android:id="@+id/enabled_alarm_sync_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enabled_alarm_sync"
+                    android:visibility="gone"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp" />
+
+                <Switch
+                    android:id="@+id/enabled_demo_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enabled_demo_mode"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_interests"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+            </LinearLayout>
             <!--</ScrollView>-->
         </LinearLayout>
 
