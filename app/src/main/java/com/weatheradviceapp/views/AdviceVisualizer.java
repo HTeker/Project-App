@@ -29,6 +29,7 @@ public class AdviceVisualizer {
         adviceIcon.setImageResource(android.R.color.transparent);
         adviceText.setText("");
         this.advice = null;
+        this.hide();
     }
 
     public void showAdvice(Advice advice) {
@@ -36,6 +37,7 @@ public class AdviceVisualizer {
         adviceIcon.setBackgroundResource(R.drawable.rounded_rect);
         adviceIcon.setImageResource(advice.getAdviceIconResource());
         adviceText.setText(advice.toString());
+        this.show();
     }
 
     public void findNewViews(LayoutInflater inflater, ViewGroup container) {
@@ -55,5 +57,13 @@ public class AdviceVisualizer {
 
     public void showText() {
         adviceText.setVisibility(View.VISIBLE);
+    }
+
+    public void hide() {
+        adviceView.setVisibility(View.GONE);
+    }
+
+    public void show() {
+        adviceView.setVisibility(View.VISIBLE);
     }
 }
