@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.helpers.AdviceFactory;
 import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
 import com.weatheradviceapp.helpers.WeatherImageMapper;
 import com.weatheradviceapp.models.UserCalendarEvent;
@@ -128,13 +129,16 @@ public class WeatherVisualizer {
     }
 
     public void showWeatherData(Weather weather, Date date, UserCalendarEvent calendarEvent) {
-
+        AdviceFactory.Filter adviceFilter = AdviceFactory.Filter.ALL;
+        if (calendarEvent != null) {
+            adviceFilter = AdviceFactory.Filter.CLOTHING;
+        }
         // Get all weather conditions for the day planning
         ArrayList<Weather> allWeathers = new ArrayList<>();
         allWeathers.add(weather);
 
         // Generate advice for all weather conditions
-        WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers);
+        WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers, adviceFilter);
         for(int i = 0; i < adviceVisualizers.size(); i++) {
             if (advGen.size() > i && advGen.get(i).getScore() > 40.0f) {
                 adviceVisualizers.get(i).showAdvice(advGen.get(i));
