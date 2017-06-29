@@ -12,8 +12,10 @@
     tools:context="com.weatheradviceapp.views.WeatherVisualizer">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="358dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp">
 
         <RelativeLayout
             android:id="@+id/title_location_datetime"
@@ -107,34 +109,34 @@
             </RelativeLayout>
 
             <ImageView
-                android:id="@+id/iconSun"
+                android:id="@+id/iconHumidity"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignTop="@+id/relativeLayout"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_toEndOf="@+id/relativeLayout"
-                app:srcCompat="@drawable/sun" />
+                app:srcCompat="@drawable/humidity" />
 
             <TextView
-                android:id="@+id/sun"
+                android:id="@+id/humidity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/iconSun"
+                android:layout_alignBottom="@+id/iconHumidity"
                 android:layout_marginLeft="4dp"
-                android:layout_toEndOf="@+id/iconSun"
+                android:layout_toEndOf="@+id/iconHumidity"
                 android:padding="3dp"
                 android:paddingLeft="4dp"
                 android:shadowColor="@color/colorTextShadowDark"
                 android:shadowRadius="3"
-                android:text="1-11+" />
+                android:text="40%" />
 
             <ImageView
                 android:id="@+id/iconWind"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_alignStart="@+id/iconSun"
-                android:layout_below="@+id/iconSun"
+                android:layout_alignStart="@+id/iconHumidity"
+                android:layout_below="@+id/iconHumidity"
                 android:layout_marginTop="12dp"
                 app:srcCompat="@drawable/wind" />
 
@@ -155,7 +157,7 @@
                 android:id="@+id/iconRain"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_alignBottom="@+id/sun"
+                android:layout_alignBottom="@+id/humidity"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@+id/windSpeed"
                 app:srcCompat="@drawable/rain" />

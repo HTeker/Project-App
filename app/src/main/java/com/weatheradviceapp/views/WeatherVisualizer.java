@@ -1,7 +1,6 @@
 package com.weatheradviceapp.views;
 
 import android.transition.AutoTransition;
-import android.transition.Fade;
 import android.transition.Scene;
 import android.transition.Transition;
 import android.transition.TransitionManager;
@@ -9,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
@@ -31,7 +29,7 @@ public class WeatherVisualizer {
     private TextView location;
     private TextView datetime;
     private TextView temp;
-    private TextView sun;
+    private TextView humidity;
     private TextView windSpeed;
     private TextView rain;
     private TextView cloud;
@@ -110,7 +108,7 @@ public class WeatherVisualizer {
         location = (TextView) wv.findViewById(R.id.location);
         datetime = (TextView) wv.findViewById(R.id.datetime);
         temp = (TextView) wv.findViewById(R.id.temp);
-        sun = (TextView) wv.findViewById(R.id.sun);
+        humidity = (TextView) wv.findViewById(R.id.humidity);
         windSpeed = (TextView) wv.findViewById(R.id.windSpeed);
         rain = (TextView) wv.findViewById(R.id.rain);
         cloud = (TextView) wv.findViewById(R.id.cloud);
@@ -177,7 +175,7 @@ public class WeatherVisualizer {
 
             weatherImg.setImageResource(new WeatherImageMapper(weather).getWeatherIconResource());
             temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
-            sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
+            humidity.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.currentCondition.getHumidity()));
             windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed() * 3.6f) + " " + container.getContext().getString(R.string.wind_speed_unit_kph));
             cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
 

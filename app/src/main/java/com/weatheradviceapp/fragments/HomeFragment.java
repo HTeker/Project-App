@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.MainActivity;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.WeatherApplication;
-import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
 import com.weatheradviceapp.helpers.WeatherImageMapper;
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.models.UserCalendar;
@@ -201,7 +199,7 @@ public class HomeFragment extends Fragment {
             } else if (view instanceof ImageView) {
                 if (view.getId() == R.id.iconCloud ||
                     view.getId() == R.id.iconRain ||
-                    view.getId() == R.id.iconSun ||
+                    view.getId() == R.id.iconHumidity ||
                     view.getId() == R.id.iconWind) {
                     ImageView imv = (ImageView) view;
                     imv.setImageDrawable(setTint(imv.getDrawable(), color));
