@@ -3,6 +3,7 @@ package com.weatheradviceapp.models;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 
 import java.util.Date;
 
@@ -13,13 +14,13 @@ import io.realm.Sort;
 import io.realm.annotations.Ignore;
 
 public class WeatherCondition extends RealmObject {
-    private String serializedWeather;
+    private String serializedForecast;
     private Date fetchDate;
     private double locationLat;
     private double locationLng;
 
     @Ignore
-    private CurrentWeather weather;
+    private WeatherHourForecast forecast;
 
     public Date getFetchDate() {
         return fetchDate;
@@ -45,18 +46,18 @@ public class WeatherCondition extends RealmObject {
         this.locationLng = locationLng;
     }
 
-    public CurrentWeather getWeather() {
+    public WeatherHourForecast getForecast() {
 
-        if (this.weather == null) {
-            this.weather = gson().fromJson(this.serializedWeather, CurrentWeather.class);
+        if (this.forecast == null) {
+            this.forecast = gson().fromJson(this.serializedForecast, WeatherHourForecast.class);
         }
 
-        return this.weather;
+        return this.forecast;
     }
 
-    public void setWeather(CurrentWeather weather) {
-        this.weather = weather;
-        this.serializedWeather = gson().toJson(weather);
+    public void setForecast(WeatherHourForecast forecast) {
+        this.forecast = forecast;
+        this.serializedForecast = gson().toJson(forecast);
     }
 
     private Gson gson() {

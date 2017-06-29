@@ -19,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.evernote.android.job.JobManager;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("home");
+                        System.out.println("Woep: " + homeFragment);
                         if (homeFragment != null) {
                             homeFragment.refreshWeatherData();
                             homeFragment.disableRefresh();
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("home");
+                        System.out.println("Woep: " + homeFragment);
                         if (homeFragment != null) {
                             homeFragment.refreshCalendarData();
                             homeFragment.disableRefresh();

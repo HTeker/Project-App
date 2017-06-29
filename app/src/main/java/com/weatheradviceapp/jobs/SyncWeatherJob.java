@@ -17,6 +17,7 @@ import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
 import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
 import com.weatheradviceapp.R;
@@ -74,20 +75,17 @@ public class SyncWeatherJob extends Job {
             final double request_lon = lon;
             final double request_lat = lat;
 
-            client.getCurrentCondition(new WeatherRequest(request_lon, request_lat), new WeatherClient.WeatherEventListener() {
+            client.getHourForecastWeather(new WeatherRequest(request_lon, request_lat), new WeatherClient.HourForecastWeatherEventListener() {
                 @Override
-                public void onWeatherRetrieved(CurrentWeather currentWeather) {
+                public void onWeatherRetrieved(WeatherHourForecast forecast) {
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
                     WeatherCondition weatherCondition = realm.createObject(WeatherCondition.class);
                     weatherCondition.setFetchDate(new Date());
-                    weatherCondition.setWeather(currentWeather);
+                    weatherCondition.setForecast(forecast);
                     weatherCondition.setLocationLng(request_lon);
                     weatherCondition.setLocationLat(request_lat);
                     realm.commitTransaction();
-
-                    float currentTemp = currentWeather.weather.temperature.getTemp();
-                    Log.d("WL", "City ["+currentWeather.weather.location.getCity()+"] Current temp ["+currentTemp+"]");
 
                     Intent intent = new Intent(WEATHER_AVAILABLE);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
