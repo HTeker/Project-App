@@ -19,8 +19,8 @@ public class WeatherAdviceGenerator  {
      *
      * @param weatherConditions
      */
-    public WeatherAdviceGenerator(Iterable<Weather> weatherConditions) {
-        adviceList = AdviceFactory.getAllAdviceInstances();
+    public WeatherAdviceGenerator(Iterable<Weather> weatherConditions, boolean showActivityAdvices) {
+        adviceList = AdviceFactory.getAllAdviceInstances(showActivityAdvices);
 
         for (Advice advice : adviceList) {
             advice.saveBestScore(weatherConditions);

@@ -128,13 +128,16 @@ public class WeatherVisualizer {
     }
 
     public void showWeatherData(Weather weather, Date date, UserCalendarEvent calendarEvent) {
-
+        boolean showActivityAdvices = true;
+        if (calendarEvent != null) {
+            showActivityAdvices = false;
+        }
         // Get all weather conditions for the day planning
         ArrayList<Weather> allWeathers = new ArrayList<>();
         allWeathers.add(weather);
 
         // Generate advice for all weather conditions
-        WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers);
+        WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers, showActivityAdvices);
         for(int i = 0; i < adviceVisualizers.size(); i++) {
             if (advGen.size() > i && advGen.get(i).getScore() > 40.0f) {
                 adviceVisualizers.get(i).showAdvice(advGen.get(i));
