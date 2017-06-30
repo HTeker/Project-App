@@ -28,6 +28,7 @@ import android.view.MenuItem;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
+import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.fragments.SettingsFragment;
 import com.weatheradviceapp.jobs.DemoCalendarJob;
 import com.weatheradviceapp.jobs.DemoWeatherJob;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private JobManager mJobManager;
     private User user;
     private BroadcastReceiver mMessageReceiver;
+    private Weather currentWeather;
 
     private static final String[] REQUIRED_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -87,9 +89,7 @@ public class MainActivity extends AppCompatActivity
         // Reset.
         mJobManager.cancelAll();
 
-        if (user.isEnabledDemoMode()) {
-            showPushNotification();
-        }
+        pushNotficationCaller();
 
         // Just now fetch weather data, so we're sure the swipeContainer is assigned
         fetchWeather();
@@ -274,14 +274,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    public void showPushNotification() {
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.umbrella_icon)
-                        .setContentTitle("Bobs Weather Advice")
-                        .setContentText("Don't forget your Umbrella")
-                        .setAutoCancel(true);
+    public PendingIntent preparePushNotification(){
 
         Intent resultIntent = new Intent(this, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -292,10 +285,125 @@ public class MainActivity extends AppCompatActivity
                         0,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int mId = 1;
-        mNotificationManager.notify(mId, mBuilder.build());
+
+        return resultPendingIntent;
+    }
+
+    public void showDemoPushNotification() {
+
+        if(user.isEnabledDemoMode()){
+            NotificationCompat.Builder demoNotificationBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.weather_advice)
+                            .setContentTitle("Bobs Weather Advice")
+                            .setContentText("Don't forget your Umbrella, Coat and Gloves")
+                            .setAutoCancel(true);
+
+            demoNotificationBuilder.setContentIntent(preparePushNotification());
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int mId = 1;
+            mNotificationManager.notify(mId, demoNotificationBuilder.build());
+        }
+    }
+
+    public void showBarbequeNotification() {
+
+        if (user.isEnabledBarbecueChip()){
+            NotificationCompat.Builder barbecueNotificationBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.weather_advice)
+                            .setContentTitle("Bobs Weather Advice")
+                            .setContentText("It's a nice weather to barbecue")
+                            .setAutoCancel(true);
+
+            barbecueNotificationBuilder.setContentIntent(preparePushNotification());
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int mId = 2;
+            mNotificationManager.notify(mId, barbecueNotificationBuilder.build());
+        }
+    }
+
+    public void showSoccerNotification() {
+
+        if (user.isEnabledSoccerChip()){
+            NotificationCompat.Builder soccerNotificationBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.weather_advice)
+                            .setContentTitle("Bobs Weather Advice")
+                            .setContentText("It's a nice weather to play soccer")
+                            .setAutoCancel(true);
+
+            soccerNotificationBuilder.setContentIntent(preparePushNotification());
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int mId = 3;
+            mNotificationManager.notify(mId, soccerNotificationBuilder.build());
+        }
+    }
+
+    public void showBeachNotification() {
+
+        if (user.isEnabledBeachChip()){
+            NotificationCompat.Builder beachNotificationBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.weather_advice)
+                            .setContentTitle("Bobs Weather Advice")
+                            .setContentText("It's a nice weather to go to the beach")
+                            .setAutoCancel(true);
+
+            beachNotificationBuilder.setContentIntent(preparePushNotification());
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int mId = 4;
+            mNotificationManager.notify(mId, beachNotificationBuilder.build());
+        }
+    }
+
+    public void showBikeNotification() {
+
+        if (user.isEnabledBikeChip()){
+            NotificationCompat.Builder bikeNotificationBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.weather_advice)
+                            .setContentTitle("Bobs Weather Advice")
+                            .setContentText("It's a nice weather for biking")
+                            .setAutoCancel(true);
+
+            bikeNotificationBuilder.setContentIntent(preparePushNotification());
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int mId = 5;
+            mNotificationManager.notify(mId, bikeNotificationBuilder.build());
+        }
+    }
+
+    public void showWaterSportNotification() {
+
+        if (user.isEnabledWaterSportChip()){
+            NotificationCompat.Builder waterSportNotificationBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.weather_advice)
+                            .setContentTitle("Bobs Weather Advice")
+                            .setContentText("It's a nice weather for water sporting")
+                            .setAutoCancel(true);
+
+            waterSportNotificationBuilder.setContentIntent(preparePushNotification());
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int mId = 6;
+            mNotificationManager.notify(mId, waterSportNotificationBuilder.build());
+        }
+    }
+
+    public void pushNotficationCaller() {
+
+        showDemoPushNotification();
+        showBarbequeNotification();
+        showBeachNotification();
+        showBikeNotification();
+        showSoccerNotification();
+        showWaterSportNotification();
     }
 }

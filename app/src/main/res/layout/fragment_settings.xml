@@ -162,6 +162,18 @@
         </LinearLayout>
 
     </LinearLayout>
+        <com.robertlevonyan.views.chip.Chip
+                android:id="@+id/barbecue_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="530dp"
+                android:layout_marginLeft="3dp"
+                app:backgroundColor="@color/colorGrey"
+                app:selectable="true"
+                app:chipIcon="@drawable/barbecue_chip_icon"
+                app:hasIcon="true"
+                app:chipText="Unselected"
+                />
 
                 <com.robertlevonyan.views.chip.Chip
                     android:id="@+id/barbecue_chip"
