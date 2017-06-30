@@ -32,9 +32,12 @@ import io.realm.RealmList;
 
 public class HomeFragment extends Fragment {
 
+    private View thisView;
     private WeatherVisualizer wvToday;
     private WeatherVisualizer wvCalendar1;
     private WeatherVisualizer wvCalendar2;
+    private int foreColor;
+    private int shadowColor;
 
     private List<AdviceVisualizer> adviceVisualizers = new ArrayList<>();
     private User user;
@@ -54,7 +57,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View thisView = inflater.inflate(R.layout.fragment_home, container, false);
+        thisView = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Get user or create user if we don't have one yet.
         user = User.getOrCreateUser();
@@ -131,8 +134,10 @@ public class HomeFragment extends Fragment {
             WeatherImageMapper wim = new WeatherImageMapper(w);
 
             view.setBackgroundResource(wim.getWeatherBackgroundResource());
-            setTextColor((ViewGroup) view, wim.getWeatherForegroundColor(), wim.getWeatherShadowColor());
             wvToday.showWeatherData(w, latestWeatherCondition.getFetchDate(), null);
+            foreColor = wim.getWeatherForegroundColor();
+            shadowColor = wim.getWeatherShadowColor();
+            setTextColor((ViewGroup) view, foreColor, shadowColor);
         }
     }
 
@@ -162,10 +167,16 @@ public class HomeFragment extends Fragment {
                     if (displayed_agenda == 0) {
                         wvCalendar1.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate(), events.get(i2));
                         wvCalendar1.show();
+                        // For some reason the icons are not tinted. When using hard coded values it
+                        // works but using only the stored values it doesn't.
+                        setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning1), 0, 0);
+                        setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning1), foreColor, shadowColor);
                     }
                     if (displayed_agenda == 1) {
                         wvCalendar2.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate(), events.get(i2));
                         wvCalendar2.show();
+                        setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning2), 0, 0);
+                        setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning2), foreColor, shadowColor);
                     }
 
                     displayed_agenda++;
@@ -190,6 +201,7 @@ public class HomeFragment extends Fragment {
      * @param color
      */
     private void setTextColor(ViewGroup parent, int color, int shadowColor) {
+
         for (int count=0; count < parent.getChildCount(); count++) {
             View view = parent.getChildAt(count);
             if (view instanceof TextView) {
@@ -200,7 +212,8 @@ public class HomeFragment extends Fragment {
                 if (view.getId() == R.id.iconCloud ||
                     view.getId() == R.id.iconRain ||
                     view.getId() == R.id.iconHumidity ||
-                    view.getId() == R.id.iconWind) {
+                    view.getId() == R.id.iconWind ||
+                    view.getId() == R.id.windDirection) {
                     ImageView imv = (ImageView) view;
                     imv.setImageDrawable(setTint(imv.getDrawable(), color));
                 }

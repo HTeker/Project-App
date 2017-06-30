@@ -36,6 +36,7 @@ public class WeatherVisualizer {
     private TextView calendar_location;
 
     private ImageView weatherImg;
+    private ImageView windDirection;
 
     private ViewGroup container;
 
@@ -112,6 +113,7 @@ public class WeatherVisualizer {
         temp = (TextView) wv.findViewById(R.id.temp);
         humidity = (TextView) wv.findViewById(R.id.humidity);
         windSpeed = (TextView) wv.findViewById(R.id.windSpeed);
+        windDirection = (ImageView) wv.findViewById(R.id.windDirection);
         rain = (TextView) wv.findViewById(R.id.rain);
         cloud = (TextView) wv.findViewById(R.id.cloud);
         weatherImg = (ImageView) wv.findViewById(R.id.weatherImg);
@@ -177,6 +179,7 @@ public class WeatherVisualizer {
             temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
             humidity.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.currentCondition.getHumidity()));
             windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed() * 3.6f) + " " + container.getContext().getString(R.string.wind_speed_unit_kph));
+            windDirection.setRotation(weather.wind.getDeg());
             cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
 
             if (weather.rain.length > 0 && (weather.rain[0].getTime() != null || weather.rain[1].getTime() != null)) {
@@ -194,6 +197,7 @@ public class WeatherVisualizer {
 
     public void show() {
         wv.setVisibility(View.VISIBLE);
+        wv.invalidate();
     }
 
     public void hide() {
