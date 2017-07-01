@@ -7,10 +7,6 @@
             android:icon="@drawable/weather"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_agenda"
-            android:icon="@drawable/advice"
-            android:title="@string/menu_agenda" />
-        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/settings"
             android:title="@string/menu_settings" />
