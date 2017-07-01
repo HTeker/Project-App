@@ -42,6 +42,9 @@ public class DemoWeatherJob extends DemoJob {
             weatherCondition.setLocationLng(0.0);
             weatherCondition.setLocationLat(0.0);
 
+            // We need to commit before the intent or else the results will be empty.
+            realm.commitTransaction();
+
             Intent intent = new Intent(WEATHER_AVAILABLE);
             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         } else {
@@ -49,7 +52,11 @@ public class DemoWeatherJob extends DemoJob {
             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         }
 
-        realm.commitTransaction();
+        // There is a possibility we didn't commit yet.
+        if (realm.isInTransaction()) {
+            realm.commitTransaction();
+        }
+
         realm.close();
 
         return Result.SUCCESS;
