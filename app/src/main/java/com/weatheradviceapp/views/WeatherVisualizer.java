@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.fragments.HomeFragment;
 import com.weatheradviceapp.helpers.AdviceFactory;
 import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
 import com.weatheradviceapp.helpers.WeatherImageMapper;
@@ -82,6 +83,8 @@ public class WeatherVisualizer {
                         adviceVisualizers.get(i).findNewViews(myInflater, (ViewGroup)wv.findViewById(R.id.advice4));
                     }
                     adviceVisualizers.get(i).hideText();
+
+                    HomeFragment.setTextColor(mSceneRoot, location.getCurrentTextColor(), location.getShadowColor());
                 }
             }
         });
@@ -105,6 +108,8 @@ public class WeatherVisualizer {
                     }
                     adviceVisualizers.get(i).showText();
                 }
+
+                HomeFragment.setTextColor(mSceneRoot, location.getCurrentTextColor(), location.getShadowColor());
             }
         });
 
@@ -139,13 +144,20 @@ public class WeatherVisualizer {
 
         // Generate advice for all weather conditions
         WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers, adviceFilter);
+        boolean showedAnyAdvices = false;
         for(int i = 0; i < adviceVisualizers.size(); i++) {
             if (advGen.size() > i && advGen.get(i).getScore() > 40.0f) {
                 adviceVisualizers.get(i).showAdvice(advGen.get(i));
                 adviceVisualizers.get(i).hideText();
+                showedAnyAdvices = true;
             } else {
                 adviceVisualizers.get(i).clearAdvice();
             }
+        }
+
+        // Hide advices when we didn't show any.
+        if (!showedAnyAdvices) {
+            mSceneRoot.setVisibility(View.GONE);
         }
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);

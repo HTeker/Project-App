@@ -28,7 +28,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class HomeFragment extends Fragment {
 
@@ -142,18 +145,13 @@ public class HomeFragment extends Fragment {
     }
 
     public void refreshCalendarData(View view) {
-        RealmList<UserCalendar> user_enabled_agendas = user.getAgendas();
-
         int displayed_agenda = 0;
 
-        // Loop through all enabled agenda's.
-        for (int i=0; i< user_enabled_agendas.size(); i++) {
-            if (displayed_agenda == 2) {
-                break;
-            }
+        if (user.isEnabledDemoMode()) {
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            RealmResults<UserCalendarEvent> events = realm.where(UserCalendarEvent.class).findAllSorted("eventBeginDate", Sort.ASCENDING);
 
-            UserCalendar calendar = user_enabled_agendas.get(i);
-            RealmList<UserCalendarEvent> events = calendar.getEvents();
             for (int i2 = 0; i2 < events.size(); i2++) {
                 if (displayed_agenda == 2) {
                     break;
@@ -182,6 +180,46 @@ public class HomeFragment extends Fragment {
                     displayed_agenda++;
                 }
             }
+        } else {
+            RealmList<UserCalendar> user_enabled_agendas = user.getAgendas();
+
+            // Loop through all enabled agenda's.
+            for (int i=0; i< user_enabled_agendas.size(); i++) {
+                if (displayed_agenda == 2) {
+                    break;
+                }
+
+                UserCalendar calendar = user_enabled_agendas.get(i);
+                RealmList<UserCalendarEvent> events = calendar.getEvents();
+                for (int i2 = 0; i2 < events.size(); i2++) {
+                    if (displayed_agenda == 2) {
+                        break;
+                    }
+
+                    if (events.get(i2).getWeather() == null) {
+                        continue;
+                    }
+
+                    if (events.get(i2).getEventBeginDate().getTime() > new Date().getTime()) {
+                        if (displayed_agenda == 0) {
+                            wvCalendar1.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate(), events.get(i2));
+                            wvCalendar1.show();
+                            // For some reason the icons are not tinted. When using hard coded values it
+                            // works but using only the stored values it doesn't.
+                            setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning1), 0, 0);
+                            setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning1), foreColor, shadowColor);
+                        }
+                        if (displayed_agenda == 1) {
+                            wvCalendar2.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate(), events.get(i2));
+                            wvCalendar2.show();
+                            setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning2), 0, 0);
+                            setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning2), foreColor, shadowColor);
+                        }
+
+                        displayed_agenda++;
+                    }
+                }
+            }
         }
 
         if (displayed_agenda == 0) {
@@ -192,6 +230,8 @@ public class HomeFragment extends Fragment {
         if (displayed_agenda == 1) {
             wvCalendar2.hide();
         }
+
+        setTextColor((ViewGroup) view, foreColor, shadowColor);
     }
 
     /**
@@ -200,7 +240,7 @@ public class HomeFragment extends Fragment {
      * @param parent
      * @param color
      */
-    private void setTextColor(ViewGroup parent, int color, int shadowColor) {
+    public static void setTextColor(ViewGroup parent, int color, int shadowColor) {
 
         for (int count=0; count < parent.getChildCount(); count++) {
             View view = parent.getChildAt(count);
