@@ -128,6 +128,7 @@ public class SyncCalendarJob extends Job {
                                             }
 
                                             realm.commitTransaction();
+                                            realm.close();
 
                                             Intent intent = new Intent(WEATHER_AVAILABLE);
                                             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
@@ -182,6 +183,7 @@ public class SyncCalendarJob extends Job {
                                             }
 
                                             realm.commitTransaction();
+                                            realm.close();
 
                                             Intent intent = new Intent(WEATHER_AVAILABLE);
                                             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
@@ -213,6 +215,7 @@ public class SyncCalendarJob extends Job {
         }
 
         realm.commitTransaction();
+        realm.close();
 
         Intent intent = new Intent(WEATHER_AVAILABLE);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
