@@ -149,7 +149,6 @@ public class HomeFragment extends Fragment {
 
         if (user.isEnabledDemoMode()) {
             Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
             RealmResults<UserCalendarEvent> events = realm.where(UserCalendarEvent.class).findAllSorted("eventBeginDate", Sort.ASCENDING);
 
             for (int i2 = 0; i2 < events.size(); i2++) {

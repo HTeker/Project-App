@@ -86,6 +86,7 @@ public class SyncWeatherJob extends Job {
                     weatherCondition.setLocationLng(request_lon);
                     weatherCondition.setLocationLat(request_lat);
                     realm.commitTransaction();
+                    realm.close();
 
                     Intent intent = new Intent(WEATHER_AVAILABLE);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
