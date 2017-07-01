@@ -1,24 +1,9 @@
 package com.weatheradviceapp.jobs;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
-
 import com.evernote.android.job.Job;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
-import com.survivingwithandroid.weather.lib.model.HourForecast;
-import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProvider;
-import com.weatheradviceapp.models.UserCalendarEvent;
-import com.weatheradviceapp.models.WeatherCondition;
-
-import java.util.Calendar;
-import java.util.Date;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
 
 public abstract class DemoJob extends Job {
     // For weather condition codes from OpenWeatherMap see: http://www.openweathermap.org/weather-conditions
