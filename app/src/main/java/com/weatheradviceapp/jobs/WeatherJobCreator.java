@@ -14,6 +14,8 @@ public class WeatherJobCreator implements JobCreator {
                 return new DemoWeatherJob();
             case SyncCalendarJob.TAG:
                 return new SyncCalendarJob();
+            case DemoCalendarJob.TAG:
+                return new DemoCalendarJob();
             default:
                 return null;
         }
