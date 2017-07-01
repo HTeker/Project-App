@@ -44,6 +44,8 @@ public abstract class DemoJob extends Job {
         CurrentWeather result = null;
         try {
             result = wp.getCurrentCondition(DEMO_DATA[demoWeatherIndex]);
+            result.weather.rain[0].setChance((float)Math.random()*100);
+            result.weather.rain[0].setTime("2017-01-01 00:00:00");
         }
         catch (Throwable t) {
             t.printStackTrace();

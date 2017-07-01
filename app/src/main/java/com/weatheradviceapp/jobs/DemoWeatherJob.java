@@ -8,7 +8,6 @@ import com.evernote.android.job.Job;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.HourForecast;
-import com.survivingwithandroid.weather.lib.model.WeatherForecast;
 import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProvider;
 import com.weatheradviceapp.models.WeatherCondition;
