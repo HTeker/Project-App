@@ -8,7 +8,6 @@ import com.evernote.android.job.Job;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.HourForecast;
-import com.survivingwithandroid.weather.lib.model.WeatherForecast;
 import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProvider;
 import com.weatheradviceapp.models.WeatherCondition;
@@ -75,6 +74,9 @@ public class DemoWeatherJob extends Job {
         CurrentWeather result = null;
         try {
             result = wp.getCurrentCondition(DEMO_DATA[demoWeatherIndex]);
+
+            result.weather.rain[0].setChance((float)Math.random()*100);
+            result.weather.rain[0].setTime("2017-01-01 00:00:00");
         }
         catch (Throwable t) {
             t.printStackTrace();
