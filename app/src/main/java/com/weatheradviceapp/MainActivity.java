@@ -1,6 +1,8 @@
 package com.weatheradviceapp;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +14,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,19 +23,28 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
+import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.fragments.SettingsFragment;
+import com.weatheradviceapp.helpers.AdviceFactory;
+import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
 import com.weatheradviceapp.jobs.DemoCalendarJob;
 import com.weatheradviceapp.jobs.DemoWeatherJob;
 import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
+import com.weatheradviceapp.models.Advice;
 import com.weatheradviceapp.models.User;
 
 import com.weatheradviceapp.fragments.HomeFragment;
+import com.weatheradviceapp.models.WeatherCondition;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     private User user;
     private BroadcastReceiver mMessageReceiver;
 
-    private static final String[] REQUIRED_PERMS={
+    private static final String[] REQUIRED_PERMS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.READ_CALENDAR
@@ -57,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(!hasRequiredPermissions()){
+        if (!hasRequiredPermissions()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(REQUIRED_PERMS, 1);
             }
@@ -116,6 +129,8 @@ public class MainActivity extends AppCompatActivity
                             homeFragment.refreshWeatherData();
                             homeFragment.disableRefresh();
                         }
+
+                        checkForNotifications();
                     }
                 });
             }
@@ -202,7 +217,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        switch(id) {
+        switch (id) {
             case R.id.nav_home:
                 displayView(id);
                 // Not working because of new fragment initialization in displayView()
@@ -220,7 +235,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean hasRequiredPermissions() {
-        for (String permision : REQUIRED_PERMS){
+        for (String permision : REQUIRED_PERMS) {
             if (!hasPermission(permision)) {
                 return false;
             }
@@ -230,7 +245,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, perm));
+        return (PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, perm));
     }
 
     public void displayView(int viewId) {
@@ -264,5 +279,61 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private PendingIntent preparePushNotification() {
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        return resultPendingIntent;
+    }
+
+    public void showPushNotification(Advice advice, int messageId) {
+        // @Gabriel, hier is een kopie van jouw code maar dan geparametriseerd met de advice. Omdat
+        // alle notifications het zelfde doen hoef je alleen de eigenschappen van de advice te
+        // gebruiken. Als je iets anders wilt weergeven dan moet je dat op de advice class toevoegen
+        // en in de concrete implementaties geef je dan de gewenste waarde terug. Bijvoorbeeld een
+        // andere tekst bij de herinnering.
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(advice.getAdviceIconResource())
+                .setContentTitle(getString(R.string.weather_app_name))
+                .setContentText(advice.toString())
+                .setAutoCancel(true)
+                .setContentIntent(preparePushNotification());
+
+        mNotificationManager.notify(messageId, nBuilder.build());
+
+        // Nu nog uitvinden wanneer we de notificatie moeten aanroepen, ik denk dat we dat moeten
+        // doen als we niet weer ontvangen.
+    }
+
+    public void checkForNotifications() {
+
+        // Dit is van de HomeFragment.refreshWeatherData() gepakt. Ik weet nog niet wat de bedoeling
+        // precies is met de notifications maar ik kan me voorstellen dat deze code nog verplaatst
+        // moet worden naar een plek waarbij de adviezen maar 1 maal worden gegenereerd.
+        WeatherCondition latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
+
+        if (latestWeatherCondition != null) {
+
+            ArrayList<Weather> allWeathers = new ArrayList<>();
+            allWeathers.add(latestWeatherCondition.getWeather());
+
+            // Generate advice for all weather conditions
+            WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers, AdviceFactory.Filter.ACTIVITY);
+
+            // En nu dus de eerste activity pakken en controleren of er wel positief advies is
+            if (advGen.size() > 0) {
+                Advice activity = advGen.get(0);
+                if (activity.getScore() > 40.0f) {
+                    showPushNotification(activity, 1);
+                }
+            }
+
+        }
     }
 }

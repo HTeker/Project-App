@@ -15,7 +15,7 @@ public class Beach extends ActivityAdvice {
     @Override
     protected float calcWeatherScore(Weather weather) {
         // Only when personal interest is selected
-        if (this.checkInterest(R.string.beach_chip)) {
+        if (this.checkInterest()) {
             return 20 + ((weather.temperature.getTemp() - 20) * 10) + ((30 - weather.clouds.getPerc()) * 5);
         }
 
@@ -30,4 +30,13 @@ public class Beach extends ActivityAdvice {
     @Override
     public int getAdviceStringResource() { return R.string.advice_barbecue; }
 
+    @Override
+    public int getChipCaptionResource() {
+        return R.string.beach_chip;
+    }
+
+    @Override
+    public int getChipColorResource() {
+        return R.color.colorBeige;
+    }
 }

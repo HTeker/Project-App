@@ -1,24 +1,22 @@
 package com.weatheradviceapp.fragments;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 
 import com.evernote.android.job.JobRequest;
@@ -27,24 +25,30 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
+
+import com.robertlevonyan.views.chip.Chip;
+import com.robertlevonyan.views.chip.OnSelectClickListener;
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.helpers.AdviceFactory;
 import com.weatheradviceapp.jobs.SyncCalendarJob;
+import com.weatheradviceapp.models.ActivityAdvice;
+import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.Interest;
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.models.UserCalendar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 
 public class SettingsFragment extends Fragment {
     private Realm realm;
@@ -242,6 +246,82 @@ public class SettingsFragment extends Fragment {
                 marker = googleMap.addMarker(markerOptions);
             }
         });
+
+
+        // Hier gaan we de activiteiten chips maken. Door dit te doen vanuit de ActivityAdvice classes
+        // hoeven we niets in de layout hard te coden en kun je nieuwe toevoegen door alleen een nieuwe
+        // subclass van ActivityAdvice te maken.
+        List<Advice> activities = AdviceFactory.getAllAdviceInstances(AdviceFactory.Filter.ACTIVITY);
+
+        RelativeLayout chips_parent = (RelativeLayout) view.findViewById(R.id.activities_selection);
+        RelativeLayout.LayoutParams layoutParams;
+        layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 0, 5, 5);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+
+        for(int i = 0; i < activities.size(); i++) {
+            Advice advice = activities.get(i);
+            if (advice instanceof ActivityAdvice) {
+                ActivityAdvice activity = (ActivityAdvice)advice;
+
+                Chip chip = new Chip(getContext());
+                chip.setId(i+1); // ID mag geen 0 zijn!!!
+                // We gebruiken de classname als identifier om op te slaan in de user. Deze classname
+                // slaan we in de chip op in de Tag.
+                chip.setTag(activity.getClass().getSimpleName());
+                chip.setBackgroundResource(activity.getChipColorResource());
+                chip.setChipText(getString(activity.getChipCaptionResource()));
+                chip.setChipIcon(ContextCompat.getDrawable(getContext(), activity.getAdviceIconResource()));
+                chip.setHasIcon(true);
+                chip.setSelectable(true);
+                chip.setSelected(activity.checkInterest()); // Werkt niet, chip reageert alleen op clicks
+                chip.setOnSelectClickListener(new OnSelectClickListener() {
+                    @Override
+                    public void onSelectClick(View v, boolean selected) {
+
+                        // First find the chip view because the view here is zomething else
+                        View p = (View) v.getParent();
+
+                        // We gaan kijken of de chip moet worden toegevoegd aan de user interests
+                        // of juist verwijderd moet worden. Dat is de functie van de chips.
+                        realm.beginTransaction();
+                        RealmList<Interest> new_interests = new RealmList();
+                        new_interests.addAll(user.getInterests());
+
+                        String chipName = (String) p.getTag();
+                        if (selected) {
+                            Interest new_interest = realm.createObject(Interest.class);
+                            new_interest.setName(chipName);
+                            new_interests.add(new_interest);
+                        } else {
+                            for(int i = new_interests.size() - 1; i >= 0; i--) {
+                                if (new_interests.get(i).getName().equals(chipName)) {
+                                    new_interests.remove(i);
+                                }
+                            }
+                        }
+                        user.setInterests(new_interests);
+                        realm.commitTransaction();
+                    }
+                });
+
+                chip.setLayoutParams(layoutParams);
+                chips_parent.addView(chip);
+
+                // For the next chip create new params, and make alignment to the current chip
+                layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0, 0, 5, 5);
+                if ((i + 1) % 3 == 0) {
+                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+                    layoutParams.addRule(RelativeLayout.BELOW, chip.getId());
+                } else {
+                    layoutParams.addRule(RelativeLayout.END_OF, chip.getId());
+                    layoutParams.addRule(RelativeLayout.ALIGN_TOP, chip.getId());
+                }
+
+            }
+        }
 
         return view;
     }

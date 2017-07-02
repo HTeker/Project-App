@@ -16,7 +16,7 @@ public class Soccer extends ActivityAdvice {
     @Override
     protected float calcWeatherScore(Weather weather) {
         // Only when personal interest is selected
-        if (this.checkInterest(R.string.bike_chip)) {
+        if (this.checkInterest()) {
             return (float) (Math.pow(weather.temperature.getTemp() - 17f, 2f) / -4 + 40) + // Temp range with optimum score at 175 C
                     (30 - weather.rain[0].getChance()) + // Above 30% chance rain degrades the score
                     (35 - (weather.wind.getSpeed() * 3.6f)); // Wind speed above 25 kmph degrades score
@@ -33,4 +33,13 @@ public class Soccer extends ActivityAdvice {
     @Override
     public int getAdviceStringResource() { return R.string.advice_soccer; }
 
+    @Override
+    public int getChipCaptionResource() {
+        return R.string.soccer_chip;
+    }
+
+    @Override
+    public int getChipColorResource() {
+        return R.color.colorGreen;
+    }
 }

@@ -15,7 +15,7 @@ public class AdviceFactory {
 
     public static final String[] adviceClasses = {
             "BeanieHat", "CottonClothing", "Gloves", "Raincoat", "SunGlasses", "Umbrella", "WoolClothing",
-            "Barbecue", "Beach", "Bike", "Soccer", "WaterSports"};
+            "Soccer", "Beach", "Bike", "Barbecue", "WaterSports"};
 
     public enum Filter {
         ALL, ACTIVITY, CLOTHING

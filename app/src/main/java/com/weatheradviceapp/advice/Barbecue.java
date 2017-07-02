@@ -16,7 +16,7 @@ public class Barbecue extends ActivityAdvice {
     @Override
     protected float calcWeatherScore(Weather weather) {
         // Only when personal interest is selected
-        if (this.checkInterest(R.string.barbecue_chip)) {
+        if (this.checkInterest()) {
             return (weather.temperature.getTemp() >= 18 ? 40 : 0) + ((15 - weather.rain[0].getChance()) * 2);
         }
 
@@ -30,5 +30,15 @@ public class Barbecue extends ActivityAdvice {
 
     @Override
     public int getAdviceStringResource() { return R.string.advice_barbecue; }
+
+    @Override
+    public int getChipCaptionResource() {
+        return R.string.barbecue_chip;
+    }
+
+    @Override
+    public int getChipColorResource() {
+        return R.color.colorGrey;
+    }
 
 }

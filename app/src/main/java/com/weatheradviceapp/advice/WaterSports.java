@@ -15,7 +15,7 @@ public class WaterSports extends ActivityAdvice {
     @Override
     protected float calcWeatherScore(Weather weather) {
         // Only when personal interest is selected
-        if (this.checkInterest(R.string.bike_chip)) {
+        if (this.checkInterest()) {
             return ((weather.temperature.getTemp() - 20) * 10) + (weather.wind.getSpeed() * 3.6f);
         }
 
@@ -30,4 +30,13 @@ public class WaterSports extends ActivityAdvice {
     @Override
     public int getAdviceStringResource() { return R.string.advice_water_sports; }
 
+    @Override
+    public int getChipCaptionResource() {
+        return R.string.watersport_chip;
+    }
+
+    @Override
+    public int getChipColorResource() {
+        return R.color.colorRed;
+    }
 }
