@@ -173,10 +173,31 @@ public class SettingsFragment extends Fragment {
 
                     List<WifiConfiguration> configuredNetworks = mainWifiObj.getConfiguredNetworks();
 
+                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+                    builderSingle.setTitle("Select one Network:");
+
+                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice);
+
                     for(int i=1; i<configuredNetworks.size(); i++){
-                        Log.d("Halil Wifi", configuredNetworks.get(i).toString());
-                        Log.d("Halil Wifi", "----------------------------------");
+                        arrayAdapter.add(configuredNetworks.get(i).SSID);
                     }
+
+                    builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String strName = arrayAdapter.getItem(which);
+                            Log.d("HalilWifi", strName);
+                        }
+                    });
+
+                    builderSingle.show();
                 }else{
                     final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("WiFi staat uit");
