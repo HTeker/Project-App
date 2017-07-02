@@ -187,12 +187,19 @@ public class SettingsFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String strName = arrayAdapter.getItem(which);
+                            Network network = new Network(strName);
 
-                            realm.beginTransaction();
-                            user.addWifiNetwork(new Network(strName));
-                            realm.commitTransaction();
+                            RealmList networks = user.getWifiNetworks();
 
-                            wifiAdapter.notifyDataSetChanged();
+                            RealmResults savedNetworks = networks.where().equalTo("name", strName).findAll();
+
+                            if(savedNetworks.size() == 0){
+                                realm.beginTransaction();
+                                user.addWifiNetwork(network);
+                                realm.commitTransaction();
+
+                                wifiAdapter.notifyDataSetChanged();
+                            }
                         }
                     });
 
