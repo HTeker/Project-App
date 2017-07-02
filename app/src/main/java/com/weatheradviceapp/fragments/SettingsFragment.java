@@ -149,7 +149,7 @@ public class SettingsFragment extends Fragment {
             realm.commitTransaction();
         }
 
-        ListAdapter wifiAdapter = new WhitelistedWifiAdapter(getActivity(), user.getWifiNetworks());
+        final WhitelistedWifiAdapter wifiAdapter = new WhitelistedWifiAdapter(getActivity(), user.getWifiNetworks());
         ListView list_whitelisted_wifi = (ListView) container_whitelisted_wifi.findViewById(R.id.list_whitelisted_wifi_networks);
         list_whitelisted_wifi.setAdapter(wifiAdapter);
         setListViewHeightBasedOnChildren(list_whitelisted_wifi);
@@ -199,6 +199,8 @@ public class SettingsFragment extends Fragment {
                             realm.beginTransaction();
                             user.addWifiNetwork(new Network(strName));
                             realm.commitTransaction();
+
+                            wifiAdapter.notifyDataSetChanged();
                         }
                     });
 
