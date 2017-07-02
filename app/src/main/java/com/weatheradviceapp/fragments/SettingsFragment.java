@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -45,6 +46,7 @@ import android.Manifest;
 import android.widget.TextView;
 
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.helpers.WifiScanReceiver;
 import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.models.Network;
 import com.weatheradviceapp.models.User;
@@ -68,6 +70,7 @@ public class SettingsFragment extends Fragment {
     private GoogleMap googleMap;
     private Marker marker;
     private View view;
+    WifiManager mainWifiObj;
 
     SettingsFragmentAgendaListAdapter agendaListAdapter = null;
 
@@ -163,6 +166,17 @@ public class SettingsFragment extends Fragment {
                 WifiManager wifi = (WifiManager)getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 if (wifi.isWifiEnabled()){
                     //wifi is enabled
+                    mainWifiObj = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+                    WifiScanReceiver wifiReciever = new WifiScanReceiver();
+                    getActivity().getApplicationContext().registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+
+                    List<WifiConfiguration> configuredNetworks = mainWifiObj.getConfiguredNetworks();
+
+                    for(int i=1; i<configuredNetworks.size(); i++){
+                        Log.d("Halil Wifi", configuredNetworks.get(i).toString());
+                        Log.d("Halil Wifi", "----------------------------------");
+                    }
                 }else{
                     final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("WiFi staat uit");
