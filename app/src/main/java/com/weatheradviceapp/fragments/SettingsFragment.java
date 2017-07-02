@@ -193,7 +193,10 @@ public class SettingsFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String strName = arrayAdapter.getItem(which);
-                            Log.d("HalilWifi", strName);
+
+                            realm.beginTransaction();
+                            user.addWifiNetwork(new Network(strName));
+                            realm.commitTransaction();
                         }
                     });
 
