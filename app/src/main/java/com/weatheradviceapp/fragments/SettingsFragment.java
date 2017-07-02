@@ -152,6 +152,8 @@ public class SettingsFragment extends Fragment {
         ListAdapter wifiAdapter = new WhitelistedWifiAdapter(getActivity(), user.getWifiNetworks());
         ListView list_whitelisted_wifi = (ListView) container_whitelisted_wifi.findViewById(R.id.list_whitelisted_wifi_networks);
         list_whitelisted_wifi.setAdapter(wifiAdapter);
+        setListViewHeightBasedOnChildren(list_whitelisted_wifi);
+
 
         Switch agenda_sync_switch = (Switch) view.findViewById(R.id.enabled_agenda_sync_switch);
         if (user.isEnabledAgendaSync()) {
@@ -539,5 +541,26 @@ public class SettingsFragment extends Fragment {
                 .setPersisted(true)
                 .build()
                 .schedule();
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }
