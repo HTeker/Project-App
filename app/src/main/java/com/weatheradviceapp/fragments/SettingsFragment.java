@@ -1,30 +1,18 @@
 package com.weatheradviceapp.fragments;
 
 import android.content.Context;
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
-<<<<<<< HEAD
-=======
-import android.net.Uri;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
->>>>>>> develop
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-<<<<<<< HEAD
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-=======
-import android.util.Log;
 import android.support.v7.app.AlertDialog;
->>>>>>> develop
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +21,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-<<<<<<< HEAD
 import android.widget.RelativeLayout;
-=======
 import android.widget.ListAdapter;
->>>>>>> develop
 import android.widget.Switch;
 
 import com.evernote.android.job.JobRequest;
@@ -52,7 +37,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
-<<<<<<< HEAD
 
 import com.robertlevonyan.views.chip.Chip;
 import com.robertlevonyan.views.chip.OnSelectClickListener;
@@ -62,14 +46,8 @@ import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.models.ActivityAdvice;
 import com.weatheradviceapp.models.Advice;
 import com.weatheradviceapp.models.Interest;
-=======
-import android.widget.TextView;
-
-import com.weatheradviceapp.R;
 import com.weatheradviceapp.helpers.WifiScanReceiver;
-import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.models.Network;
->>>>>>> develop
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.models.UserCalendar;
 import com.weatheradviceapp.adapters.WhitelistedWifiAdapter;
@@ -78,10 +56,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class SettingsFragment extends Fragment {
     private Realm realm;
