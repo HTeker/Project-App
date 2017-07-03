@@ -168,7 +168,7 @@ public class SettingsFragment extends Fragment {
                     List<WifiConfiguration> configuredNetworks = mainWifiObj.getConfiguredNetworks();
 
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
-                    builderSingle.setTitle("Select one Network:");
+                    builderSingle.setTitle(R.string.select_network);
 
                     final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice);
 
@@ -176,7 +176,7 @@ public class SettingsFragment extends Fragment {
                         arrayAdapter.add(configuredNetworks.get(i).SSID);
                     }
 
-                    builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    builderSingle.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -206,9 +206,9 @@ public class SettingsFragment extends Fragment {
                     builderSingle.show();
                 }else{
                     final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("WiFi staat uit");
-                    alertDialog.setMessage("Zet uw WiFi aan en probeer het opnieuw");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    alertDialog.setTitle(R.string.wifi_is_disabled);
+                    alertDialog.setMessage(getContext().getString(R.string.enable_wifi_try_again));
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getContext().getString(R.string.ok),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     alertDialog.dismiss();
