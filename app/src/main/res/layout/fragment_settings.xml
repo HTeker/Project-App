@@ -6,6 +6,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
@@ -61,7 +66,7 @@
                 android:text="@string/enabled_wifi_location"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp" />
-          
+
             <LinearLayout
                 android:id="@+id/container_whitelisted_wifi"
                 android:layout_width="match_parent"
@@ -90,7 +95,7 @@
                     android:text="@string/add_wifi"/>
 
             </LinearLayout>
-          
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,20 +159,33 @@
                 android:layout_marginBottom="5dp"
                 />
 
-            <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        </LinearLayout>
+
+    </LinearLayout>
+        <com.robertlevonyan.views.chip.Chip
+                android:id="@+id/barbecue_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="530dp"
+                android:layout_marginLeft="3dp"
+                app:backgroundColor="@color/colorGrey"
+                app:selectable="true"
+                app:chipIcon="@drawable/barbecue_chip_icon"
+                app:hasIcon="true"
+                app:chipText="Unselected"
+                />
+
                 <com.robertlevonyan.views.chip.Chip
                     android:id="@+id/barbecue_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="530dp"
                     android:layout_marginLeft="3dp"
                     app:backgroundColor="@color/colorGrey"
                     app:selectable="true"
                     app:chipIcon="@drawable/barbecue_chip_icon"
                     app:hasIcon="true"
-                    app:chipText="@string/barbecue_chip"
+                    app:chipText="Unselected"
                     />
 
                 <com.robertlevonyan.views.chip.Chip
@@ -180,79 +198,50 @@
                     app:selectable="true"
                     app:chipIcon="@drawable/beach_chip_icon"
                     app:hasIcon="true"
-                    app:chipText="@string/beach_chip"
-                    />
-
-                <com.robertlevonyan.views.chip.Chip
-                    android:id="@+id/bike_chip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/beach_chip"
-                    android:layout_alignBottom="@id/beach_chip"
-                    app:backgroundColor="@color/colorYellow"
-                    app:selectable="true"
-                    app:chipIcon="@drawable/bike_chip_icon"
-                    app:hasIcon="true"
-                    app:chipText="@string/bike_chip"
-                    />
-
-                <com.robertlevonyan.views.chip.Chip
-                    android:id="@+id/walking_chip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_below="@id/barbecue_chip"
-                    android:layout_marginTop="5dp"
-                    app:backgroundColor="@color/colorTurquoise"
-                    app:selectable="true"
-                    app:chipIcon="@drawable/walking_chip_icon"
-                    app:hasIcon="true"
-                    app:chipText="@string/walking_chip"
+                    app:chipText="Unselected"
                     />
 
                 <com.robertlevonyan.views.chip.Chip
                     android:id="@+id/soccer_chip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/walking_chip"
-                    android:layout_alignBottom="@id/walking_chip"
+                    android:layout_toRightOf="@id/beach_chip"
+                    android:layout_alignBottom="@id/beach_chip"
                     app:backgroundColor="@color/colorGreen"
                     app:selectable="true"
                     app:chipIcon="@drawable/soccer_chip_icon"
                     app:hasIcon="true"
-                    app:chipText="@string/soccer_chip"
-                    />
-
-                <com.robertlevonyan.views.chip.Chip
-                    android:id="@+id/fishing_chip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/soccer_chip"
-                    android:layout_alignBottom="@id/soccer_chip"
-                    app:backgroundColor="@color/colorSilver"
-                    app:selectable="true"
-                    app:chipIcon="@drawable/fishing_chip_icon"
-                    app:hasIcon="true"
-                    app:chipText="@string/fishing_chip"
+                    app:chipText="Unselected"
                     />
 
                 <com.robertlevonyan.views.chip.Chip
                     android:id="@+id/watersport_chip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/walking_chip"
-                    android:layout_marginBottom="3dp"
                     android:layout_marginLeft="3dp"
+                    android:layout_below="@id/soccer_chip"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="3dp"
                     app:backgroundColor="@color/colorRed"
+                    app:selectable="true"
                     app:chipIcon="@drawable/watersport_chip_icon"
-                    app:chipText="@string/watersport_chip"
                     app:hasIcon="true"
-                    app:selectable="true" />
+                    app:chipText="Unselected"
+                    />
+
+                <com.robertlevonyan.views.chip.Chip
+                    android:id="@+id/bike_chip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/watersport_chip"
+                    android:layout_alignBottom="@id/watersport_chip"
+                    app:backgroundColor="@color/colorYellow"
+                    app:selectable="true"
+                    app:chipIcon="@drawable/bike_chip_icon"
+                    app:hasIcon="true"
+                    app:chipText="Unselected"
+                    />
+
             </RelativeLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
 
 </ScrollView>
