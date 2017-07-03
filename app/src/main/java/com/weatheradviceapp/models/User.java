@@ -22,6 +22,16 @@ public class User extends RealmObject {
     private RealmList<Interest> interests;
     private RealmList<UserCalendar> agendas;
 
+    private String lastConnectedWifi;
+
+    public String getLastConnectedWifi(){
+        return lastConnectedWifi;
+    }
+
+    public void setLastConnectedWifi(String SSID){
+        this.lastConnectedWifi = SSID;
+    }
+
     public boolean isEnabledGPSLocation() {
         return enabledGPSLocation;
     }
