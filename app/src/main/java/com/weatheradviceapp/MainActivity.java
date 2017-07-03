@@ -7,29 +7,28 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.survivingwithandroid.weather.lib.model.Weather;
+import com.weatheradviceapp.fragments.HomeFragment;
 import com.weatheradviceapp.fragments.SettingsFragment;
 import com.weatheradviceapp.helpers.AdviceFactory;
 import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
@@ -39,12 +38,9 @@ import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
 import com.weatheradviceapp.models.Advice;
 import com.weatheradviceapp.models.User;
-
-import com.weatheradviceapp.fragments.HomeFragment;
 import com.weatheradviceapp.models.WeatherCondition;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -324,9 +320,9 @@ public class MainActivity extends AppCompatActivity
             allWeathers.add(latestWeatherCondition.getWeather());
 
             // Generate advice for all weather conditions
-            WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers, AdviceFactory.Filter.ACTIVITY);
+            WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers, AdviceFactory.Filter.CLOTHING);
 
-            // En nu dus de eerste activity pakken en controleren of er wel positief advies is
+            // En nu dus de eerste advice pakken en controleren of er wel positief advies is
             if (advGen.size() > 0) {
                 Advice activity = advGen.get(0);
                 if (activity.getScore() > 40.0f) {
