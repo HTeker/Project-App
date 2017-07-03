@@ -1,0 +1,76 @@
+<resources>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    <string name="cancel">Annuleer</string>
+    <string name="ok">Ok</string>
+
+    <string name="weather_app_name">Bobs Weer Advies</string>
+    <string name="title_home">Bobs Weer Advies</string>
+    <string name="title_settings">Instellingen</string>
+    <string name="title_my_advice">Mijn advies</string>
+    <string name="title_agenda">Agenda</string>
+
+    <string name="navigation_drawer_open">Open navigatie</string>
+    <string name="navigation_drawer_close">Close navigatie</string>
+
+    <string name="main_today">Vandaag</string>
+    <string name="main_planning">Planning</string>
+
+    <string name="temp_unit_celsius">°C</string>
+    <string name="temp_unit_fahrenheit">°F</string>
+    <string name="wind_speed_unit_kph">km/h</string>
+    <string name="wind_speed_unit_mph">MPH</string>
+
+    <string name="settings_location">Locatie</string>
+    <string name="enabled_gps_location">GPS</string>
+    <string name="enabled_wifi_location">WiFi</string>
+
+    <string name="settings_whitelisted_wifi_networks">Opgeslagen WiFi netwerken</string>
+
+    <string name="settings_sync">Sync</string>
+    <string name="enabled_agenda_sync">Agenda</string>
+    <string name="enabled_alarm_sync">Alarm</string>
+    <string name="enabled_demo_mode">Demo Modus</string>
+
+    <string name="settings_interests">Interesses</string>
+
+    <string name="menu_header">Project App HRO Dinf1</string>
+    <string name="menu_payoff">Team apps</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_my_advice">Mijn advies</string>
+    <string name="menu_settings">Instellingen</string>
+
+    <string name="advice_sunglasses">Zet je zonnebril op, want de zon is vel in %1$s.</string>
+    <string name="advice_umbrella">Neem een paraplu mee, want het zal regenen in %1$s.</string>
+    <string name="advice_beanie_hat">Zet een muts op, want het is heel koud in %1$s.</string>
+    <string name="advice_gloves">Trek je handschoenen aan, want het is heel koud in %1$s.</string>
+    <string name="advice_raincoat">Vergeet je regenjas niet, want het is winderig en het zal regenen in %1$s.</string>
+    <string name="advice_wool">Trek wolle kleding aan, want het zal koud zijn in %1$s.</string>
+    <string name="advice_cotton">Trek katoene kleding aan, want het zal warm zijn in %1$s.</string>
+
+    <string name="advice_barbecue">Koop wat vlees voor de BBQ. Het weer is goed en de verwachting op regen is zeer laag.</string>
+    <string name="advice_beach">Pak je handdoekken en zwempak en ga naar het strand. Het wordt warm en zonnig!</string>
+    <string name="advice_bike">Vandaag is geschikt om te fietsen. Er is niet veel wind of regen en het temperatuur is goed voor fysieke activiteiten.</string>
+    <string name="advice_soccer">Het weer is geschikt voor outdoor activiteiten. Je kunt een potje voetbal spelen met je vrienden bijvoorbeeld.</string>
+    <string name="advice_water_sports">Het weer is geschikt voor activiteiten op het water. Surfen, kite-surfen of zeilen zijn goede opties vandaag.</string>
+    <string name="barbecue_chip">Barbecue</string>
+    <string name="beach_chip">Strand</string>
+    <string name="bike_chip">Fietsen</string>
+    <string name="walking_chip">Wandelen</string>
+    <string name="soccer_chip">Voetbal</string>
+    <string name="fishing_chip">Vissen</string>
+    <string name="watersport_chip">Watersporten</string>
+
+    <string name="delete_wifi">Verwijder WiFi netwerk</string>
+    <string name="add_wifi">Voeg WiFi netwerk toe</string>
+    <string name="delete_wifi_confirm">Weet je zeker dat je dit netwerk wil verwijderen?</string>
+
+    <string name="select_network">Selecteer een netwerk:</string>
+    <string name="wifi_is_disabled">WiFi is uitgeschakeld</string>
+    <string name="enable_wifi_try_again">Schakel WiFi in en probeer het opnieuw</string>
+
+    <string name="demo_demonstrate_app">Presenteer app</string>
+    <string name="demo_university_rotterdam">Hogeschool Rotterdam</string>
+    <string name="demo_celebrate_summer">Vier de zomervakantie!</string>
+    <string name="demo_club_hollywood_rotterdam">Club Hollywood Rotterdam</string>
+</resources>
