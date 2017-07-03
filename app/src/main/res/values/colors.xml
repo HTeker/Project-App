@@ -3,4 +3,17 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorWeatherIconBg">#003f9c</color>
+
+    <color name="colorTextLight">#e0e0e0</color>
+    <color name="colorTextShadowLight">#333333</color>
+    <color name="colorTextDark">#333333</color>
+    <color name="colorTextShadowDark">#88aaaaaa</color>
+    <color name="colorGrey">#8BAEBA</color>
+    <color name="colorBeige">#E5D8B9</color>
+    <color name="colorYellow">#F2F27F</color>
+    <color name="colorGreen">#8AC28A</color>
+    <color name="colorTurquoise">#2DA095</color>
+    <color name="colorSilver">#ACACAC</color>
+    <color name="colorRed">#D16159</color>
 </resources>

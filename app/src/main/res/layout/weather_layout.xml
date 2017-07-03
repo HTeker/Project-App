@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/weather_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="3dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="3dp"
+    tools:context="com.weatheradviceapp.views.WeatherVisualizer">
+
+    <RelativeLayout
+        android:id="@+id/title_location_datetime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="0.54"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
+            android:text="location"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/calendar_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location"
+            android:layout_weight="0.54"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
+            android:text="location2"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/datetime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/location"
+            android:layout_alignBottom="@+id/location"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="32dp"
+            android:layout_weight="0.54"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
+            android:text="date/time"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/weather_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_location_datetime">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp">
+
+            <ImageView
+                android:id="@+id/weatherImg"
+                android:layout_width="72dp"
+                android:layout_height="70dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/circle"
+                android:padding="4dp" />
+
+            <TextView
+                android:id="@+id/temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@+id/weatherImg"
+                android:gravity="center"
+                android:shadowColor="@color/colorTextShadowDark"
+                android:shadowRadius="3"
+                android:text="21"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/tempUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/temp"
+                android:layout_toEndOf="@+id/temp"
+                android:shadowColor="@color/colorTextShadowDark"
+                android:shadowRadius="3"
+                android:text="@string/temp_unit_celsius"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iconHumidity"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@+id/relativeLayout"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_toEndOf="@+id/relativeLayout"
+            app:srcCompat="@drawable/humidity" />
+
+        <TextView
+            android:id="@+id/humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iconHumidity"
+            android:layout_marginLeft="4dp"
+            android:layout_toEndOf="@+id/iconHumidity"
+            android:padding="3dp"
+            android:paddingLeft="4dp"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
+            android:text="40%" />
+
+        <ImageView
+            android:id="@+id/iconWind"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@+id/iconHumidity"
+            android:layout_below="@+id/iconHumidity"
+            android:layout_marginTop="12dp"
+            app:srcCompat="@drawable/wind" />
+
+        <ImageView
+            android:id="@+id/windDirection"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignBottom="@+id/iconWind"
+            android:layout_alignEnd="@+id/iconWind"
+            app:srcCompat="@drawable/arrow" />
+
+        <TextView
+            android:id="@+id/windSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iconWind"
+            android:layout_marginLeft="4dp"
+            android:layout_toEndOf="@+id/iconWind"
+            android:padding="3dp"
+            android:paddingLeft="4dp"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
+            android:text="16 km/h" />
+
+        <ImageView
+            android:id="@+id/iconRain"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@+id/humidity"
+            android:layout_marginLeft="12dp"
+            android:layout_toEndOf="@+id/windSpeed"
+            app:srcCompat="@drawable/rain" />
+
+        <TextView
+            android:id="@+id/rain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iconRain"
+            android:layout_marginLeft="4dp"
+            android:layout_toEndOf="@+id/iconRain"
+            android:padding="3dp"
+            android:paddingLeft="4dp"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
+            android:text="40 %" />
+
+        <ImageView
+            android:id="@+id/iconCloud"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@+id/windSpeed"
+            android:layout_alignStart="@+id/iconRain"
+            app:srcCompat="@drawable/cloud" />
+
+        <TextView
+            android:id="@+id/cloud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iconCloud"
+            android:layout_marginLeft="4dp"
+            android:layout_toEndOf="@+id/iconCloud"
+            android:padding="3dp"
+            android:shadowColor="@color/colorTextShadowDark"
+            android:shadowRadius="3"
+            android:text="40 %" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_below="@+id/weather_details"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/advices_scene">
+
+        <include layout="@layout/weather_layout_scene_closed" />
+
+    </FrameLayout>
+
+</RelativeLayout>
