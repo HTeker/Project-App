@@ -55,10 +55,12 @@ public class WeatherVisualizer {
 
         final LayoutInflater myInflater = inflater;
 
-        // Initialize view
+        // Initialize view.
         wv = inflater.inflate(R.layout.weather_layout, container);
 
         mSceneRoot = (ViewGroup) wv.findViewById(R.id.advices_scene);
+
+        // Toggle advice display when advice icons/text are clicked.
         mSceneRoot.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 toggleAdviceDetail(view);
@@ -66,6 +68,7 @@ public class WeatherVisualizer {
         });
 
         closedScene = Scene.getSceneForLayout(mSceneRoot, R.layout.weather_layout_scene_closed, container.getContext());
+        // Update views when we transitioned.
         closedScene.setEnterAction(new Runnable() {
             @Override
             public void run() {
@@ -90,6 +93,7 @@ public class WeatherVisualizer {
         });
 
         openScene = Scene.getSceneForLayout(mSceneRoot, R.layout.weather_layout_scene_open, container.getContext());
+        // Update views when we transitioned.
         openScene.setEnterAction(new Runnable() {
             @Override
             public void run() {
@@ -146,6 +150,8 @@ public class WeatherVisualizer {
         WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers, adviceFilter);
         boolean showedAnyAdvices = false;
         for(int i = 0; i < adviceVisualizers.size(); i++) {
+
+            // Only show advice when score is high enough.
             if (advGen.size() > i && advGen.get(i).getScore() > 40.0f) {
                 adviceVisualizers.get(i).showAdvice(advGen.get(i));
                 adviceVisualizers.get(i).hideText();
@@ -176,10 +182,12 @@ public class WeatherVisualizer {
 
         if (null != weather.location.getCity()) {
 
-            // Set values in views
+            // Set values in views.
             location.setText(weather.location.getCity());
 
             if (calendarEvent != null) {
+
+                // Calendar event shows different data than normal weather.
                 location.setText(weather.location.getCity());
                 calendar_location.setText(calendarEvent.getTitle());
                 calendar_location.setVisibility(View.VISIBLE);
@@ -194,6 +202,7 @@ public class WeatherVisualizer {
             windDirection.setRotation(weather.wind.getDeg());
             cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
 
+            // Make sure we have rain data, WeatherLib automatically fills the rain, but the actual data is empty.
             if (weather.rain.length > 0 && (weather.rain[0].getTime() != null || weather.rain[1].getTime() != null)) {
                 if (weather.rain[0].getTime() != null) {
                     rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
@@ -222,6 +231,8 @@ public class WeatherVisualizer {
 
     public void showAdviceDetails(boolean show) {
         if (show != adviceDetails) {
+
+            // Fade to the proper scene.
             Transition mFadeTransition = new AutoTransition();
             if (show) {
                 TransitionManager.go(openScene, mFadeTransition);

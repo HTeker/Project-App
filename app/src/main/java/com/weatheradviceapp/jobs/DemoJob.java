@@ -17,8 +17,15 @@ public abstract class DemoJob extends Job {
             "{\"coord\":{\"lon\":4.4203586,\"lat\":51.9280573},\"weather\":[{\"id\":801,\"main\":\"Clouds\",\"description\":\"few clouds \",\"icon\":\"02d\"}],\"base\":\"stations\",\"main\":{\"temp\":24.0,\"pressure\":1031,\"humidity\":78,\"temp_min\":22.12,\"temp_max\":26.37},\"visibility\":10000,\"wind\":{\"speed\":18.6,\"deg\":50},\"clouds\":{\"all\":35},\"rain\":{\"3h\":0},\"dt\":1485789600,\"sys\":{\"type\":1,\"id\":5091,\"message\":0.0103,\"country\":\"NL\",\"sunrise\":1485762037,\"sunset\":1485794875},\"id\":2747891,\"name\":\"Rotterdam\",\"cod\":200}",
     };
 
+    // Variable to keep track of which demo data was last used.
     private static int demoWeatherIndex = 0;
 
+    /**
+     * Get demo weather data.
+     *
+     * @return
+     *   Demo weather data from the DEMO_DATA list.
+     */
     public CurrentWeather getNewCurrentWeather() {
         // Let's create the WeatherProvider
         WeatherConfig config = new WeatherConfig();
@@ -29,6 +36,8 @@ public abstract class DemoJob extends Job {
         CurrentWeather result = null;
         try {
             result = wp.getCurrentCondition(DEMO_DATA[demoWeatherIndex]);
+
+            // Override rain chance as OpenWeatherMap doesn't return chance.
             result.weather.rain[0].setChance((float)Math.random()*100);
             result.weather.rain[0].setTime("2017-01-01 00:00:00");
         }

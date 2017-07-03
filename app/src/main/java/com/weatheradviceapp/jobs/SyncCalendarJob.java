@@ -1,16 +1,10 @@
 package com.weatheradviceapp.jobs;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -20,7 +14,6 @@ import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
 import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
-import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.WeatherForecast;
 import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
@@ -29,7 +22,6 @@ import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.models.UserCalendar;
 import com.weatheradviceapp.models.UserCalendarEvent;
-import com.weatheradviceapp.models.WeatherCondition;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -85,7 +77,10 @@ public class SyncCalendarJob extends Job {
                         Geocoder geocoder = new Geocoder(this.getContext(), Locale.getDefault());
                         try {
                             List<Address> addresses = geocoder.getFromLocationName(location, 1);
+                            // Check if we matched addresses, use the first one matched.
                             if (addresses.size() > 0) {
+
+                                // Insert event into Realm.
                                 UserCalendarEvent calendar_event = realm.createObject(UserCalendarEvent.class);
                                 calendar_event.setInstanceID(instanceID);
                                 calendar_event.setEventID(eventID);
@@ -110,19 +105,24 @@ public class SyncCalendarJob extends Job {
 
                                 SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
-                                // If event date is today, we can't use forecast weather.
+                                // Fetch weather data for event.
+
+                                // If event date is today, we can't use forecast weather, we use hourForecast, which also contains more details.
                                 if (DATE_FORMAT.format(new Date(beginVal)).equalsIgnoreCase(DATE_FORMAT.format(new Date()))) {
                                     client.getHourForecastWeather(new WeatherRequest(addresses.get(0).getLongitude(), addresses.get(0).getLatitude()), new WeatherClient.HourForecastWeatherEventListener() {
                                         @Override
                                         public void onWeatherRetrieved(WeatherHourForecast forecast) {
 
+                                            // Get the hour difference so we can select the proper weather for this event.
                                             long date_difference = new Date(beginVal).getTime() - new Date().getTime();
                                             int hour = (int)(date_difference / DateUtils.HOUR_IN_MILLIS);
 
                                             Realm realm = Realm.getDefaultInstance();
                                             realm.beginTransaction();
-                                            RealmResults<UserCalendarEvent> calendar_events = realm.where(UserCalendarEvent.class).equalTo("instanceID", instanceID).findAll();
 
+                                            // Update all events that match this ID.
+                                            // We can't do this directly to the realm object because we are in another thread.
+                                            RealmResults<UserCalendarEvent> calendar_events = realm.where(UserCalendarEvent.class).equalTo("instanceID", instanceID).findAll();
                                             for (int i=0; i< calendar_events.size(); i++) {
                                                 calendar_events.get(i).setWeather(forecast.getHourForecast(hour).weather);
                                             }
@@ -130,6 +130,7 @@ public class SyncCalendarJob extends Job {
                                             realm.commitTransaction();
                                             realm.close();
 
+                                            // Let the app know we have new data.
                                             Intent intent = new Intent(WEATHER_AVAILABLE);
                                             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                                         }
@@ -151,15 +152,21 @@ public class SyncCalendarJob extends Job {
                                         @Override
                                         public void onWeatherRetrieved(WeatherForecast forecast) {
 
+                                            // Get the day difference so we can fetch the weather for the proper day.
                                             long date_difference = new Date(beginVal).getTime() - new Date().getTime();
                                             int day = (int)(date_difference / DateUtils.DAY_IN_MILLIS);
 
                                             Realm realm = Realm.getDefaultInstance();
                                             realm.beginTransaction();
+
+                                            // Update all events that match this ID.
+                                            // We can't do this directly to the realm object because we are in another thread.
                                             RealmResults<UserCalendarEvent> calendar_events = realm.where(UserCalendarEvent.class).equalTo("instanceID", instanceID).findAll();
 
                                             for (int i=0; i< calendar_events.size(); i++) {
 
+                                                // We need to set some temperature data manually because we don't have the normal data.
+                                                // This is actually more detailed.
                                                 if (new Date(beginVal).getHours() >= 0 && new Date(beginVal).getHours() < 6) {
                                                     forecast.getForecast(day).weather.temperature.setTemp(forecast.getForecast(day).forecastTemp.night);
                                                 }
@@ -185,6 +192,7 @@ public class SyncCalendarJob extends Job {
                                             realm.commitTransaction();
                                             realm.close();
 
+                                            // Let the app know we have new data.
                                             Intent intent = new Intent(WEATHER_AVAILABLE);
                                             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                                         }
@@ -217,6 +225,7 @@ public class SyncCalendarJob extends Job {
         realm.commitTransaction();
         realm.close();
 
+        // Let the app know we have new data.
         Intent intent = new Intent(WEATHER_AVAILABLE);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
 

@@ -4,21 +4,14 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.evernote.android.job.Job;
-import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
-import com.survivingwithandroid.weather.lib.model.HourForecast;
-import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
-import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProvider;
 import com.weatheradviceapp.models.UserCalendarEvent;
-import com.weatheradviceapp.models.WeatherCondition;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class DemoCalendarJob extends DemoJob {
 
@@ -41,6 +34,8 @@ public class DemoCalendarJob extends DemoJob {
         });
 
         realm.beginTransaction();
+
+        // Get demo weather data.
         CurrentWeather currentWeather = getNewCurrentWeather();
         if (currentWeather != null) {
             UserCalendarEvent userCalendarEvent1 = realm.createObject(UserCalendarEvent.class);

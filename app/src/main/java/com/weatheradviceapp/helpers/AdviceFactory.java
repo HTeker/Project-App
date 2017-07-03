@@ -17,12 +17,22 @@ public class AdviceFactory {
             "BeanieHat", "CottonClothing", "Gloves", "Raincoat", "SunGlasses", "Umbrella", "WoolClothing",
             "Barbecue", "Beach", "Bike", "Soccer", "WaterSports"};
 
+    /**
+     * Available filters to apply to the advices lsit.
+     */
     public enum Filter {
         ALL, ACTIVITY, CLOTHING
     }
 
+    /**
+     * Factory to get an advice instance by string.
+     *
+     * @param adviceClass
+     *   The advice class to return.
+     * @return
+     *   The generated advice instance.
+     */
     public static Advice getAdviceInstance(String adviceClass) {
-
         switch(adviceClass) {
             case "BeanieHat":
                 return new BeanieHat();
@@ -53,6 +63,14 @@ public class AdviceFactory {
         }
     }
 
+    /**
+     * Return all advices which match the given filter.
+     *
+     * @param filter
+     *   The filter to apply to the list.
+     * @return
+     *   An filtered list of advices.
+     */
     public static List<Advice> getAllAdviceInstances(Filter filter) {
         List<Advice> result = new ArrayList<>();
 
