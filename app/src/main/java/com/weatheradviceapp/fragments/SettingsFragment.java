@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ListAdapter;
 import android.widget.Switch;
+import android.Manifest;
 
 import com.evernote.android.job.JobRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,8 +36,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import android.Manifest;
 
 import com.robertlevonyan.views.chip.Chip;
 import com.robertlevonyan.views.chip.OnSelectClickListener;

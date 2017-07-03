@@ -80,10 +80,13 @@ public class WeatherCondition extends RealmObject {
     }
 
     public Weather getWeather() {
+        // We fetched the weather per hour. Calculate the time difference
+        // between the fetch date and the current date.
         long date_difference = new Date().getTime() - getFetchDate().getTime();
         int hour = (int)(date_difference / DateUtils.HOUR_IN_MILLIS);
 
-        // If hour not found, just take last hour.
+        // If our weather forecast was refreshed later than forecast
+        // availability, use the last known weather.
         if (getForecast().hoursForecast.size() < hour) {
             hour = (getForecast().hoursForecast.size() - 1);
         }

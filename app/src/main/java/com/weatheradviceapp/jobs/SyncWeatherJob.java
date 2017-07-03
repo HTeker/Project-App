@@ -16,7 +16,6 @@ import com.survivingwithandroid.weather.lib.WeatherClient;
 import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
 import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
-import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
 import com.survivingwithandroid.weather.lib.request.WeatherRequest;
@@ -56,9 +55,11 @@ public class SyncWeatherJob extends Job {
                     .config(config)
                     .build();
 
+            // Default location, HRO.
             double lon = 51.917377F;
             double lat = 4.48392F;
 
+            // Get GPS location or location from settings.
             if (!currentUser.isEnabledGPSLocation()) {
                 lon = currentUser.getCustomLocationLng();
                 lat = currentUser.getCustomLocationLat();
@@ -80,6 +81,8 @@ public class SyncWeatherJob extends Job {
                 public void onWeatherRetrieved(WeatherHourForecast forecast) {
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
+
+                    // Inset object into Realm.
                     WeatherCondition weatherCondition = realm.createObject(WeatherCondition.class);
                     weatherCondition.setFetchDate(new Date());
                     weatherCondition.setForecast(forecast);

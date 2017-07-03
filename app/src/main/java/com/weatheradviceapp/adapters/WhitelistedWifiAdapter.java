@@ -2,7 +2,6 @@ package com.weatheradviceapp.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.weatheradviceapp.MainActivity;
 import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.Network;
 import com.weatheradviceapp.models.User;

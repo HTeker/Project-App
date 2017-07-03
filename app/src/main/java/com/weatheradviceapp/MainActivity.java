@@ -66,12 +66,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Require proper permissions.
         if (!hasRequiredPermissions()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(REQUIRED_PERMS, 1);
             }
         }
 
+        // Initialize navigation drawer.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -81,24 +83,30 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Allow intents for data updates.
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SyncWeatherJob.WEATHER_AVAILABLE);
         intentFilter.addAction(SyncCalendarJob.WEATHER_AVAILABLE);
 
+        // Intent receiver.
         mMessageReceiver = new WeatherReceiver(new Handler());
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, intentFilter);
 
+        // Job manager for background processing.
         mJobManager = JobManager.instance();
-        // Reset.
+
+        // Reset the job manager if we had any scheduled jobs.
         mJobManager.cancelAll();
 
-        // Just now fetch weather data, so we're sure the swipeContainer is assigned
+        // Fetch weather/calendar data.
         fetchWeather();
         scheduleWeatherFetching();
+
+        // Schedule weather/calendar fetchers for background processing.
         fetchCalendarWeather();
         scheduleCalendarWeatherFetching();
 
-        // Init home fragment
+        // Init home fragment by default.
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, new HomeFragment(), "home");
         ft.commit();
@@ -116,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
 
             if (intent.getAction().equalsIgnoreCase(SyncWeatherJob.WEATHER_AVAILABLE)) {
-                // Post the UI updating code to our Handler
+                // Post the UI updating code to our Handler.
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -132,7 +140,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             if (intent.getAction().equalsIgnoreCase(SyncCalendarJob.WEATHER_AVAILABLE)) {
-                // Post the UI updating code to our Handler
+                // Post the UI updating code to our Handler.
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -196,6 +204,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
+        // Fix back back press, when backbutton is pressed, see if we had a fragment on the stack.
+        // Imitate activity behaviour.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -216,8 +227,6 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_home:
                 displayView(id);
-                // Not working because of new fragment initialization in displayView()
-                //showAdviceDetails(id == R.id.nav_my_advice);
                 break;
 
             default:
@@ -244,6 +253,12 @@ public class MainActivity extends AppCompatActivity
         return (PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, perm));
     }
 
+    /**
+     * Helper to display a new fragment by menu item id.
+     *
+     * @param viewId
+     *   The menu item ID to display the fragment for.
+     */
     public void displayView(int viewId) {
 
         Fragment fragment = null;
@@ -329,7 +344,6 @@ public class MainActivity extends AppCompatActivity
                     showPushNotification(activity, 1);
                 }
             }
-
         }
     }
 }

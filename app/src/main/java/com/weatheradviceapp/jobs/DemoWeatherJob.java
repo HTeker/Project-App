@@ -4,12 +4,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.evernote.android.job.Job;
-import com.survivingwithandroid.weather.lib.WeatherConfig;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
 import com.survivingwithandroid.weather.lib.model.HourForecast;
 import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
-import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProvider;
 import com.weatheradviceapp.models.WeatherCondition;
 
 import java.util.Date;
@@ -28,8 +25,8 @@ public class DemoWeatherJob extends DemoJob {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
+        // Get demo weather data.
         CurrentWeather currentWeather = getNewCurrentWeather();
-
         if (currentWeather != null) {
             WeatherCondition weatherCondition = realm.createObject(WeatherCondition.class);
             weatherCondition.setFetchDate(new Date());
