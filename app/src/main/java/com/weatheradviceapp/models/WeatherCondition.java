@@ -1,8 +1,11 @@
 package com.weatheradviceapp.models;
 
+import android.text.format.DateUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.model.Weather;
 import com.survivingwithandroid.weather.lib.model.WeatherHourForecast;
 
 import java.util.Date;
@@ -74,5 +77,20 @@ public class WeatherCondition extends RealmObject {
         }
 
         return null;
+    }
+
+    public Weather getWeather() {
+        // We fetched the weather per hour. Calculate the time difference
+        // between the fetch date and the current date.
+        long date_difference = new Date().getTime() - getFetchDate().getTime();
+        int hour = (int)(date_difference / DateUtils.HOUR_IN_MILLIS);
+
+        // If our weather forecast was refreshed later than forecast
+        // availability, use the last known weather.
+        if (getForecast().hoursForecast.size() < hour) {
+            hour = (getForecast().hoursForecast.size() - 1);
+        }
+
+        return getForecast().getHourForecast(hour).weather;
     }
 }

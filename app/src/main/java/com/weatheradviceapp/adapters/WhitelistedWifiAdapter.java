@@ -45,15 +45,15 @@ public class WhitelistedWifiAdapter extends ArrayAdapter<Network> {
             @Override
             public void onClick(View v) {
                 final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                alertDialog.setTitle("Verwijder WiFi");
-                alertDialog.setMessage("Weet je zeker dat je dit netwerk wilt verwijderen uit de lijst?");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Nee",
+                alertDialog.setTitle(R.string.delete_wifi);
+                alertDialog.setMessage(getContext().getString(R.string.delete_wifi_confirm));
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getContext().getString(R.string.no),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 alertDialog.dismiss();
                             }
                         });
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ja",
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getContext().getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

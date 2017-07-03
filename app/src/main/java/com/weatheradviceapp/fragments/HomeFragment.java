@@ -139,20 +139,9 @@ public class HomeFragment extends Fragment {
 
         // Latest weather could be empty when weather was never fetched.
         if (latestWeatherCondition != null) {
-
-            // We fetched the weather per hour. Calculate the time difference
-            // between the fetch date and the current date.
-            long date_difference = new Date().getTime() - latestWeatherCondition.getFetchDate().getTime();
-            int hour = (int)(date_difference / DateUtils.HOUR_IN_MILLIS);
-
-            // If our weather forecast was refreshed later than forecast
-            // availability, use the last known weather.
-            if (latestWeatherCondition.getForecast().hoursForecast.size() < hour) {
-                hour = (latestWeatherCondition.getForecast().hoursForecast.size() - 1);
-            }
+            Weather w = latestWeatherCondition.getWeather();
 
             // Set the image background for this weather condition.
-            Weather w = latestWeatherCondition.getForecast().getHourForecast(hour).weather;
             WeatherImageMapper wim = new WeatherImageMapper(w);
             view.setBackgroundResource(wim.getWeatherBackgroundResource());
 

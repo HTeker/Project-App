@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.weatheradviceapp.R;
 import com.weatheradviceapp.models.UserCalendarEvent;
 
 import java.util.Calendar;
@@ -47,8 +48,8 @@ public class DemoCalendarJob extends DemoJob {
             dt = c.getTime();
 
             userCalendarEvent1.setEventBeginDate(dt);
-            userCalendarEvent1.setTitle("App presenteren");
-            userCalendarEvent1.setLocationTitle("Hogeschool Rotterdam");
+            userCalendarEvent1.setTitle(getContext().getString(R.string.demo_demonstrate_app));
+            userCalendarEvent1.setLocationTitle(getContext().getString(R.string.demo_university_rotterdam));
             userCalendarEvent1.setWeather(currentWeather.weather);
             userCalendarEvent1.setLocationLng(0.0);
             userCalendarEvent1.setLocationLat(0.0);
@@ -61,8 +62,8 @@ public class DemoCalendarJob extends DemoJob {
                 dt = c.getTime();
 
                 userCalendarEvent2.setEventBeginDate(dt);
-                userCalendarEvent2.setTitle("Zomervakantie vieren");
-                userCalendarEvent2.setLocationTitle("Club Hollywood Rotterdam");
+                userCalendarEvent2.setTitle(getContext().getString(R.string.demo_celebrate_summer));
+                userCalendarEvent2.setLocationTitle(getContext().getString(R.string.demo_club_hollywood_rotterdam));
                 userCalendarEvent2.setWeather(secondCurrentWeather.weather);
                 userCalendarEvent2.setLocationLng(0.0);
                 userCalendarEvent2.setLocationLat(0.0);
