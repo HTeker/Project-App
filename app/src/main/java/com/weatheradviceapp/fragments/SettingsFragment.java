@@ -2,23 +2,33 @@ package com.weatheradviceapp.fragments;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ListAdapter;
 import android.widget.Switch;
 
 import com.evernote.android.job.JobRequest;
@@ -27,20 +37,26 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
+import android.widget.TextView;
+
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.helpers.WifiScanReceiver;
 import com.weatheradviceapp.jobs.SyncCalendarJob;
+import com.weatheradviceapp.models.Network;
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.models.UserCalendar;
+import com.weatheradviceapp.adapters.WhitelistedWifiAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -50,9 +66,11 @@ public class SettingsFragment extends Fragment {
     private Realm realm;
     private User user;
     MapView mMapView;
+    LinearLayout container_whitelisted_wifi;
     private GoogleMap googleMap;
     private Marker marker;
     private View view;
+    WifiManager mainWifiObj;
 
     SettingsFragmentAgendaListAdapter agendaListAdapter = null;
 
@@ -103,8 +121,10 @@ public class SettingsFragment extends Fragment {
         });
 
         Switch wifi_switch = (Switch) view.findViewById(R.id.enabled_wifi_location_switch);
+        container_whitelisted_wifi = (LinearLayout) view.findViewById(R.id.container_whitelisted_wifi);
         if (user.isEnabledWiFiLocation()) {
             wifi_switch.setChecked(true);
+            container_whitelisted_wifi.setVisibility(View.VISIBLE);
         }
 
         wifi_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -112,14 +132,92 @@ public class SettingsFragment extends Fragment {
                 realm.beginTransaction();
                 user.setEnabledWiFiLocation(isChecked);
                 realm.commitTransaction();
+
+                if (isChecked) {
+                    container_whitelisted_wifi.setVisibility(View.VISIBLE);
+                } else {
+                    container_whitelisted_wifi.setVisibility(View.GONE);
+                }
             }
         });
+
+        final WhitelistedWifiAdapter wifiAdapter = new WhitelistedWifiAdapter(getActivity(), user.getWifiNetworks());
+        ListView list_whitelisted_wifi = (ListView) container_whitelisted_wifi.findViewById(R.id.list_whitelisted_wifi_networks);
+        list_whitelisted_wifi.setAdapter(wifiAdapter);
+        setListViewHeightBasedOnChildren(list_whitelisted_wifi);
+
 
         Switch agenda_sync_switch = (Switch) view.findViewById(R.id.enabled_agenda_sync_switch);
         if (user.isEnabledAgendaSync()) {
             agenda_sync_switch.setChecked(true);
             fillUserAgendas(view, UserCalendar.getUserCalendars());
         }
+
+        Button btn_add_wifi = (Button) view.findViewById(R.id.button_add_wifi);
+        btn_add_wifi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WifiManager wifi = (WifiManager)getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                if (wifi.isWifiEnabled()){
+                    //wifi is enabled
+                    mainWifiObj = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+                    WifiScanReceiver wifiReciever = new WifiScanReceiver();
+                    getActivity().getApplicationContext().registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+
+                    List<WifiConfiguration> configuredNetworks = mainWifiObj.getConfiguredNetworks();
+
+                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+                    builderSingle.setTitle("Select one Network:");
+
+                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice);
+
+                    for(int i=1; i<configuredNetworks.size(); i++){
+                        arrayAdapter.add(configuredNetworks.get(i).SSID);
+                    }
+
+                    builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String strName = arrayAdapter.getItem(which);
+                            Network network = new Network(strName);
+
+                            RealmList networks = user.getWifiNetworks();
+
+                            RealmResults savedNetworks = networks.where().equalTo("name", strName).findAll();
+
+                            if(savedNetworks.size() == 0){
+                                realm.beginTransaction();
+                                user.addWifiNetwork(network);
+                                realm.commitTransaction();
+
+                                wifiAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+
+                    builderSingle.show();
+                }else{
+                    final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("WiFi staat uit");
+                    alertDialog.setMessage("Zet uw WiFi aan en probeer het opnieuw");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
+            }
+        });
 
         agenda_sync_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -444,5 +542,26 @@ public class SettingsFragment extends Fragment {
                 .setPersisted(true)
                 .build()
                 .schedule();
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }
