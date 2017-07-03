@@ -2,9 +2,9 @@ package com.weatheradviceapp.advice;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ClothingAdvice;
 
-public class CottonClothing extends Advice {
+public class CottonClothing extends ClothingAdvice {
 
     /**
      * The CottonClothing score is based on the temperature above 20 C.

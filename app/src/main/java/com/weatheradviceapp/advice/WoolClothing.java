@@ -2,9 +2,9 @@ package com.weatheradviceapp.advice;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ClothingAdvice;
 
-public class WoolClothing extends Advice {
+public class WoolClothing extends ClothingAdvice {
 
     /**
      * The WoolClothing score is based on the temperature. Temperatures below 12 degrees gets a

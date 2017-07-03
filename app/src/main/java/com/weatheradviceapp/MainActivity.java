@@ -19,11 +19,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.weatheradviceapp.fragments.SettingsFragment;
+import com.weatheradviceapp.jobs.DemoCalendarJob;
 import com.weatheradviceapp.jobs.DemoWeatherJob;
 import com.weatheradviceapp.jobs.SyncCalendarJob;
 import com.weatheradviceapp.jobs.SyncWeatherJob;
@@ -162,7 +164,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void fetchCalendarWeather() {
-        new JobRequest.Builder(SyncCalendarJob.TAG)
+        new JobRequest.Builder(user.isEnabledDemoMode() ? DemoCalendarJob.TAG : SyncCalendarJob.TAG)
                 .setExecutionWindow(3_000L, 4_000L)
                 .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)

@@ -2,9 +2,9 @@ package com.weatheradviceapp.advice;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ClothingAdvice;
 
-public class Gloves extends Advice {
+public class Gloves extends ClothingAdvice {
 
     /**
      * The Gloves advice is based on the temperature and starts below 5 C. Colder is a higher rating.

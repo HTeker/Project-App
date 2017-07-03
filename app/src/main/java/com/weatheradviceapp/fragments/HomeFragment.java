@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,6 @@ import android.widget.TextView;
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.MainActivity;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.WeatherApplication;
-import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
 import com.weatheradviceapp.helpers.WeatherImageMapper;
 import com.weatheradviceapp.models.User;
 import com.weatheradviceapp.models.UserCalendar;
@@ -29,13 +28,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class HomeFragment extends Fragment {
 
+    private View thisView;
     private WeatherVisualizer wvToday;
     private WeatherVisualizer wvCalendar1;
     private WeatherVisualizer wvCalendar2;
+    private int foreColor;
+    private int shadowColor;
 
     private List<AdviceVisualizer> adviceVisualizers = new ArrayList<>();
     private User user;
@@ -55,7 +60,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View thisView = inflater.inflate(R.layout.fragment_home, container, false);
+        thisView = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Get user or create user if we don't have one yet.
         user = User.getOrCreateUser();
@@ -120,28 +125,32 @@ public class HomeFragment extends Fragment {
         WeatherCondition latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
 
         if (latestWeatherCondition != null) {
-            Weather w = latestWeatherCondition.getWeather().weather;
+            long date_difference = new Date().getTime() - latestWeatherCondition.getFetchDate().getTime();
+            int hour = (int)(date_difference / DateUtils.HOUR_IN_MILLIS);
+
+            // If hour not found, just take last hour.
+            if (latestWeatherCondition.getForecast().hoursForecast.size() < hour) {
+                hour = (latestWeatherCondition.getForecast().hoursForecast.size() - 1);
+            }
+
+            Weather w = latestWeatherCondition.getForecast().getHourForecast(hour).weather;
             WeatherImageMapper wim = new WeatherImageMapper(w);
 
             view.setBackgroundResource(wim.getWeatherBackgroundResource());
-            setTextColor((ViewGroup) view, wim.getWeatherForegroundColor(), wim.getWeatherShadowColor());
             wvToday.showWeatherData(w, latestWeatherCondition.getFetchDate(), null);
+            foreColor = wim.getWeatherForegroundColor();
+            shadowColor = wim.getWeatherShadowColor();
+            setTextColor((ViewGroup) view, foreColor, shadowColor);
         }
     }
 
     public void refreshCalendarData(View view) {
-        RealmList<UserCalendar> user_enabled_agendas = user.getAgendas();
-
         int displayed_agenda = 0;
 
-        // Loop through all enabled agenda's.
-        for (int i=0; i< user_enabled_agendas.size(); i++) {
-            if (displayed_agenda == 2) {
-                break;
-            }
+        if (user.isEnabledDemoMode()) {
+            Realm realm = Realm.getDefaultInstance();
+            RealmResults<UserCalendarEvent> events = realm.where(UserCalendarEvent.class).findAllSorted("eventBeginDate", Sort.ASCENDING);
 
-            UserCalendar calendar = user_enabled_agendas.get(i);
-            RealmList<UserCalendarEvent> events = calendar.getEvents();
             for (int i2 = 0; i2 < events.size(); i2++) {
                 if (displayed_agenda == 2) {
                     break;
@@ -155,13 +164,59 @@ public class HomeFragment extends Fragment {
                     if (displayed_agenda == 0) {
                         wvCalendar1.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate(), events.get(i2));
                         wvCalendar1.show();
+                        // For some reason the icons are not tinted. When using hard coded values it
+                        // works but using only the stored values it doesn't.
+                        setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning1), 0, 0);
+                        setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning1), foreColor, shadowColor);
                     }
                     if (displayed_agenda == 1) {
                         wvCalendar2.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate(), events.get(i2));
                         wvCalendar2.show();
+                        setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning2), 0, 0);
+                        setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning2), foreColor, shadowColor);
                     }
 
                     displayed_agenda++;
+                }
+            }
+        } else {
+            RealmList<UserCalendar> user_enabled_agendas = user.getAgendas();
+
+            // Loop through all enabled agenda's.
+            for (int i=0; i< user_enabled_agendas.size(); i++) {
+                if (displayed_agenda == 2) {
+                    break;
+                }
+
+                UserCalendar calendar = user_enabled_agendas.get(i);
+                RealmList<UserCalendarEvent> events = calendar.getEvents();
+                for (int i2 = 0; i2 < events.size(); i2++) {
+                    if (displayed_agenda == 2) {
+                        break;
+                    }
+
+                    if (events.get(i2).getWeather() == null) {
+                        continue;
+                    }
+
+                    if (events.get(i2).getEventBeginDate().getTime() > new Date().getTime()) {
+                        if (displayed_agenda == 0) {
+                            wvCalendar1.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate(), events.get(i2));
+                            wvCalendar1.show();
+                            // For some reason the icons are not tinted. When using hard coded values it
+                            // works but using only the stored values it doesn't.
+                            setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning1), 0, 0);
+                            setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning1), foreColor, shadowColor);
+                        }
+                        if (displayed_agenda == 1) {
+                            wvCalendar2.showWeatherData(events.get(i2).getWeather(), events.get(i2).getEventBeginDate(), events.get(i2));
+                            wvCalendar2.show();
+                            setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning2), 0, 0);
+                            setTextColor((ViewGroup) thisView.findViewById(R.id.weatherPlanning2), foreColor, shadowColor);
+                        }
+
+                        displayed_agenda++;
+                    }
                 }
             }
         }
@@ -174,6 +229,8 @@ public class HomeFragment extends Fragment {
         if (displayed_agenda == 1) {
             wvCalendar2.hide();
         }
+
+        setTextColor((ViewGroup) view, foreColor, shadowColor);
     }
 
     /**
@@ -182,7 +239,8 @@ public class HomeFragment extends Fragment {
      * @param parent
      * @param color
      */
-    private void setTextColor(ViewGroup parent, int color, int shadowColor) {
+    public static void setTextColor(ViewGroup parent, int color, int shadowColor) {
+
         for (int count=0; count < parent.getChildCount(); count++) {
             View view = parent.getChildAt(count);
             if (view instanceof TextView) {
@@ -192,8 +250,9 @@ public class HomeFragment extends Fragment {
             } else if (view instanceof ImageView) {
                 if (view.getId() == R.id.iconCloud ||
                     view.getId() == R.id.iconRain ||
-                    view.getId() == R.id.iconSun ||
-                    view.getId() == R.id.iconWind) {
+                    view.getId() == R.id.iconHumidity ||
+                    view.getId() == R.id.iconWind ||
+                    view.getId() == R.id.windDirection) {
                     ImageView imv = (ImageView) view;
                     imv.setImageDrawable(setTint(imv.getDrawable(), color));
                 }

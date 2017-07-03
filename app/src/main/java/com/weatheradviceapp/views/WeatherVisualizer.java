@@ -1,7 +1,6 @@
 package com.weatheradviceapp.views;
 
 import android.transition.AutoTransition;
-import android.transition.Fade;
 import android.transition.Scene;
 import android.transition.Transition;
 import android.transition.TransitionManager;
@@ -9,11 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
+import com.weatheradviceapp.fragments.HomeFragment;
+import com.weatheradviceapp.helpers.AdviceFactory;
 import com.weatheradviceapp.helpers.WeatherAdviceGenerator;
 import com.weatheradviceapp.helpers.WeatherImageMapper;
 import com.weatheradviceapp.models.UserCalendarEvent;
@@ -30,13 +30,14 @@ public class WeatherVisualizer {
     private TextView location;
     private TextView datetime;
     private TextView temp;
-    private TextView sun;
+    private TextView humidity;
     private TextView windSpeed;
     private TextView rain;
     private TextView cloud;
     private TextView calendar_location;
 
     private ImageView weatherImg;
+    private ImageView windDirection;
 
     private ViewGroup container;
 
@@ -49,6 +50,8 @@ public class WeatherVisualizer {
     private boolean adviceDetails = false;
 
     public WeatherVisualizer(LayoutInflater inflater, ViewGroup container, Weather weather, Date date) {
+
+        this.container = container;
 
         final LayoutInflater myInflater = inflater;
 
@@ -80,6 +83,8 @@ public class WeatherVisualizer {
                         adviceVisualizers.get(i).findNewViews(myInflater, (ViewGroup)wv.findViewById(R.id.advice4));
                     }
                     adviceVisualizers.get(i).hideText();
+
+                    HomeFragment.setTextColor(mSceneRoot, location.getCurrentTextColor(), location.getShadowColor());
                 }
             }
         });
@@ -103,20 +108,21 @@ public class WeatherVisualizer {
                     }
                     adviceVisualizers.get(i).showText();
                 }
+
+                HomeFragment.setTextColor(mSceneRoot, location.getCurrentTextColor(), location.getShadowColor());
             }
         });
 
         location = (TextView) wv.findViewById(R.id.location);
         datetime = (TextView) wv.findViewById(R.id.datetime);
         temp = (TextView) wv.findViewById(R.id.temp);
-        sun = (TextView) wv.findViewById(R.id.sun);
+        humidity = (TextView) wv.findViewById(R.id.humidity);
         windSpeed = (TextView) wv.findViewById(R.id.windSpeed);
+        windDirection = (ImageView) wv.findViewById(R.id.windDirection);
         rain = (TextView) wv.findViewById(R.id.rain);
         cloud = (TextView) wv.findViewById(R.id.cloud);
         weatherImg = (ImageView) wv.findViewById(R.id.weatherImg);
         calendar_location = (TextView) wv.findViewById(R.id.calendar_location);
-
-        this.container = container;
 
         adviceVisualizers = new ArrayList<>();
         adviceVisualizers.add(new AdviceVisualizer(inflater, (ViewGroup) wv.findViewById(R.id.advice1)));
@@ -128,20 +134,30 @@ public class WeatherVisualizer {
     }
 
     public void showWeatherData(Weather weather, Date date, UserCalendarEvent calendarEvent) {
-
+        AdviceFactory.Filter adviceFilter = AdviceFactory.Filter.ALL;
+        if (calendarEvent != null) {
+            adviceFilter = AdviceFactory.Filter.CLOTHING;
+        }
         // Get all weather conditions for the day planning
         ArrayList<Weather> allWeathers = new ArrayList<>();
         allWeathers.add(weather);
 
         // Generate advice for all weather conditions
-        WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers);
+        WeatherAdviceGenerator advGen = new WeatherAdviceGenerator(allWeathers, adviceFilter);
+        boolean showedAnyAdvices = false;
         for(int i = 0; i < adviceVisualizers.size(); i++) {
             if (advGen.size() > i && advGen.get(i).getScore() > 40.0f) {
                 adviceVisualizers.get(i).showAdvice(advGen.get(i));
                 adviceVisualizers.get(i).hideText();
+                showedAnyAdvices = true;
             } else {
                 adviceVisualizers.get(i).clearAdvice();
             }
+        }
+
+        // Hide advices when we didn't show any.
+        if (!showedAnyAdvices) {
+            mSceneRoot.setVisibility(View.GONE);
         }
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
@@ -173,22 +189,27 @@ public class WeatherVisualizer {
 
             weatherImg.setImageResource(new WeatherImageMapper(weather).getWeatherIconResource());
             temp.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.temperature.getTemp()));
-            sun.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.currentCondition.getUV()));
+            humidity.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.currentCondition.getHumidity()));
             windSpeed.setText(String.format(java.util.Locale.getDefault(), "%.0f", weather.wind.getSpeed() * 3.6f) + " " + container.getContext().getString(R.string.wind_speed_unit_kph));
+            windDirection.setRotation(weather.wind.getDeg());
             cloud.setText(String.format(java.util.Locale.getDefault(), "%d %%", weather.clouds.getPerc()));
 
-            // TODO: Get forecast for rain prediction
-            // The rain on the currentWeather is only representing the volume in mm from the last 3 hours.
-            if (weather.rain.length > 0) {
-                rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
+            if (weather.rain.length > 0 && (weather.rain[0].getTime() != null || weather.rain[1].getTime() != null)) {
+                if (weather.rain[0].getTime() != null) {
+                    rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[0].getChance()));
+                }
+                else if (weather.rain[1].getTime() != null) {
+                    rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", weather.rain[1].getChance()));
+                }
             } else {
-                rain.setText("-");
+                rain.setText(String.format(java.util.Locale.getDefault(), "%.0f %%", 0.0f));
             }
         }
     }
 
     public void show() {
         wv.setVisibility(View.VISIBLE);
+        wv.invalidate();
     }
 
     public void hide() {
@@ -210,9 +231,9 @@ public class WeatherVisualizer {
 
             for(int i = 0; i < adviceVisualizers.size(); i++) {
                 if (show) {
-                   // adviceVisualizers.get(i).hideText();
+                   adviceVisualizers.get(i).showText();
                 } else {
-                    //adviceVisualizers.get(i).showText();
+                   adviceVisualizers.get(i).hideText();
                 }
             }
 

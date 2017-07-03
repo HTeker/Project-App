@@ -2,9 +2,9 @@ package com.weatheradviceapp.advice;
 
 import com.survivingwithandroid.weather.lib.model.Weather;
 import com.weatheradviceapp.R;
-import com.weatheradviceapp.models.Advice;
+import com.weatheradviceapp.models.ClothingAdvice;
 
-public class BeanieHat extends Advice {
+public class BeanieHat extends ClothingAdvice {
 
     /**
      * The BeanieHat advice is based on the temprerature, Lower than 5 C starts a rating. Colder is
