@@ -125,15 +125,7 @@ public class HomeFragment extends Fragment {
         WeatherCondition latestWeatherCondition = WeatherCondition.getLatestWeatherCondition();
 
         if (latestWeatherCondition != null) {
-            long date_difference = new Date().getTime() - latestWeatherCondition.getFetchDate().getTime();
-            int hour = (int)(date_difference / DateUtils.HOUR_IN_MILLIS);
-
-            // If hour not found, just take last hour.
-            if (latestWeatherCondition.getForecast().hoursForecast.size() < hour) {
-                hour = (latestWeatherCondition.getForecast().hoursForecast.size() - 1);
-            }
-
-            Weather w = latestWeatherCondition.getForecast().getHourForecast(hour).weather;
+            Weather w = latestWeatherCondition.getWeather();
             WeatherImageMapper wim = new WeatherImageMapper(w);
 
             view.setBackgroundResource(wim.getWeatherBackgroundResource());
